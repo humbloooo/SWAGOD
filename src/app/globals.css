@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #FF0000;
+  --color-background: #FFFFFF;
+  --color-surface: #F5F5F5;
+  --color-text: #000000;
+  --font-sans: var(--font-inter-tight), ui-sans-serif, system-ui, sans-serif;
+  
+  --animate-jitter: jitter 0.2s infinite;
+  
+  @keyframes jitter {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(-2px, 2px); }
+    50% { transform: translate(2px, -2px); }
+    75% { transform: translate(-2px, -2px); }
+    100% { transform: translate(0, 0); }
+  }
+}
+
+:root {
+  --background: #FFFFFF;
+  --foreground: #000000;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  letter-spacing: -0.05em;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #FF0000;
+  border-radius: 0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #D90000;
+}
+
+/* Hide scrollbar for generic containers but keep functionality defined in components */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

@@ -1,0 +1,7 @@
+[run]
+start_command = "npm run dev"
+build_command = "npm run build"
+port = 3000
+
+[deploy]
+runtime = "edge"
