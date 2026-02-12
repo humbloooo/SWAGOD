@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Product } from "@/lib/types";
-import products from "@/data/products.json"; // Fixed import
+// Verified: removed static import
 import Header from "@/components/Header";
 import Navigation from "@/components/Navigation";
 import AddToCartButton from "@/components/AddToCartButton";

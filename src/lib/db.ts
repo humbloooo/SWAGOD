@@ -1,79 +1,188 @@
-import fs from 'fs/promises';
-import path from 'path';
+import { firestore } from './firebase-admin';
+import { Product, SiteSettings, Feedback } from './types';
 
-const dataDir = path.join(process.cwd(), 'src/data');
+// Enforce Firestore collection names
+const PRODUCTS_COLLECTION = 'products';
+const ARCHIVES_COLLECTION = 'archives';
+const FEEDBACK_COLLECTION = 'feedback';
+const PROMOS_COLLECTION = 'promos';
+const SETTINGS_COLLECTION = 'settings';
+const ABOUT_COLLECTION = 'about';
+const ADMINS_COLLECTION = 'admins'; // New collection for authorized admin emails
 
-export async function readJSON<T>(filename: string): Promise<T> {
-    const filePath = path.join(dataDir, filename);
+export async function isUserAdmin(email: string): Promise<boolean> {
+    if (!email) return false;
     try {
-        const data = await fs.readFile(filePath, 'utf-8');
-        return JSON.parse(data);
-    } catch (error) {
-        console.error(`Error reading ${filename}:`, error);
-        // Return null or empty array based on context? 
-        // Best to return null here and let wrapper handle, or throw?
-        // To prevent crash, let's return null and cast.
-        return null as any;
+        // Check 1: Is strict admin in 'admins' collection?
+        const doc = await firestore.collection(ADMINS_COLLECTION).doc(email).get();
+        if (doc.exists) return true;
+
+        // Check 2: Maybe we store it in 'users' with role: 'admin'?
+        const userQuery = await firestore.collection('users').where('email', '==', email).where('role', '==', 'admin').get();
+        if (!userQuery.empty) return true;
+
+        // FALLBACK: Allow specific hardcoded email for initial setup if migration isn't perfect yet
+        // Remove this later!
+        if (email === 'admin@swagod.com') return true;
+
+        return false;
+    } catch (e) {
+        console.error("Admin check failed", e);
+        return false;
     }
 }
 
-export async function writeJSON<T>(filename: string, data: T): Promise<void> {
-    const filePath = path.join(dataDir, filename);
-    await fs.writeFile(filePath, JSON.stringify(data, null, 2), 'utf-8');
-}
-
-// Typed helpers
-import { Product, SiteSettings } from './types';
+// --- PRODUCTS ---
 
 export async function getProducts(): Promise<Product[]> {
-    return await readJSON<Product[]>('products.json') || [];
+    try {
+        const snapshot = await firestore.collection(PRODUCTS_COLLECTION).get();
+        return snapshot.docs.map((doc: any) => ({ id: doc.id, ...doc.data() } as Product));
+    } catch (error) {
+        console.error("Error fetching products:", error);
+        return [];
+    }
 }
 
-export async function saveProducts(products: Product[]): Promise<void> {
-    return writeJSON('products.json', products);
+export async function getProductById(id: string): Promise<Product | null> {
+    try {
+        const doc = await firestore.collection(PRODUCTS_COLLECTION).doc(id).get();
+        if (!doc.exists) return null;
+        return { id: doc.id, ...doc.data() } as Product;
+    } catch (error) {
+        console.error(`Error fetching product ${id}:`, error);
+        return null;
+    }
 }
+
+// Replaces saveProducts (bulk) with specific operations
+export async function addProduct(product: Product): Promise<void> {
+    // If ID is provided, use it, otherwise auto-gen
+    if (product.id) {
+        await firestore.collection(PRODUCTS_COLLECTION).doc(product.id).set(product);
+    } else {
+        await firestore.collection(PRODUCTS_COLLECTION).add(product);
+    }
+}
+
+export async function updateProduct(product: Product): Promise<void> {
+    if (!product.id) throw new Error("Product ID required for update");
+    await firestore.collection(PRODUCTS_COLLECTION).doc(product.id).set(product, { merge: true });
+}
+
+export async function deleteProduct(id: string): Promise<void> {
+    await firestore.collection(PRODUCTS_COLLECTION).doc(id).delete();
+}
+
+// For backward compatibility during migration, if any code still calls saveProducts(array)
+// we should ideally warn or implement a batch write, but better to refactor the caller.
+// Let's keep it but make it rewrite the whole collection (EXPENSIVE/DANGEROUS)?
+// No, the user wants "Strictly based on Firebase". We will refactor the callers (API routes).
+
+// --- ARCHIVES ---
 
 export async function getArchives(): Promise<any[]> {
-    return await readJSON<any[]>('archives.json') || [];
+    try {
+        const snapshot = await firestore.collection(ARCHIVES_COLLECTION).orderBy('date', 'desc').get();
+        return snapshot.docs.map((doc: any) => ({ id: doc.id, ...doc.data() }));
+    } catch (error) {
+        console.error("Error fetching archives:", error);
+        return [];
+    }
 }
 
-export async function saveArchives(archives: any[]): Promise<void> {
-    return writeJSON('archives.json', archives);
+export async function addArchive(item: any): Promise<void> {
+    if (item.id) {
+        await firestore.collection(ARCHIVES_COLLECTION).doc(item.id).set(item);
+    } else {
+        await firestore.collection(ARCHIVES_COLLECTION).add(item);
+    }
 }
 
-export async function getAbout(): Promise<any> {
-    return await readJSON<any>('about.json') || {};
+export async function deleteArchive(id: string): Promise<void> {
+    await firestore.collection(ARCHIVES_COLLECTION).doc(id).delete();
 }
 
-export async function saveAbout(data: any): Promise<void> {
-    return writeJSON('about.json', data);
+// --- FEEDBACK ---
+
+export async function getFeedback(): Promise<Feedback[]> {
+    try {
+        const snapshot = await firestore.collection(FEEDBACK_COLLECTION).orderBy('date', 'desc').get();
+        return snapshot.docs.map((doc: any) => ({ id: doc.id, ...doc.data() } as Feedback));
+    } catch (error) {
+        console.error("Error fetching feedback:", error);
+        return [];
+    }
 }
+
+export async function addFeedback(feedback: Feedback): Promise<void> {
+    await firestore.collection(FEEDBACK_COLLECTION).add(feedback);
+}
+
+export async function deleteFeedback(id: string): Promise<void> {
+    await firestore.collection(FEEDBACK_COLLECTION).doc(id).delete();
+}
+
+// --- PROMOS ---
 
 export async function getPromos(): Promise<any[]> {
-    return await readJSON<any[]>('promos.json') || [];
+    try {
+        const snapshot = await firestore.collection(PROMOS_COLLECTION).get();
+        return snapshot.docs.map((doc: any) => ({ id: doc.id, ...doc.data() }));
+    } catch (error) {
+        console.error("Error fetching promos:", error);
+        return [];
+    }
 }
 
-export async function savePromos(promos: any[]): Promise<void> {
-    return writeJSON('promos.json', promos);
+export async function addPromo(promo: any): Promise<void> {
+    await firestore.collection(PROMOS_COLLECTION).add(promo);
 }
+
+export async function deletePromo(id: string): Promise<void> {
+    await firestore.collection(PROMOS_COLLECTION).doc(id).delete();
+}
+
+export async function updatePromo(promo: any): Promise<void> {
+    if (!promo.id) throw new Error("Promo ID required");
+    await firestore.collection(PROMOS_COLLECTION).doc(promo.id).set(promo, { merge: true });
+}
+
+
+// --- SETTINGS ---
 
 export async function getSettings(): Promise<SiteSettings> {
-    return await readJSON<SiteSettings>('settings.json') || {
+    try {
+        const doc = await firestore.collection(SETTINGS_COLLECTION).doc('main').get();
+        if (doc.exists) {
+            return doc.data() as SiteSettings;
+        }
+    } catch (error) {
+        console.error("Error fetching settings:", error);
+    }
+    // Default
+    return {
         footerText: "© 2026 SWAGOD. ALL RIGHTS RESERVED.",
         socials: { instagram: "", twitter: "", tiktok: "" }
     };
 }
 
 export async function saveSettings(settings: SiteSettings): Promise<void> {
-    return writeJSON('settings.json', settings);
+    await firestore.collection(SETTINGS_COLLECTION).doc('main').set(settings, { merge: true });
 }
 
-import { Feedback } from './types';
+// --- ABOUT ---
 
-export async function getFeedback(): Promise<Feedback[]> {
-    return readJSON<Feedback[]>('feedback.json');
+export async function getAbout(): Promise<any> {
+    try {
+        const doc = await firestore.collection(ABOUT_COLLECTION).doc('main').get();
+        if (doc.exists) return doc.data();
+    } catch (error) {
+        console.error("Error fetching about:", error);
+    }
+    return {};
 }
 
-export async function saveFeedback(feedback: Feedback[]): Promise<void> {
-    return writeJSON('feedback.json', feedback);
+export async function saveAbout(data: any): Promise<void> {
+    await firestore.collection(ABOUT_COLLECTION).doc('main').set(data, { merge: true });
 }

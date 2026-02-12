@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getArchives, saveArchives } from '@/lib/db';
+import { getArchives, addArchive, deleteArchive } from '@/lib/db';
 
 export async function GET() {
     const data = await getArchives();
@@ -7,30 +7,28 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-    const newItem = await request.json();
-    const archives = await getArchives();
-
-    if (!newItem.id) {
-        newItem.id = Math.random().toString(36).substr(2, 9);
+    try {
+        const newItem = await request.json();
+        if (!newItem.id) {
+            newItem.id = Math.random().toString(36).substr(2, 9);
+        }
+        await addArchive(newItem);
+        return NextResponse.json({ success: true, item: newItem });
+    } catch (e) {
+        return NextResponse.json({ success: false, error: "Failed to add archive" }, { status: 500 });
     }
-
-    archives.push(newItem);
-    await saveArchives(archives);
-    return NextResponse.json({ success: true, item: newItem });
 }
 
 export async function DELETE(request: Request) {
     const { searchParams } = new URL(request.url);
-    const id = searchParams.get('id'); // Assuming archive items have IDs, need to verify
-
-    // Check if archives have IDs. If not, we might need to delete by index or add IDs.
-    // The previous POST code added IDs: Math.random()...
+    const id = searchParams.get('id');
 
     if (!id) return NextResponse.json({ error: "ID required" }, { status: 400 });
 
-    const archives = await getArchives();
-    const filtered = archives.filter(a => a.id !== id);
-
-    await saveArchives(filtered);
-    return NextResponse.json({ success: true });
+    try {
+        await deleteArchive(id);
+        return NextResponse.json({ success: true });
+    } catch (e) {
+        return NextResponse.json({ success: false, error: "Failed to delete" }, { status: 500 });
+    }
 }

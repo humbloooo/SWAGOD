@@ -80,7 +80,7 @@ export default function Header() {
                                 { l: "Shop", h: "/merch" },
                                 { l: "Tour", h: "/tour" },
                                 { l: "Archive", h: "/archive" },
-                                { l: "Admin", h: "/admin" },
+                                { l: "Login", h: "/login" },
                             ].map((item, i) => (
                                 <motion.div
                                     key={item.l}

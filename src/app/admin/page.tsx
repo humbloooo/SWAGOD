@@ -31,7 +31,7 @@ export default async function AdminPage() {
                         }}
                         className="px-6 py-4 bg-black text-white uppercase font-bold hover:bg-primary transition-colors w-full"
                     >
-                        Sign Out & Login as Admin
+                        Switch Account / Sign Out
                     </button>
                     <Link href="/" className="px-6 py-4 border border-black uppercase font-bold hover:bg-gray-100 transition-colors w-full">
                         Return to Store

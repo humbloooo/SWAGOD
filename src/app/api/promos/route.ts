@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getPromos, savePromos } from "@/lib/db";
+import { getPromos, addPromo, updatePromo, deletePromo } from "@/lib/db";
 
 export async function GET() {
     const promos = await getPromos();
@@ -9,28 +9,31 @@ export async function GET() {
 export async function POST(request: Request) {
     const body = await request.json();
 
-    // If it's a list, save it all (replaces everything, useful for delete/edit)
-    // Or if it's a single item, append? 
-    // Let's assume the client sends the NEW item to append, OR the full list.
-    // For simplicity, let's handle "save full list" or "append one".
-    // Let's strict to: POST = Append new promo. PUT = Replace full list (for delete/edit state).
-
-    // Current pattern in other routes:
-    // Products: POST = Append/Update single.
-
-    // Let's support saving a single promo.
-    const promos = await getPromos() || [];
-
-    if (Array.isArray(body)) {
-        // If body is array, replace all (bulk update)
-        await savePromos(body);
-        return NextResponse.json(body);
+    // Firestore-based: Only support adding a single item
+    // Generate ID purely for client-side optimisms if needed, but Firestore can auto-gen.
+    // However, keeping consistent ID is good.
+    const newPromo = { ...body };
+    if (!newPromo.id) {
+        // If we want to let Firestore gen ID, we'd use .add(). 
+        // But let's stick to explicit update logic requiring IDs for now if poss.
+        // Actually, db.ts addPromo uses .add() which makes a new ID if not provided.
     }
+    await addPromo(newPromo);
+    return NextResponse.json({ success: true });
+}
 
-    // Append single
-    const newPromo = { ...body, id: body.id || Date.now().toString() };
-    promos.push(newPromo);
-    await savePromos(promos);
+export async function PUT(request: Request) {
+    const body = await request.json();
+    await updatePromo(body);
+    return NextResponse.json({ success: true });
+}
 
-    return NextResponse.json(newPromo);
+export async function DELETE(request: Request) {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
+    if (id) {
+        await deletePromo(id);
+        return NextResponse.json({ success: true });
+    }
+    return NextResponse.json({ error: "Missing ID" }, { status: 400 });
 }

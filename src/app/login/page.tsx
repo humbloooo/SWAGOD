@@ -1,66 +1,127 @@
 "use client";
 
-import { signIn } from "next-auth/react"; // Client side sign in
+import { signIn } from "next-auth/react";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 import Header from "@/components/Header";
 import Navigation from "@/components/Navigation";
-import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
     const router = useRouter();
+    const [isLoading, setIsLoading] = useState<string | null>(null);
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
 
-    const handleAdminLogin = () => {
-        signIn("credentials", { callbackUrl: "/admin" });
+    const handleGoogleSignIn = async () => {
+        setIsLoading("google");
+        try {
+            await signIn("google", { callbackUrl: "/admin" }); // Default to admin, middleware handles redirect if not admin
+        } catch (error) {
+            toast.error("Google sign in failed");
+        } finally {
+            setIsLoading(null);
+        }
     };
 
-    const handleGoogleLogin = () => {
-        signIn("google", { callbackUrl: "/" });
+    const handleCredentialsSignIn = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsLoading("credentials");
+
+        const res = await signIn("credentials", {
+            username: "admin", // Legacy hardcoded check in auth.ts expecting 'username'
+            password: password,
+            redirect: false,
+        });
+
+        if (res?.error) {
+            toast.error("Invalid credentials");
+            setIsLoading(null);
+        } else {
+            router.push("/admin");
+        }
     };
 
     return (
-        <main className="min-h-screen bg-background pb-[60px] pt-24 flex flex-col">
+        <main className="min-h-screen bg-background relative overflow-hidden flex flex-col font-sans">
             <Header />
-            <div className="flex-1 flex items-center justify-center p-6">
-                <div className="w-full max-w-md space-y-8 border border-black p-8 bg-surface">
-                    <div className="text-center">
-                        <h1 className="text-4xl font-black uppercase tracking-tighter mb-2">
-                            SWAGOD // ID
-                        </h1>
-                        <p className="font-mono text-gray-500 text-sm">
-                            PLEASE SELECT YOUR ACCESS LEVEL
-                        </p>
-                    </div>
+            <Navigation />
 
-                    <div className="space-y-4">
+            <div className="flex-1 flex items-center justify-center p-6 z-10 pt-24">
+                <div className="w-full max-w-md bg-white border border-black p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+                    <h1 className="text-4xl font-black uppercase tracking-tighter mb-2 text-center">
+                        Welcome // <span className="text-primary">Back</span>
+                    </h1>
+                    <p className="text-gray-500 font-mono text-xs text-center mb-8 uppercase">
+                        Secure Access Portal
+                    </p>
+
+                    <div className="space-y-6">
+                        {/* Primary Google Login */}
                         <button
-                            onClick={handleAdminLogin}
-                            className="w-full py-6 bg-black text-white font-bold uppercase tracking-widest hover:bg-primary transition-colors border border-black group relative overflow-hidden"
+                            onClick={handleGoogleSignIn}
+                            disabled={!!isLoading}
+                            className="w-full h-12 bg-black text-white font-bold uppercase tracking-wider hover:bg-primary hover:text-black transition-colors flex items-center justify-center gap-2 group"
                         >
-                            <span className="relative z-10">Administrator</span>
-                            <div className="absolute inset-0 bg-red-600 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-in-out" />
+                            {isLoading === "google" ? (
+                                <Loader2 className="animate-spin" />
+                            ) : (
+                                <>
+                                    <span>Continue with Google</span>
+                                    <span className="group-hover:translate-x-1 transition-transform">→</span>
+                                </>
+                            )}
                         </button>
 
-                        <div className="relative flex items-center justify-center">
-                            <span className="bg-surface px-4 text-xs font-mono text-gray-400 uppercase">Or</span>
-                            <div className="absolute inset-0 border-t border-gray-200 -z-10" />
+                        <div className="relative flex py-2 items-center">
+                            <div className="flex-grow border-t border-gray-200"></div>
+                            <span className="flex-shrink-0 mx-4 text-gray-400 text-xs font-mono uppercase">OR</span>
+                            <div className="flex-grow border-t border-gray-200"></div>
                         </div>
 
-                        <button
-                            onClick={handleGoogleLogin}
-                            className="w-full py-6 bg-white text-black font-bold uppercase tracking-widest hover:bg-gray-50 transition-colors border border-black"
-                        >
-                            Customer (Google)
-                        </button>
+                        {/* Admin Password Fallback (Hidden in plain sight, just a form) */}
+                        <form onSubmit={handleCredentialsSignIn} className="space-y-4">
+                            <div>
+                                <label className="block font-mono text-xs uppercase mb-1 font-bold text-gray-400">Master Password (Admin Only)</label>
+                                <input
+                                    type="password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    className="w-full h-10 border border-gray-300 px-3 font-mono text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
+                                    placeholder="••••••••"
+                                />
+                            </div>
+                            {password.length > 0 && (
+                                <button
+                                    type="submit"
+                                    disabled={!!isLoading}
+                                    className="w-full h-10 border border-black text-black font-bold uppercase text-xs hover:bg-gray-100 transition-colors"
+                                >
+                                    {isLoading === "credentials" ? "Verifying..." : "Unlock Admin"}
+                                </button>
+                            )}
+                        </form>
                     </div>
 
-                    <div className="text-center pt-4">
-                        <a href="/" className="text-xs font-mono text-gray-400 hover:text-black uppercase border-b border-transparent hover:border-black transition-colors">
-                            Return to Store
-                        </a>
+                    <div className="mt-8 text-center">
+                        <p className="font-mono text-xs text-gray-500">
+                            Don't have an account?{" "}
+                            <Link href="/signup" className="text-black font-bold hover:text-primary underline decoration-2">
+                                JOIN THE CULT
+                            </Link>
+                        </p>
                     </div>
                 </div>
             </div>
-            <Navigation />
+
+            {/* Background Elements */}
+            <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-5">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[20vw] font-black uppercase leading-none whitespace-nowrap">
+                    SWAGOD
+                </div>
+            </div>
         </main>
     );
 }

@@ -30,25 +30,31 @@ export default function AdminPromos() {
     };
 
     const toggleActive = async (index: number) => {
-        const updated = [...promos];
-        updated[index].active = !updated[index].active;
-        setPromos(updated);
+        const itemToUpdate = { ...promos[index], active: !promos[index].active };
 
-        // Save full list
+        // Optimistic UI Update
+        const updatedList = [...promos];
+        updatedList[index] = itemToUpdate;
+        setPromos(updatedList);
+
+        // API Call
         await fetch("/api/promos", {
-            method: "POST",
-            body: JSON.stringify(updated),
+            method: "PUT",
+            body: JSON.stringify(itemToUpdate),
         });
     };
 
     const handleDelete = async (index: number) => {
         if (!confirm("Delete?")) return;
+        const item = promos[index];
+
+        // Optimistic UI Update
         const updated = promos.filter((_, i) => i !== index);
         setPromos(updated);
-        // Save full list
-        await fetch("/api/promos", {
-            method: "POST",
-            body: JSON.stringify(updated),
+
+        // API Call
+        await fetch(`/api/promos?id=${item.id}`, {
+            method: "DELETE",
         });
     }
 
