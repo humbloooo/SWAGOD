@@ -11,7 +11,7 @@ import { useCartStore } from "@/lib/store";
 const MENU_LINKS = [
     { name: "HOME", href: "/" },
     { name: "LATEST DROPS", href: "/#latest-drops" },
-    { name: "MERCH", href: "/merch" },
+    { name: "SHOP", href: "/shop" },
     { name: "TOUR", href: "/tour" },
     { name: "ARCHIVE", href: "/archive" },
 ];
@@ -77,7 +77,8 @@ export default function Header() {
                         </button>
                         <div className="flex flex-col space-y-8">
                             {[
-                                { l: "Shop", h: "/merch" },
+                                { l: "Home", h: "/" },
+                                { l: "Shop", h: "/shop" },
                                 { l: "Tour", h: "/tour" },
                                 { l: "Archive", h: "/archive" },
                                 { l: "Login", h: "/login" },

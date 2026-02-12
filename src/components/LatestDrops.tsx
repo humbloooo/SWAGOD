@@ -43,7 +43,7 @@ export default function LatestDrops({ products }: LatestDropsProps) {
             </div>
 
             <div className="flex justify-center mt-24">
-                <Link href="/merch" className="px-12 py-4 border border-black hover:bg-black hover:text-white transition-colors uppercase font-bold tracking-widest text-sm">
+                <Link href="/shop" className="px-12 py-4 border border-black hover:bg-black hover:text-white transition-colors uppercase font-bold tracking-widest text-sm">
                     View All Products
                 </Link>
             </div>

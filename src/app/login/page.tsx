@@ -31,7 +31,7 @@ export default function LoginPage() {
         setIsLoading("credentials");
 
         const res = await signIn("credentials", {
-            username: "admin", // Legacy hardcoded check in auth.ts expecting 'username'
+            username: email, // Changed from hardcoded "admin" to user input email
             password: password,
             redirect: false,
         });
@@ -59,11 +59,48 @@ export default function LoginPage() {
                     </p>
 
                     <div className="space-y-6">
-                        {/* Primary Google Login */}
+                        {/* Primary Login Form */}
+                        <form onSubmit={handleCredentialsSignIn} className="space-y-4">
+                            <div>
+                                <label className="block font-mono text-xs uppercase mb-1 font-bold text-gray-500">Email</label>
+                                <input
+                                    type="text"
+                                    value={email} // Using password state reused or need email state? Standard uses email.
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    className="w-full h-12 border border-gray-300 px-4 font-mono text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
+                                    placeholder="Enter your email"
+                                />
+                            </div>
+                            <div>
+                                <label className="block font-mono text-xs uppercase mb-1 font-bold text-gray-500">Password</label>
+                                <input
+                                    type="password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    className="w-full h-12 border border-gray-300 px-4 font-mono text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
+                                    placeholder="••••••••"
+                                />
+                            </div>
+                            <button
+                                type="submit"
+                                disabled={!!isLoading}
+                                className="w-full h-12 bg-black text-white font-bold uppercase tracking-wider hover:bg-gray-800 transition-colors"
+                            >
+                                {isLoading === "credentials" ? <Loader2 className="animate-spin mx-auto" /> : "Login"}
+                            </button>
+                        </form>
+
+                        <div className="relative flex py-2 items-center">
+                            <div className="flex-grow border-t border-gray-200"></div>
+                            <span className="flex-shrink-0 mx-4 text-gray-400 text-xs font-mono uppercase">OR</span>
+                            <div className="flex-grow border-t border-gray-200"></div>
+                        </div>
+
+                        {/* Google Login */}
                         <button
                             onClick={handleGoogleSignIn}
                             disabled={!!isLoading}
-                            className="w-full h-12 bg-black text-white font-bold uppercase tracking-wider hover:bg-primary hover:text-black transition-colors flex items-center justify-center gap-2 group"
+                            className="w-full h-12 border border-black bg-white text-black font-bold uppercase tracking-wider hover:bg-gray-50 transition-colors flex items-center justify-center gap-2 group"
                         >
                             {isLoading === "google" ? (
                                 <Loader2 className="animate-spin" />
@@ -74,35 +111,6 @@ export default function LoginPage() {
                                 </>
                             )}
                         </button>
-
-                        <div className="relative flex py-2 items-center">
-                            <div className="flex-grow border-t border-gray-200"></div>
-                            <span className="flex-shrink-0 mx-4 text-gray-400 text-xs font-mono uppercase">OR</span>
-                            <div className="flex-grow border-t border-gray-200"></div>
-                        </div>
-
-                        {/* Admin Password Fallback (Hidden in plain sight, just a form) */}
-                        <form onSubmit={handleCredentialsSignIn} className="space-y-4">
-                            <div>
-                                <label className="block font-mono text-xs uppercase mb-1 font-bold text-gray-400">Master Password (Admin Only)</label>
-                                <input
-                                    type="password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full h-10 border border-gray-300 px-3 font-mono text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
-                                    placeholder="••••••••"
-                                />
-                            </div>
-                            {password.length > 0 && (
-                                <button
-                                    type="submit"
-                                    disabled={!!isLoading}
-                                    className="w-full h-10 border border-black text-black font-bold uppercase text-xs hover:bg-gray-100 transition-colors"
-                                >
-                                    {isLoading === "credentials" ? "Verifying..." : "Unlock Admin"}
-                                </button>
-                            )}
-                        </form>
                     </div>
 
                     <div className="mt-8 text-center">

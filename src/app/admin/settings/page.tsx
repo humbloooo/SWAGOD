@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import Navigation from "@/components/Navigation";
+import ImageUpload from "@/components/admin/ImageUpload";
 import { SiteSettings } from "@/lib/types";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -68,6 +69,20 @@ export default function AdminSettings() {
                                     value={settings.footerText}
                                     onChange={(e) => setSettings({ ...settings, footerText: e.target.value })}
                                     className="w-full p-3 border border-gray-200 focus:border-black outline-none font-mono text-sm"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="bg-surface border border-black p-8">
+                        <h3 className="font-bold uppercase mb-6">Hero Wallpaper</h3>
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-xs font-mono uppercase mb-2">Desktop Background</label>
+                                <ImageUpload
+                                    value={settings.heroImage}
+                                    onChange={(url) => setSettings({ ...settings, heroImage: url })}
+                                    folder="settings"
                                 />
                             </div>
                         </div>

@@ -7,13 +7,13 @@ import Image from "next/image";
 
 import Link from "next/link";
 
-export default function Hero() {
+export default function Hero({ heroImage }: { heroImage?: string }) {
     return (
         <section className="relative flex flex-col items-center justify-center h-screen w-full overflow-hidden bg-background">
             {/* Background Image */}
             <div className="absolute inset-0 z-0">
                 <Image
-                    src="/assets/hero-bg.png"
+                    src={heroImage || "/assets/hero-bg.png"}
                     alt="Hero Background"
                     fill
                     className="object-cover opacity-80"

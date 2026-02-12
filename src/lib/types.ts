@@ -14,6 +14,7 @@ export interface CartItem extends Product {
 }
 
 export interface SiteSettings {
+    heroImage?: string; // New field for Hero Wallpaper
     footerText: string;
     socials: {
         instagram: string;
