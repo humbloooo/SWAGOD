@@ -12,7 +12,7 @@ export default function GlitchText({ text, className }: GlitchTextProps) {
     return (
         <div className={cn("relative inline-block group cursor-default", className)}>
             <motion.h1
-                className="relative z-10 font-bold tracking-tighter text-black uppercase"
+                className="relative z-10 font-bold tracking-tighter text-white uppercase"
                 style={{ fontSize: "clamp(4rem, 15vw, 12rem)" }}
             >
                 {text}
@@ -39,7 +39,7 @@ export default function GlitchText({ text, className }: GlitchTextProps) {
 
             {/* Ghost Channel - More Chaotic */}
             <motion.h1
-                className="absolute top-0 left-0 z-0 font-bold tracking-tighter text-black/50 uppercase opacity-50"
+                className="absolute top-0 left-0 z-0 font-bold tracking-tighter text-white/50 uppercase opacity-50"
                 style={{ fontSize: "clamp(4rem, 15vw, 12rem)" }}
                 animate={{
                     x: [4, -6, 6, -4, 0],

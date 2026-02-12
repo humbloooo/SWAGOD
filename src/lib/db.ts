@@ -9,10 +9,11 @@ export async function readJSON<T>(filename: string): Promise<T> {
         const data = await fs.readFile(filePath, 'utf-8');
         return JSON.parse(data);
     } catch (error) {
-        // If file doesn't exist or is empty, return empty array/object depending on type?
-        // For now assume files exist as we created them.
         console.error(`Error reading ${filename}:`, error);
-        throw error;
+        // Return null or empty array based on context? 
+        // Best to return null here and let wrapper handle, or throw?
+        // To prevent crash, let's return null and cast.
+        return null as any;
     }
 }
 
@@ -25,7 +26,7 @@ export async function writeJSON<T>(filename: string, data: T): Promise<void> {
 import { Product, SiteSettings } from './types';
 
 export async function getProducts(): Promise<Product[]> {
-    return readJSON<Product[]>('products.json');
+    return await readJSON<Product[]>('products.json') || [];
 }
 
 export async function saveProducts(products: Product[]): Promise<void> {
@@ -33,7 +34,7 @@ export async function saveProducts(products: Product[]): Promise<void> {
 }
 
 export async function getArchives(): Promise<any[]> {
-    return readJSON<any[]>('archives.json');
+    return await readJSON<any[]>('archives.json') || [];
 }
 
 export async function saveArchives(archives: any[]): Promise<void> {
@@ -41,7 +42,7 @@ export async function saveArchives(archives: any[]): Promise<void> {
 }
 
 export async function getAbout(): Promise<any> {
-    return readJSON<any>('about.json');
+    return await readJSON<any>('about.json') || {};
 }
 
 export async function saveAbout(data: any): Promise<void> {
@@ -49,7 +50,7 @@ export async function saveAbout(data: any): Promise<void> {
 }
 
 export async function getPromos(): Promise<any[]> {
-    return readJSON<any[]>('promos.json');
+    return await readJSON<any[]>('promos.json') || [];
 }
 
 export async function savePromos(promos: any[]): Promise<void> {
@@ -57,7 +58,10 @@ export async function savePromos(promos: any[]): Promise<void> {
 }
 
 export async function getSettings(): Promise<SiteSettings> {
-    return readJSON<SiteSettings>('settings.json');
+    return await readJSON<SiteSettings>('settings.json') || {
+        footerText: "© 2026 SWAGOD. ALL RIGHTS RESERVED.",
+        socials: { instagram: "", twitter: "", tiktok: "" }
+    };
 }
 
 export async function saveSettings(settings: SiteSettings): Promise<void> {

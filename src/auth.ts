@@ -5,8 +5,8 @@ import CredentialsProvider from "next-auth/providers/credentials";
 export const authOptions: NextAuthOptions = {
     providers: [
         GoogleProvider({
-            clientId: process.env.GOOGLE_CLIENT_ID as string,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+            clientId: process.env.GOOGLE_CLIENT_ID || "missing-client-id",
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET || "missing-client-secret",
         }),
         CredentialsProvider({
             name: "Credentials",
@@ -28,15 +28,13 @@ export const authOptions: NextAuthOptions = {
         }),
     ],
     callbacks: {
-        jwt({ token, user }) {
+        jwt({ token, user }: any) {
             if (user) {
-                // @ts-ignore
                 token.role = user.role;
             }
             return token;
         },
-        session({ session, token }) {
-            // @ts-ignore
+        session({ session, token }: any) {
             session.user.role = token.role;
             return session;
         },

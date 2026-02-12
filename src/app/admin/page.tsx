@@ -20,14 +20,21 @@ export default async function AdminPage() {
                 <Header />
                 <h1 className="text-4xl font-black text-red-600 uppercase mb-4">Access Denied</h1>
                 <p className="font-mono text-gray-600 mb-8 max-w-md">
-                    You are logged in as <strong>{session.user.email}</strong>, but you do not have administrator privileges.
+                    You are currently logged in as <strong>{session.user.email}</strong>.<br />
+                    This account does not have admin permissions.
                 </p>
-                <div className="flex gap-4">
-                    <Link href="/" className="px-6 py-3 border border-black uppercase font-bold hover:bg-black hover:text-white transition-colors">
-                        Return Home
-                    </Link>
-                    <Link href="/api/auth/signout" className="px-6 py-3 bg-red-600 text-white uppercase font-bold hover:bg-red-700 transition-colors">
-                        Sign Out
+                <div className="flex flex-col gap-4 w-full max-w-sm">
+                    <button
+                        onClick={() => {
+                            // Force signout then redirect to login
+                            window.location.href = "/api/auth/signout?callbackUrl=/login";
+                        }}
+                        className="px-6 py-4 bg-black text-white uppercase font-bold hover:bg-primary transition-colors w-full"
+                    >
+                        Sign Out & Login as Admin
+                    </button>
+                    <Link href="/" className="px-6 py-4 border border-black uppercase font-bold hover:bg-gray-100 transition-colors w-full">
+                        Return to Store
                     </Link>
                 </div>
             </main>
