@@ -6,6 +6,7 @@ export interface Product {
     category: "merch" | "accessories" | "clothing";
     description: string;
     sizes?: string[]; // New for Phase 2
+    images?: string[]; // New for Gallery Support
 }
 
 export interface CartItem extends Product {

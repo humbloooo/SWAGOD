@@ -16,18 +16,64 @@ export default function ImageUpload({ value, onChange, folder = "uploads" }: Ima
     const [isLoading, setIsLoading] = useState(false);
     const [isDragging, setIsDragging] = useState(false);
 
+    const compressImage = (file: File): Promise<string> => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (event) => {
+                const img = document.createElement("img");
+                img.src = event.target?.result as string;
+                img.onload = () => {
+                    const canvas = document.createElement("canvas");
+                    const MAX_WIDTH = 1200; // Resize to max 1200px width
+                    const scaleSize = MAX_WIDTH / img.width;
+                    const width = (scaleSize < 1) ? MAX_WIDTH : img.width;
+                    const height = (scaleSize < 1) ? img.height * scaleSize : img.height;
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext("2d");
+                    ctx?.drawImage(img, 0, 0, width, height);
+
+                    // Compress to JPEG with 0.8 quality
+                    const dataUrl = canvas.toDataURL("image/jpeg", 0.8);
+                    resolve(dataUrl);
+                };
+                img.onerror = (err) => reject(err);
+            };
+            reader.onerror = (err) => reject(err);
+        });
+    };
+
     const handleUpload = async (file: File) => {
         setIsLoading(true);
         try {
-            // Create a unique path: folder/timestamp_filename
-            const path = `${folder}/${Date.now()}_${file.name}`;
-            const url = await uploadImage(file, path);
-            onChange(url);
-            toast.success("Image uploaded successfully");
+            // "Bypass" with Compression
+            // Allow up to 5MB input, but compress it down
+            if (file.size > 5 * 1024 * 1024) {
+                toast.error("File excessively large. Max 5MB input.");
+                setIsLoading(false);
+                return;
+            }
+
+            const compressedBase64 = await compressImage(file);
+
+            // Final safety check: Firestore limit is ~1MB (1,048,576 bytes)
+            // Base64 is ~33% larger than binary. Safe limit for string length is ~1,000,000 chars.
+            if (compressedBase64.length > 1000000) {
+                toast.error("Image still too large after compression. Try a simpler image.");
+                setIsLoading(false);
+                return;
+            }
+
+            onChange(compressedBase64);
+            // Calculate saved size for user feedback
+            const sizeInKB = Math.round(compressedBase64.length / 1024);
+            toast.success(`Compressed & Saved! (${sizeInKB}KB)`);
+            setIsLoading(false);
         } catch (error) {
             console.error("Upload failed", error);
             toast.error("Upload failed. Try again.");
-        } finally {
             setIsLoading(false);
         }
     };

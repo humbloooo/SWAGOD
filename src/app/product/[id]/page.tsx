@@ -16,6 +16,7 @@ export default function ProductPage() {
     const [product, setProduct] = useState<Product | null>(null);
     const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
     const [selectedSize, setSelectedSize] = useState<string | undefined>(undefined);
+    const [selectedImage, setSelectedImage] = useState<string | undefined>(undefined);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -52,14 +53,38 @@ export default function ProductPage() {
             <div className="container mx-auto px-6">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-24">
                     {/* Image */}
-                    <div className="relative aspect-[3/4] lg:aspect-square border border-black max-h-[80vh]">
-                        <Image
-                            src={product.image}
-                            alt={product.title}
-                            fill
-                            className="object-cover"
-                            priority
-                        />
+                    {/* Gallery Section */}
+                    <div className="flex flex-col gap-4">
+                        {/* Main Image */}
+                        <div className="relative aspect-[3/4] lg:aspect-square border border-black max-h-[80vh] overflow-hidden">
+                            <Image
+                                src={selectedImage || product.image || "/assets/placeholder.png"}
+                                alt={product.title}
+                                fill
+                                className="object-cover transition-all duration-500"
+                                priority
+                            />
+                        </div>
+
+                        {/* Formatting: Thumbnails */}
+                        {product.images && product.images.length > 0 && (
+                            <div className="grid grid-cols-4 gap-2">
+                                {product.images.map((img, idx) => (
+                                    <button
+                                        key={idx}
+                                        onClick={() => setSelectedImage(img)}
+                                        className={`relative aspect-square border overflow-hidden transition-all ${selectedImage === img ? "border-black opacity-100" : "border-transparent opacity-60 hover:opacity-100"}`}
+                                    >
+                                        <Image
+                                            src={img}
+                                            alt={`View ${idx + 1}`}
+                                            fill
+                                            className="object-cover"
+                                        />
+                                    </button>
+                                ))}
+                            </div>
+                        )}
                     </div>
 
                     {/* Details */}

@@ -62,7 +62,7 @@ function ProductCard({ product, index, addItem }: { product: Product, index: num
         >
             <Link href={`/product/${product.id}`} className="block relative w-full h-full overflow-hidden bg-surface">
                 <Image
-                    src={product.image}
+                    src={product.image || "/assets/placeholder.png"}
                     alt={product.title}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-105"

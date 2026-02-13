@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Product } from "@/lib/data";
 import ImageUpload from "@/components/admin/ImageUpload";
+import MultiImageUpload from "@/components/admin/MultiImageUpload";
 
 export default function AdminProducts() {
     const [products, setProducts] = useState<Product[]>([]);
@@ -103,19 +104,16 @@ export default function AdminProducts() {
                                 </div>
                                 <div>
                                     <label className="block mb-1">Product Image</label>
-                                    <div className="mt-2">
-                                        <ImageUpload
-                                            value={currentProduct.image}
-                                            onChange={(url) => setCurrentProduct({ ...currentProduct, image: url })}
-                                            folder="products"
-                                        />
-                                    </div>
-                                    {/* Fallback text input if needed */}
-                                    <input
-                                        className="w-full border p-2 mt-2 text-xs text-gray-500"
-                                        placeholder="Or paste URL manually"
-                                        value={currentProduct.image || ""}
-                                        onChange={e => setCurrentProduct({ ...currentProduct, image: e.target.value })}
+                                    <MultiImageUpload
+                                        values={currentProduct.images || (currentProduct.image ? [currentProduct.image] : [])}
+                                        onChange={(urls) => {
+                                            setCurrentProduct({
+                                                ...currentProduct,
+                                                images: urls,
+                                                image: urls[0] || "" // Keep main image synced with first gallery image
+                                            });
+                                        }}
+                                        folder="products"
                                     />
                                 </div>
                                 <div>

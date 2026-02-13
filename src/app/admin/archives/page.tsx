@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import ImageUpload from "@/components/admin/ImageUpload";
 
 export default function AdminArchives() {
     const [archives, setArchives] = useState<any[]>([]);
@@ -58,12 +59,18 @@ export default function AdminArchives() {
                                     />
                                 </div>
                                 <div>
-                                    <label className="block mb-1">Image Path</label>
+                                    <label className="block mb-1">Archive Image</label>
+                                    <ImageUpload
+                                        value={newItem.image}
+                                        onChange={(url) => setNewItem({ ...newItem, image: url })}
+                                        folder="archives"
+                                    />
+                                    {/* Fallback */}
                                     <input
-                                        className="w-full border p-2"
+                                        className="w-full border p-2 mt-2 text-xs text-gray-400"
+                                        placeholder="Or paste URL..."
                                         value={newItem.image || ""}
                                         onChange={e => setNewItem({ ...newItem, image: e.target.value })}
-                                        required
                                     />
                                 </div>
                                 <div>
