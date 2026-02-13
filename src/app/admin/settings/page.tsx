@@ -130,8 +130,7 @@ export default function AdminSettings() {
                         </div>
                     </div>
 
-                        </div>
-                    </div>
+
 
                     <div className="bg-surface border border-black p-8">
                         <h3 className="font-bold uppercase mb-6">Marquee Banner</h3>
@@ -184,7 +183,7 @@ export default function AdminSettings() {
                     </button>
                 </form >
             </div >
-        <Navigation />
+            <Navigation />
         </main >
     );
 }
