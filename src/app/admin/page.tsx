@@ -56,6 +56,12 @@ export default async function AdminPage() {
                         <div className="mt-4 text-xs font-mono">ADD / EDIT / DELETE</div>
                     </Link>
 
+                    <Link href="/admin/tour" className="p-8 border border-black bg-surface hover:bg-black hover:text-white transition-colors group">
+                        <h3 className="font-mono text-gray-500 group-hover:text-gray-400 mb-2">EVENTS</h3>
+                        <p className="text-2xl font-bold uppercase">Tours</p>
+                        <div className="mt-4 text-xs font-mono">DATES / VENUES</div>
+                    </Link>
+
                     <Link href="/admin/archives" className="p-8 border border-black bg-surface hover:bg-black hover:text-white transition-colors group">
                         <h3 className="font-mono text-gray-500 group-hover:text-gray-400 mb-2">CONTENT</h3>
                         <p className="text-2xl font-bold uppercase">Archives</p>

@@ -7,6 +7,7 @@ export interface Product {
     description: string;
     sizes?: string[]; // New for Phase 2
     images?: string[]; // New for Gallery Support
+    createdAt?: string; // ISO String for "Newest" sorting
 }
 
 export interface CartItem extends Product {
@@ -16,6 +17,7 @@ export interface CartItem extends Product {
 
 export interface SiteSettings {
     heroImage?: string; // New field for Hero Wallpaper
+    latestDropsLimit?: number; // Control number of items on home page
     footerText: string;
     socials: {
         instagram: string;
@@ -30,4 +32,13 @@ export interface Feedback {
     email: string;
     message: string;
     date: string;
+}
+
+export interface TourEvent {
+    id: string;
+    date: string; // ISO String
+    city: string;
+    venue: string;
+    ticketLink?: string;
+    soldOut?: boolean;
 }

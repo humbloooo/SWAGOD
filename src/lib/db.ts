@@ -1,5 +1,5 @@
 import { firestore } from './firebase-admin';
-import { Product, SiteSettings, Feedback } from './types';
+import { Product, SiteSettings, Feedback, TourEvent } from './types';
 
 // Enforce Firestore collection names
 const PRODUCTS_COLLECTION = 'products';
@@ -9,6 +9,7 @@ const PROMOS_COLLECTION = 'promos';
 const SETTINGS_COLLECTION = 'settings';
 const ABOUT_COLLECTION = 'about';
 const ADMINS_COLLECTION = 'admins'; // New collection for authorized admin emails
+const TOURS_COLLECTION = 'tours';
 
 export async function isUserAdmin(email: string): Promise<boolean> {
     if (!email) return false;
@@ -58,10 +59,13 @@ export async function getProductById(id: string): Promise<Product | null> {
 // Replaces saveProducts (bulk) with specific operations
 export async function addProduct(product: Product): Promise<void> {
     // If ID is provided, use it, otherwise auto-gen
+    const now = new Date().toISOString();
+    const data = { ...product, createdAt: product.createdAt || now };
+
     if (product.id) {
-        await firestore.collection(PRODUCTS_COLLECTION).doc(product.id).set(product);
+        await firestore.collection(PRODUCTS_COLLECTION).doc(product.id).set(data, { merge: true });
     } else {
-        await firestore.collection(PRODUCTS_COLLECTION).add(product);
+        await firestore.collection(PRODUCTS_COLLECTION).add(data);
     }
 }
 
@@ -185,4 +189,28 @@ export async function getAbout(): Promise<any> {
 
 export async function saveAbout(data: any): Promise<void> {
     await firestore.collection(ABOUT_COLLECTION).doc('main').set(data, { merge: true });
+}
+
+// --- TOURS ---
+
+export async function getTours(): Promise<TourEvent[]> {
+    try {
+        const snapshot = await firestore.collection(TOURS_COLLECTION).orderBy('date', 'asc').get();
+        return snapshot.docs.map((doc: any) => ({ id: doc.id, ...doc.data() } as TourEvent));
+    } catch (error) {
+        console.error("Error fetching tours:", error);
+        return [];
+    }
+}
+
+export async function addTour(tour: TourEvent): Promise<void> {
+    if (tour.id) {
+        await firestore.collection(TOURS_COLLECTION).doc(tour.id).set(tour);
+    } else {
+        await firestore.collection(TOURS_COLLECTION).add(tour);
+    }
+}
+
+export async function deleteTour(id: string): Promise<void> {
+    await firestore.collection(TOURS_COLLECTION).doc(id).delete();
 }

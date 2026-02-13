@@ -8,9 +8,17 @@ import FeedbackForm from "@/components/FeedbackForm";
 import { getProducts, getAbout, getSettings } from "@/lib/db";
 
 export default async function Home() {
-  const products = await getProducts();
+  const allProducts = await getProducts();
   const aboutData = await getAbout();
   const settings = await getSettings();
+
+  // Top Newest Releases (Dynamic Limit, default 7)
+  const limit = settings?.latestDropsLimit || 7;
+
+  // Sort by createdAt desc (newest first). Fallback to empty string if undefined.
+  const products = allProducts
+    .sort((a, b) => (b.createdAt || "").localeCompare(a.createdAt || ""))
+    .slice(0, limit);
 
   return (
     <main className="min-h-screen pb-[60px] bg-background">

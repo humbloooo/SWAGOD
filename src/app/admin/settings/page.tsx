@@ -130,6 +130,22 @@ export default function AdminSettings() {
                         </div>
                     </div>
 
+                    <div className="bg-surface border border-black p-8">
+                        <h3 className="font-bold uppercase mb-6">Latest Drops</h3>
+                        <div className="space-y-4">
+                            <div className="mb-6">
+                                <label className="block mb-1">Latest Drops Limit (Min 3)</label>
+                                <input
+                                    type="number"
+                                    min="3"
+                                    className="w-full border p-2"
+                                    value={settings.latestDropsLimit || 7}
+                                    onChange={e => setSettings({ ...settings, latestDropsLimit: Math.max(3, parseInt(e.target.value) || 3) })}
+                                />
+                            </div>
+                        </div>
+                    </div>
+
                     <button
                         type="submit"
                         className="w-full py-4 bg-black text-white font-bold uppercase tracking-widest hover:bg-primary transition-colors"
