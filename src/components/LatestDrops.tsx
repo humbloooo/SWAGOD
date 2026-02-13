@@ -14,6 +14,8 @@ interface LatestDropsProps {
 
 export default function LatestDrops({ products }: LatestDropsProps) {
     const addItem = useCartStore((state) => state.addItem) as (product: any) => void;
+    // Double check sorting here just in case
+    const sortedProducts = [...products].sort((a, b) => (b.createdAt || "").localeCompare(a.createdAt || ""));
 
     return (
         <section id="latest-drops" className="py-24 bg-background border-t border-gray-100">
@@ -29,7 +31,7 @@ export default function LatestDrops({ products }: LatestDropsProps) {
             {/* CLOTHING SECTION */}
             <h3 className="text-2xl font-bold uppercase mb-8 px-4 border-l-4 border-primary ml-4">Clothing</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4 mb-16">
-                {products.filter(p => p.category === 'clothing').map((product, index) => (
+                {sortedProducts.filter(p => p.category === 'clothing').map((product, index) => (
                     <ProductCard key={product.id} product={product} index={index} addItem={addItem} />
                 ))}
             </div>
@@ -37,7 +39,7 @@ export default function LatestDrops({ products }: LatestDropsProps) {
             {/* MERCH/ACCESSORIES SECTION */}
             <h3 className="text-2xl font-bold uppercase mb-8 px-4 border-l-4 border-primary ml-4">Merch & Accessories</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4">
-                {products.filter(p => p.category === 'accessories' || p.category === 'merch').map((product, index) => (
+                {sortedProducts.filter(p => p.category === 'accessories' || p.category === 'merch').map((product, index) => (
                     <ProductCard key={product.id} product={product} index={index} addItem={addItem} />
                 ))}
             </div>

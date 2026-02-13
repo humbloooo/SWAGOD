@@ -96,10 +96,11 @@ export async function getArchives(): Promise<any[]> {
 }
 
 export async function addArchive(item: any): Promise<void> {
+    const data = { ...item, date: item.date || new Date().toISOString() };
     if (item.id) {
-        await firestore.collection(ARCHIVES_COLLECTION).doc(item.id).set(item);
+        await firestore.collection(ARCHIVES_COLLECTION).doc(item.id).set(data);
     } else {
-        await firestore.collection(ARCHIVES_COLLECTION).add(item);
+        await firestore.collection(ARCHIVES_COLLECTION).add(data);
     }
 }
 

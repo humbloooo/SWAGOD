@@ -34,6 +34,7 @@ export default function AdminArchives() {
                     setArchives(updated);
                     setIsEditing(false);
                     setNewItem({});
+                    window.location.reload();
                     return 'Archive added!';
                 },
                 error: 'Failed to add archive'
