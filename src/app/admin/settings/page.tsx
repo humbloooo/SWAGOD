@@ -130,6 +130,36 @@ export default function AdminSettings() {
                         </div>
                     </div>
 
+                        </div>
+                    </div>
+
+                    <div className="bg-surface border border-black p-8">
+                        <h3 className="font-bold uppercase mb-6">Marquee Banner</h3>
+                        <div className="space-y-4">
+                            <label className="flex items-center gap-2 border p-4 cursor-pointer hover:bg-gray-100">
+                                <input
+                                    type="checkbox"
+                                    checked={settings.showMarquee || false}
+                                    onChange={(e) => setSettings({ ...settings, showMarquee: e.target.checked })}
+                                />
+                                <span className="font-bold uppercase">Show Banner</span>
+                            </label>
+
+                            {settings.showMarquee && (
+                                <div>
+                                    <label className="block text-xs font-mono uppercase mb-2">Banner Text (use // to separate)</label>
+                                    <input
+                                        type="text"
+                                        value={settings.marqueeText || ""}
+                                        onChange={(e) => setSettings({ ...settings, marqueeText: e.target.value })}
+                                        placeholder="WORLDWIDE SHIPPING // NEW DROP AVAILABLE"
+                                        className="w-full p-3 border border-gray-200 focus:border-black outline-none font-mono text-sm"
+                                    />
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
                     <div className="bg-surface border border-black p-8">
                         <h3 className="font-bold uppercase mb-6">Latest Drops</h3>
                         <div className="space-y-4">
@@ -152,9 +182,9 @@ export default function AdminSettings() {
                     >
                         Save Changes
                     </button>
-                </form>
-            </div>
-            <Navigation />
-        </main>
+                </form >
+            </div >
+        <Navigation />
+        </main >
     );
 }

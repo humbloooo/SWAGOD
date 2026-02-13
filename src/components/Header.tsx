@@ -27,28 +27,19 @@ export default function Header() {
         setMounted(true);
     }, []);
 
+    const [settings, setSettings] = useState<any>(null);
+
+    useEffect(() => {
+        setMounted(true);
+        fetch("/api/settings").then(res => res.json()).then(data => setSettings(data));
+    }, []);
+
     const itemCount = mounted ? cartItems.reduce((acc, item) => acc + item.quantity, 0) : 0;
+    const marqueeText = settings?.marqueeText || "WORLDWIDE SHIPPING AVAILABLE // FREE SHIPPING ON ORDERS OVER R2000 // NEW DROP: 'FUTURE REFLECTION' LIVE NOW // LIMITED QUANTITIES // WORLDWIDE SHIPPING AVAILABLE // FREE SHIPPING ON ORDERS OVER R2000";
 
     return (
         <>
-            {/* MARQUEE BANNER */}
-            <div className="fixed top-0 left-0 w-full z-[60] bg-primary text-white text-[10px] font-bold py-1 overflow-hidden whitespace-nowrap">
-                <div className="animate-marquee inline-block">
-                    <span className="mx-4">WORLDWIDE SHIPPING AVAILABLE</span>
-                    <span className="mx-4">//</span>
-                    <span className="mx-4">FREE SHIPPING ON ORDERS OVER R2000</span>
-                    <span className="mx-4">//</span>
-                    <span className="mx-4">NEW DROP: "FUTURE REFLECTION" LIVE NOW</span>
-                    <span className="mx-4">//</span>
-                    <span className="mx-4">LIMITED QUANTITIES</span>
-                    <span className="mx-4">//</span>
-                    <span className="mx-4">WORLDWIDE SHIPPING AVAILABLE</span>
-                    <span className="mx-4">//</span>
-                    <span className="mx-4">FREE SHIPPING ON ORDERS OVER R2000</span>
-                </div>
-            </div>
-
-            <header className="fixed top-6 left-0 w-full h-16 bg-primary z-50 flex items-center justify-between px-6 shadow-md">
+            <header className="fixed top-0 left-0 w-full h-16 bg-primary z-50 flex items-center justify-between px-6 shadow-md">
                 <Link href="/" className="text-white font-black text-xl tracking-tighter">
                     SWAGOD
                 </Link>
@@ -73,6 +64,17 @@ export default function Header() {
                     </button>
                 </div>
             </header>
+
+            {/* MARQUEE BANNER - Dynamic */}
+            {settings?.showMarquee && (
+                <div className="fixed top-16 left-0 w-full z-[40] bg-black text-white text-[10px] font-bold py-1 overflow-hidden whitespace-nowrap border-b border-gray-800">
+                    <div className="animate-marquee inline-block">
+                        <span className="mx-4">{marqueeText}</span>
+                        <span className="mx-4">//</span>
+                        <span className="mx-4">{marqueeText}</span>
+                    </div>
+                </div>
+            )}
 
             <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
 
