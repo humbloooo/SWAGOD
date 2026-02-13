@@ -7,6 +7,8 @@ import BackToTop from "@/components/BackToTop";
 import FeedbackForm from "@/components/FeedbackForm";
 import { getProducts, getAbout, getSettings } from "@/lib/db";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   const allProducts = await getProducts();
   const aboutData = await getAbout();

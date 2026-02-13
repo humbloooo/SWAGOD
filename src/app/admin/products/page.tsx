@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Product } from "@/lib/data";
 import ImageUpload from "@/components/admin/ImageUpload";
 import MultiImageUpload from "@/components/admin/MultiImageUpload";
+import { toast } from "sonner";
 
 export default function AdminProducts() {
     const [products, setProducts] = useState<Product[]>([]);
@@ -21,32 +22,58 @@ export default function AdminProducts() {
         e.preventDefault();
         const method = currentProduct.id ? "PUT" : "POST";
 
-        const res = await fetch("/api/products", {
-            method,
-            body: JSON.stringify(currentProduct),
+        const promise = new Promise(async (resolve, reject) => {
+            try {
+                const res = await fetch("/api/products", {
+                    method,
+                    body: JSON.stringify(currentProduct),
+                });
+
+                if (!res.ok) {
+                    const error = await res.json();
+                    throw new Error(error.error || "Failed to save product");
+                }
+
+                resolve(res);
+            } catch (err) {
+                reject(err);
+            }
         });
 
-        if (res.ok) {
-            // Refresh
-            const updated = await fetch("/api/products").then(r => r.json());
-            setProducts(updated);
-            setIsEditing(false);
-            setCurrentProduct({});
-        }
+        toast.promise(promise, {
+            loading: 'Saving product...',
+            success: async () => {
+                // Refresh
+                const updated = await fetch("/api/products").then(r => r.json());
+                setProducts(updated);
+                setIsEditing(false);
+                setCurrentProduct({});
+                return 'Product saved successfully!';
+            },
+            error: (err: any) => `Error: ${err.message}`
+        });
     };
 
     const handleDelete = async (id: string) => {
         if (!confirm("Delete this product?")) return;
 
-        const res = await fetch(`/api/products?id=${id}`, {
-            method: "DELETE",
-        });
-
-        if (res.ok) {
-            setProducts(products.filter(p => p.id !== id));
-        } else {
-            alert("Failed to delete product");
-        }
+        toast.promise(
+            async () => {
+                const res = await fetch(`/api/products?id=${id}`, {
+                    method: "DELETE",
+                });
+                if (!res.ok) throw new Error("Failed to delete");
+                return res;
+            },
+            {
+                loading: 'Deleting product...',
+                success: () => {
+                    setProducts(products.filter(p => p.id !== id));
+                    return 'Product deleted';
+                },
+                error: 'Failed to delete product'
+            }
+        );
     };
 
     return (

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { toast } from "sonner";
 
 export default function AdminAbout() {
     const [data, setData] = useState<any>({ heading: "", paragraphs: [], footer: "" });
@@ -13,11 +14,21 @@ export default function AdminAbout() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        await fetch("/api/about", {
-            method: "POST",
-            body: JSON.stringify(data),
-        });
-        alert("Saved!");
+        toast.promise(
+            async () => {
+                const res = await fetch("/api/about", {
+                    method: "POST",
+                    body: JSON.stringify(data),
+                });
+                if (!res.ok) throw new Error("Failed to save");
+                return res;
+            },
+            {
+                loading: 'Saving about page...',
+                success: 'About page updated!',
+                error: 'Failed to save'
+            }
+        );
     };
 
     const updateParagraph = (index: number, value: string) => {

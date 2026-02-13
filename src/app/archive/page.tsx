@@ -3,6 +3,8 @@ import Navigation from "@/components/Navigation";
 import Image from "next/image";
 import { getArchives } from "@/lib/db";
 
+export const dynamic = "force-dynamic";
+
 export default async function Archive() {
     const archives = await getArchives();
 

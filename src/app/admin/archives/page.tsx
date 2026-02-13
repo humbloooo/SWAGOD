@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import ImageUpload from "@/components/admin/ImageUpload";
+import { toast } from "sonner";
 
 export default function AdminArchives() {
     const [archives, setArchives] = useState<any[]>([]);
@@ -16,17 +17,28 @@ export default function AdminArchives() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const res = await fetch("/api/archives", {
-            method: "POST",
-            body: JSON.stringify(newItem),
-        });
 
-        if (res.ok) {
-            const updated = await fetch("/api/archives").then(r => r.json());
-            setArchives(updated);
-            setIsEditing(false);
-            setNewItem({});
-        }
+        toast.promise(
+            async () => {
+                const res = await fetch("/api/archives", {
+                    method: "POST",
+                    body: JSON.stringify(newItem),
+                });
+                if (!res.ok) throw new Error("Failed to add archive");
+                return res;
+            },
+            {
+                loading: 'Adding archive...',
+                success: async () => {
+                    const updated = await fetch("/api/archives").then(r => r.json());
+                    setArchives(updated);
+                    setIsEditing(false);
+                    setNewItem({});
+                    return 'Archive added!';
+                },
+                error: 'Failed to add archive'
+            }
+        );
     };
 
     return (
@@ -101,8 +113,20 @@ export default function AdminArchives() {
                                     onClick={async (e) => {
                                         e.stopPropagation();
                                         if (!confirm("Delete?")) return;
-                                        await fetch(`/api/archives?id=${item.id}`, { method: "DELETE" });
-                                        setArchives(archives.filter(a => a.id !== item.id));
+                                        toast.promise(
+                                            async () => {
+                                                const res = await fetch(`/api/archives?id=${item.id}`, { method: "DELETE" });
+                                                if (!res.ok) throw new Error("Failed");
+                                            },
+                                            {
+                                                loading: 'Deleting...',
+                                                success: () => {
+                                                    setArchives(archives.filter(a => a.id !== item.id));
+                                                    return 'Deleted';
+                                                },
+                                                error: 'Failed to delete'
+                                            }
+                                        );
                                     }}
                                     className="text-red-500 hover:text-red-400 uppercase font-black"
                                 >

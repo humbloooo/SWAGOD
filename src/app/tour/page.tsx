@@ -4,6 +4,8 @@ import Navigation from "@/components/Navigation";
 import Link from "next/link";
 import { getTours } from "@/lib/db";
 
+export const dynamic = "force-dynamic";
+
 export default async function Tour() {
     const tours = await getTours();
 
