@@ -144,6 +144,28 @@ export default function AdminProducts() {
                                     />
                                 </div>
                                 <div>
+                                    <label className="block mb-1">Sizes Available</label>
+                                    <div className="flex gap-4 flex-wrap">
+                                        {["S", "M", "L", "XL", "XXL"].map(size => (
+                                            <label key={size} className="flex items-center gap-2 border p-2 cursor-pointer hover:bg-gray-100">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={currentProduct.sizes?.includes(size) || false}
+                                                    onChange={(e) => {
+                                                        const currentSizes = currentProduct.sizes || [];
+                                                        if (e.target.checked) {
+                                                            setCurrentProduct({ ...currentProduct, sizes: [...currentSizes, size] });
+                                                        } else {
+                                                            setCurrentProduct({ ...currentProduct, sizes: currentSizes.filter(s => s !== size) });
+                                                        }
+                                                    }}
+                                                />
+                                                <span className="font-bold">{size}</span>
+                                            </label>
+                                        ))}
+                                    </div>
+                                </div>
+                                <div>
                                     <label className="block mb-1">Description</label>
                                     <textarea
                                         className="w-full border p-2 h-32"

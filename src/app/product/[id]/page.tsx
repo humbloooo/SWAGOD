@@ -125,6 +125,12 @@ export default function ProductPage() {
                             </div>
                         )}
 
+                        <div className="mb-6">
+                            <button className="text-xs font-bold uppercase underline hover:text-primary transition-colors">
+                                HAVE A PROMO CODE?
+                            </button>
+                        </div>
+
                         <AddToCartButton product={product} selectedSize={selectedSize} />
 
                         <div className="pt-8 text-xs font-mono text-gray-400">

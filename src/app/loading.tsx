@@ -5,8 +5,9 @@ export default function Loading() {
                 //
             </div>
             <div className="mt-4 font-mono text-sm uppercase text-gray-400 animate-pulse">
-                Loading Assets...
+                <div className="mt-4 font-mono text-sm uppercase text-gray-400 animate-pulse">
+                    Taking you there...
+                </div>
             </div>
-        </div>
-    );
+            );
 }

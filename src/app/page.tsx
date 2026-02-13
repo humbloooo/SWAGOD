@@ -18,9 +18,10 @@ export default async function Home() {
   const limit = settings?.latestDropsLimit || 7;
 
   // Sort by createdAt desc (newest first). Fallback to empty string if undefined.
+  // Sort by createdAt desc (newest first). Fallback to empty string if undefined.
   const products = allProducts
-    .sort((a, b) => (b.createdAt || "").localeCompare(a.createdAt || ""))
-    .slice(0, limit);
+    .sort((a, b) => (b.createdAt || "").localeCompare(a.createdAt || ""));
+  // .slice(0, limit); // MOVED SLICING TO COMPONENT PER CATEGORY
 
   return (
     <main className="min-h-screen pb-[60px] bg-background">
