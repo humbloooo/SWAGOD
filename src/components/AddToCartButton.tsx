@@ -9,7 +9,7 @@ export default function AddToCartButton({ product, selectedSize }: { product: Pr
         <button
             onClick={() => {
                 // @ts-ignore
-                if (product.sizes && !selectedSize) {
+                if (product.sizes && product.sizes.length > 0 && !selectedSize) {
                     toast.error("PLEASE SELECT A SIZE");
                     return;
                 }
