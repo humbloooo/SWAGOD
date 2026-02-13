@@ -30,19 +30,36 @@ export default function LatestDrops({ products }: LatestDropsProps) {
 
             {/* CLOTHING SECTION */}
             <h3 className="text-2xl font-bold uppercase mb-8 px-4 border-l-4 border-primary ml-4">Clothing</h3>
-            <h3 className="text-2xl font-bold uppercase mb-8 px-4 border-l-4 border-primary ml-4">Clothing</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4 mb-16">
-                {sortedProducts.filter(p => p.category === 'clothing').slice(0, 4).map((product, index) => (
-                    <ProductCard key={product.id} product={product} index={index} addItem={addItem} />
-                ))}
+                {sortedProducts.filter(p => (p.category || "").toLowerCase() === 'clothing').slice(0, 4).length > 0 ? (
+                    sortedProducts.filter(p => (p.category || "").toLowerCase() === 'clothing').slice(0, 4).map((product, index) => (
+                        <ProductCard key={product.id} product={product} index={index} addItem={addItem} />
+                    ))
+                ) : (
+                    <div className="col-span-full py-12 text-center border border-dashed border-gray-300 rounded-lg">
+                        <p className="font-mono text-gray-400 uppercase">No Clothing Drops Yet</p>
+                    </div>
+                )}
             </div>
 
             {/* MERCH/ACCESSORIES SECTION */}
             <h3 className="text-2xl font-bold uppercase mb-8 px-4 border-l-4 border-primary ml-4">Merch & Accessories</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4">
-                {sortedProducts.filter(p => p.category === 'accessories' || p.category === 'merch').slice(0, 4).map((product, index) => (
-                    <ProductCard key={product.id} product={product} index={index} addItem={addItem} />
-                ))}
+                {sortedProducts.filter(p => {
+                    const cat = (p.category || "").toLowerCase();
+                    return cat === 'accessories' || cat === 'merch';
+                }).slice(0, 4).length > 0 ? (
+                    sortedProducts.filter(p => {
+                        const cat = (p.category || "").toLowerCase();
+                        return cat === 'accessories' || cat === 'merch';
+                    }).slice(0, 4).map((product, index) => (
+                        <ProductCard key={product.id} product={product} index={index} addItem={addItem} />
+                    ))
+                ) : (
+                    <div className="col-span-full py-12 text-center border border-dashed border-gray-300 rounded-lg">
+                        <p className="font-mono text-gray-400 uppercase">No Merch Drops Yet</p>
+                    </div>
+                )}
             </div>
 
             <div className="flex justify-center mt-24">

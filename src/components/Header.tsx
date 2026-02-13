@@ -31,7 +31,24 @@ export default function Header() {
 
     return (
         <>
-            <header className="fixed top-0 left-0 w-full h-16 bg-primary z-50 flex items-center justify-between px-6">
+            {/* MARQUEE BANNER */}
+            <div className="fixed top-0 left-0 w-full z-[60] bg-primary text-white text-[10px] font-bold py-1 overflow-hidden whitespace-nowrap">
+                <div className="animate-marquee inline-block">
+                    <span className="mx-4">WORLDWIDE SHIPPING AVAILABLE</span>
+                    <span className="mx-4">//</span>
+                    <span className="mx-4">FREE SHIPPING ON ORDERS OVER R2000</span>
+                    <span className="mx-4">//</span>
+                    <span className="mx-4">NEW DROP: "FUTURE REFLECTION" LIVE NOW</span>
+                    <span className="mx-4">//</span>
+                    <span className="mx-4">LIMITED QUANTITIES</span>
+                    <span className="mx-4">//</span>
+                    <span className="mx-4">WORLDWIDE SHIPPING AVAILABLE</span>
+                    <span className="mx-4">//</span>
+                    <span className="mx-4">FREE SHIPPING ON ORDERS OVER R2000</span>
+                </div>
+            </div>
+
+            <header className="fixed top-6 left-0 w-full h-16 bg-primary z-50 flex items-center justify-between px-6 shadow-md">
                 <Link href="/" className="text-white font-black text-xl tracking-tighter">
                     SWAGOD
                 </Link>
