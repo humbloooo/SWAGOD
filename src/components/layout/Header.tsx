@@ -113,7 +113,7 @@ export default function Header() {
             </motion.header>
 
             {/* MARQUEE BANNER - Dynamic */}
-            {settings?.showMarquee && (
+            {mounted && settings?.showMarquee && (
                 <div className="fixed top-16 left-0 w-full z-[40] bg-black text-white text-[10px] font-bold py-1 overflow-hidden whitespace-nowrap border-b border-gray-800">
                     <div className="animate-marquee inline-block">
                         <span className="mx-4 uppercase">{marqueeText}</span>

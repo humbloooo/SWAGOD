@@ -27,7 +27,7 @@ export default async function Home() {
       <Header />
       <BackgroundBrackets />
       <Hero heroImage={settings?.heroImage} />
-      <About data={aboutData} />
+      {aboutData && <About data={aboutData} />}
       <LatestDrops products={products} />
       <FeedbackForm />
       <Navigation />

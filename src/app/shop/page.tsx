@@ -20,7 +20,10 @@ export default function Shop() {
     const [recentlyViewed, setRecentlyViewed] = useState<Product[]>([]);
     const isLoading = products.length === 0 && !lastFetch;
 
+    const [mounted, setMounted] = useState(false);
+
     useEffect(() => {
+        setTimeout(() => setMounted(true), 0);
         try {
             const stored = localStorage.getItem('recentlyViewed');
             if (stored) {
@@ -84,7 +87,7 @@ export default function Shop() {
                     )}
                 </div>
 
-                {recentlyViewed.length > 0 && (
+                {mounted && recentlyViewed.length > 0 && (
                     <div className="border-t border-white/10 pt-24 mb-24">
                         <h2 className="text-2xl font-black uppercase tracking-widest mb-12">
                             RECENTLY <span className="text-primary">CLASSIFIED</span>

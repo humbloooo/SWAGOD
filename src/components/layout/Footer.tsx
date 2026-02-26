@@ -7,7 +7,10 @@ import { SiteSettings } from "@/lib/types";
 export default function Footer() {
     const [settings, setSettings] = useState<SiteSettings | null>(null);
 
+    const [mounted, setMounted] = useState(false);
+
     useEffect(() => {
+        setTimeout(() => setMounted(true), 0);
         fetch("/api/settings")
             .then(res => res.json())
             .then(data => setSettings(data))
@@ -43,14 +46,14 @@ export default function Footer() {
                     <div>
                         <h4 className="font-bold uppercase mb-6 text-gray-400 text-xs tracking-widest">Connect</h4>
                         <ul className="space-y-4 font-mono text-xs text-gray-300">
-                            {settings?.socials ? (
+                            {mounted && settings?.socials ? (
                                 <>
                                     <li><a href={settings.socials.instagram} target="_blank" className="hover:text-primary transition-colors">INSTAGRAM</a></li>
                                     <li><a href={settings.socials.twitter} target="_blank" className="hover:text-primary transition-colors">TWITTER</a></li>
                                     <li><a href={settings.socials.tiktok} target="_blank" className="hover:text-primary transition-colors">TIKTOK</a></li>
                                 </>
                             ) : (
-                                <li className="text-gray-600">Loading...</li>
+                                <li className="text-gray-600">UNLINKED</li>
                             )}
                         </ul>
                     </div>
@@ -70,7 +73,7 @@ export default function Footer() {
                 </div>
 
                 <div className="pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-mono text-gray-600">
-                    <p>{settings?.footerText || `© ${year} SWAGOD. ALL RIGHTS RESERVED.`}</p>
+                    <p>{(mounted && settings?.footerText) || `© ${year} SWAGOD. ALL RIGHTS RESERVED.`}</p>
                     <div className="flex gap-4">
                         <Link href="/privacy" className="hover:text-primary transition-colors">PRIVACY POLICY</Link>
                         <Link href="/terms" className="hover:text-primary transition-colors">TERMS OF SERVICE</Link>
