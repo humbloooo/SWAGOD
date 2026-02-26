@@ -10,17 +10,22 @@ interface CartState {
     total: () => number;
 }
 
-export const useCartStore = create<CartState>()(
+interface WishlistState {
+    wishlistItems: Product[];
+    addToWishlist: (product: Product) => void;
+    removeFromWishlist: (productId: string) => void;
+    isInWishlist: (productId: string) => boolean;
+}
+
+interface AppState extends CartState, WishlistState { }
+
+export const useAppStore = create<AppState>()(
     persist(
         (set, get) => ({
             items: [],
             addItem: (product, size) => {
                 const currentItems = get().items;
-                // If product has sizes but no size selected, default to 'M' or handle error?
-                // For now, if no size passed but product has sizes, we might need to enforce it in UI.
-                // Here we assume UI creates the unique key.
                 const selectedSize = size || "M";
-
                 const existingItem = currentItems.find((item) => item.id === product.id && item.selectedSize === selectedSize);
 
                 if (existingItem) {
@@ -44,9 +49,26 @@ export const useCartStore = create<CartState>()(
             total: () => {
                 return get().items.reduce((acc, item) => acc + item.price * item.quantity, 0);
             },
+
+            // Wishlist
+            wishlistItems: [],
+            addToWishlist: (product) => {
+                if (!get().wishlistItems.find(p => p.id === product.id)) {
+                    set({ wishlistItems: [...get().wishlistItems, product] });
+                }
+            },
+            removeFromWishlist: (productId) => {
+                set({ wishlistItems: get().wishlistItems.filter(p => p.id !== productId) });
+            },
+            isInWishlist: (productId) => {
+                return get().wishlistItems.some(p => p.id === productId);
+            }
         }),
         {
-            name: 'swagod-cart',
+            name: 'swagod-store',
         }
     )
 );
+
+// Fallback exports for backward compatibility if needed, though we should refactor
+export const useCartStore = useAppStore;

@@ -65,10 +65,11 @@ export default function LoginPage() {
                                 <label className="block font-mono text-xs uppercase mb-1 font-bold text-gray-500">Email</label>
                                 <input
                                     type="text"
-                                    value={email} // Using password state reused or need email state? Standard uses email.
+                                    value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     className="w-full h-12 border border-gray-300 px-4 font-mono text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
                                     placeholder="Enter your email"
+                                    suppressHydrationWarning
                                 />
                             </div>
                             <div>
@@ -79,6 +80,7 @@ export default function LoginPage() {
                                     onChange={(e) => setPassword(e.target.value)}
                                     className="w-full h-12 border border-gray-300 px-4 font-mono text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
                                     placeholder="••••••••"
+                                    suppressHydrationWarning
                                 />
                             </div>
                             <button

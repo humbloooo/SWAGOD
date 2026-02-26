@@ -4,116 +4,104 @@ import { redirect } from "next/navigation";
 import Header from "@/components/Header";
 import Navigation from "@/components/Navigation";
 import Link from "next/link";
+import AdminAnalytics from "@/components/admin/AdminAnalytics";
 
 export default async function AdminPage() {
-    const session = await getServerSession(authOptions);
-
-    if (!session?.user) {
-        redirect("/api/auth/signin?callbackUrl=/admin");
-    }
-
-    // Basic role check (if we had roles working perfectly, for now just existence)
-    // @ts-ignore
-    if (session.user.role !== "admin") {
-        return (
-            <main className="min-h-screen bg-background flex flex-col items-center justify-center p-6 text-center">
-                <Header />
-                <h1 className="text-4xl font-black text-red-600 uppercase mb-4">Access Denied</h1>
-                <p className="font-mono text-gray-600 mb-8 max-w-md">
-                    You are currently logged in as <strong>{session.user.email}</strong>.<br />
-                    This account does not have admin permissions.
-                </p>
-                <div className="flex flex-col gap-4 w-full max-w-sm">
-                    <button
-                        onClick={() => {
-                            // Force signout then redirect to login
-                            window.location.href = "/api/auth/signout?callbackUrl=/login";
-                        }}
-                        className="px-6 py-4 bg-black text-white uppercase font-bold hover:bg-primary transition-colors w-full"
-                    >
-                        Switch Account / Sign Out
-                    </button>
-                    <Link href="/" className="px-6 py-4 border border-black uppercase font-bold hover:bg-gray-100 transition-colors w-full">
-                        Return to Store
-                    </Link>
-                </div>
-            </main>
-        );
-    }
-
     return (
-        <main className="min-h-screen bg-background pb-[60px] pt-24">
-            <Header />
+        <main className="pb-[100px] pt-32">
             <div className="container mx-auto px-6">
-                <h1 className="text-6xl font-black uppercase tracking-tighter mb-12">
-                    Admin // <span className="text-primary">Dashboard</span>
-                </h1>
+                <header className="mb-20">
+                    <h1 className="text-7xl md:text-9xl font-black uppercase tracking-tighter mb-4 leading-none">
+                        SWAGOD // <span className="text-primary italic">ADMIN</span>
+                    </h1>
+                    <p className="text-primary font-mono uppercase tracking-[0.2em] text-sm italic mb-16">AUTHORIZED PERSONNEL ACCESS ONLY</p>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-                    <Link href="/admin/products" className="p-8 border border-black bg-surface hover:bg-black hover:text-white transition-colors group">
-                        <h3 className="font-mono text-gray-500 group-hover:text-gray-400 mb-2">MANAGEMENT</h3>
-                        <p className="text-2xl font-bold uppercase">Products</p>
-                        <div className="mt-4 text-xs font-mono">ADD / EDIT / DELETE</div>
+                    <AdminAnalytics />
+                </header>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
+                    <Link href="/admin/products" className="group relative p-10 border border-white/10 bg-white/5 backdrop-blur-md hover:border-primary transition-all duration-500 overflow-hidden">
+                        <div className="absolute top-0 right-0 p-4 text-white/10 group-hover:text-primary transition-colors">01</div>
+                        <h3 className="font-mono text-primary text-xs uppercase tracking-[0.3em] mb-4">COMMERCE</h3>
+                        <p className="text-3xl font-black uppercase tracking-tight mb-2">PRODUCTS</p>
+                        <p className="text-white/40 font-mono text-[10px] uppercase">MANAGE ACTIVE COLLECTIONS</p>
+                        <div className="mt-8 flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest group-hover:gap-4 transition-all">
+                            ENTER HUB <span className="text-primary">→</span>
+                        </div>
                     </Link>
 
-                    <Link href="/admin/tour" className="p-8 border border-black bg-surface hover:bg-black hover:text-white transition-colors group">
-                        <h3 className="font-mono text-gray-500 group-hover:text-gray-400 mb-2">EVENTS</h3>
-                        <p className="text-2xl font-bold uppercase">Tours</p>
-                        <div className="mt-4 text-xs font-mono">DATES / VENUES</div>
+                    <Link href="/admin/archives" className="group relative p-10 border border-white/10 bg-white/5 backdrop-blur-md hover:border-primary transition-all duration-500 overflow-hidden">
+                        <div className="absolute top-0 right-0 p-4 text-white/10 group-hover:text-primary transition-colors">02</div>
+                        <h3 className="font-mono text-primary text-xs uppercase tracking-[0.3em] mb-4">HISTORY</h3>
+                        <p className="text-3xl font-black uppercase tracking-tight mb-2">ARCHIVES</p>
+                        <p className="text-white/40 font-mono text-[10px] uppercase">LEGACY ENTRY MANAGEMENT</p>
+                        <div className="mt-8 flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest group-hover:gap-4 transition-all">
+                            VIEW ARCHIVE <span className="text-primary">→</span>
+                        </div>
                     </Link>
 
-                    <Link href="/admin/archives" className="p-8 border border-black bg-surface hover:bg-black hover:text-white transition-colors group">
-                        <h3 className="font-mono text-gray-500 group-hover:text-gray-400 mb-2">CONTENT</h3>
-                        <p className="text-2xl font-bold uppercase">Archives</p>
-                        <div className="mt-4 text-xs font-mono">UPLOAD / CAPTION</div>
+                    <Link href="/admin/tour" className="group relative p-10 border border-white/10 bg-white/5 backdrop-blur-md hover:border-primary transition-all duration-500 overflow-hidden">
+                        <div className="absolute top-0 right-0 p-4 text-white/10 group-hover:text-primary transition-colors">03</div>
+                        <h3 className="font-mono text-primary text-xs uppercase tracking-[0.3em] mb-4">LOGISTICS</h3>
+                        <p className="text-3xl font-black uppercase tracking-tight mb-2">TOUR DATES</p>
+                        <p className="text-white/40 font-mono text-[10px] uppercase">GLOBAL SOURCING AND EVENTS</p>
+                        <div className="mt-8 flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest group-hover:gap-4 transition-all">
+                            MANAGE DATES <span className="text-primary">→</span>
+                        </div>
                     </Link>
 
-                    <Link href="/admin/about" className="p-8 border border-black bg-surface hover:bg-black hover:text-white transition-colors group">
-                        <h3 className="font-mono text-gray-500 group-hover:text-gray-400 mb-2">PAGE</h3>
-                        <p className="text-2xl font-bold uppercase">About Us</p>
-                        <div className="mt-4 text-xs font-mono">TEXT EDITING</div>
+                    <Link href="/admin/feedback" className="group relative p-10 border border-white/10 bg-white/5 backdrop-blur-md hover:border-primary transition-all duration-500 overflow-hidden">
+                        <div className="absolute top-0 right-0 p-4 text-white/10 group-hover:text-primary transition-colors">04</div>
+                        <h3 className="font-mono text-primary text-xs uppercase tracking-[0.3em] mb-4">COMMUNICATION</h3>
+                        <p className="text-3xl font-black uppercase tracking-tight mb-2">FEEDBACK</p>
+                        <p className="text-white/40 font-mono text-[10px] uppercase">CLIENT ENQUIRIES & REVIEWS</p>
+                        <div className="mt-8 flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest group-hover:gap-4 transition-all">
+                            VIEW INBOX <span className="text-primary">→</span>
+                        </div>
                     </Link>
 
-                    <Link href="/admin/promos" className="p-8 border border-black bg-surface hover:bg-black hover:text-white transition-colors group">
-                        <h3 className="font-mono text-gray-500 group-hover:text-gray-400 mb-2">SALES</h3>
-                        <p className="text-2xl font-bold uppercase">Promos</p>
-                        <div className="mt-4 text-xs font-mono">DISCOUNT CODES</div>
+                    <Link href="/admin/settings" className="group relative p-10 border border-white/10 bg-white/5 backdrop-blur-md hover:border-primary transition-all duration-500 overflow-hidden">
+                        <div className="absolute top-0 right-0 p-4 text-white/10 group-hover:text-primary transition-colors">05</div>
+                        <h3 className="font-mono text-primary text-xs uppercase tracking-[0.3em] mb-4">INFRASTRUCTURE</h3>
+                        <p className="text-3xl font-black uppercase tracking-tight mb-2">SETTINGS</p>
+                        <p className="text-white/40 font-mono text-[10px] uppercase">CORE SYSTEM CONFIGURATION</p>
+                        <div className="mt-8 flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest group-hover:gap-4 transition-all">
+                            ACCESS CORE <span className="text-primary">→</span>
+                        </div>
                     </Link>
 
-                    <Link href="/admin/settings" className="p-8 border border-black bg-surface hover:bg-black hover:text-white transition-colors group">
-                        <h3 className="font-mono text-gray-500 group-hover:text-gray-400 mb-2">GLOBAL</h3>
-                        <p className="text-2xl font-bold uppercase">Settings</p>
-                        <div className="mt-4 text-xs font-mono">FOOTER / SOCIALS</div>
-                    </Link>
-
-                    <Link href="/admin/feedback" className="p-8 border border-black bg-surface hover:bg-black hover:text-white transition-colors group">
-                        <h3 className="font-mono text-gray-500 group-hover:text-gray-400 mb-2">CLIENTS</h3>
-                        <p className="text-2xl font-bold uppercase">Feedback</p>
-                        <div className="mt-4 text-xs font-mono">MESSAGES / REQUESTS</div>
+                    <Link href="/admin/promos" className="group relative p-10 border border-white/10 bg-white/5 backdrop-blur-md hover:border-primary transition-all duration-500 overflow-hidden">
+                        <div className="absolute top-0 right-0 p-4 text-white/10 group-hover:text-primary transition-colors">06</div>
+                        <h3 className="font-mono text-primary text-xs uppercase tracking-[0.3em] mb-4">MARKETING</h3>
+                        <p className="text-3xl font-black uppercase tracking-tight mb-2">PROMOS</p>
+                        <p className="text-white/40 font-mono text-[10px] uppercase">CAMPAIGN AND OFFERS</p>
+                        <div className="mt-8 flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest group-hover:gap-4 transition-all">
+                            DEPLOY CAMPAIGN <span className="text-primary">→</span>
+                        </div>
                     </Link>
                 </div>
 
-                <div className="mt-12">
-                    <h2 className="text-2xl font-bold uppercase mb-6">Recent Orders</h2>
+                <div className="mt-24 pt-12 border-t border-white/10">
+                    <h2 className="text-3xl font-black uppercase tracking-tighter mb-10 glitch-hover inline-block">RECENT TRANSACTIONS</h2>
                     <div className="overflow-x-auto">
-                        <table className="w-full text-left font-mono text-sm">
+                        <table className="w-full text-left font-mono text-xs uppercase tracking-widest">
                             <thead>
-                                <tr className="border-b-2 border-black">
-                                    <th className="py-4">ORDER ID</th>
-                                    <th className="py-4">CUSTOMER</th>
-                                    <th className="py-4">TOTAL</th>
-                                    <th className="py-4">STATUS</th>
+                                <tr className="border-b border-primary/30 text-primary">
+                                    <th className="py-6 font-black">REFERENCE_ID</th>
+                                    <th className="py-6 font-black">CUSTOMER</th>
+                                    <th className="py-6 font-black">AMOUNT</th>
+                                    <th className="py-6 font-black">STATUS</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody className="text-white/60">
                                 {[1, 2, 3, 4, 5].map((i) => (
-                                    <tr key={i} className="border-b border-gray-200">
-                                        <td className="py-4">#SWG-{1000 + i}</td>
-                                        <td className="py-4">user_{i}@example.com</td>
-                                        <td className="py-4">R {(Math.random() * 100 + 20).toFixed(2)}</td>
-                                        <td className="py-4">
-                                            <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-bold">
-                                                PAID
+                                    <tr key={i} className="border-b border-white/5 hover:bg-white/5 transition-colors group">
+                                        <td className="py-6 font-mono">SWG_RTN_{100 * i}X</td>
+                                        <td className="py-6 italic">USER_ACCOUNT_{i}@SWAGOD.COM</td>
+                                        <td className="py-6">R {(Math.random() * 1000 + 500).toFixed(2)}</td>
+                                        <td className="py-6 text-primary">
+                                            <span className="px-3 py-1 bg-primary/20 text-primary border border-primary/20 text-[10px] font-black glow-primary">
+                                                SUCCESS
                                             </span>
                                         </td>
                                     </tr>
@@ -123,7 +111,6 @@ export default async function AdminPage() {
                     </div>
                 </div>
             </div>
-            <Navigation />
         </main>
     );
 }

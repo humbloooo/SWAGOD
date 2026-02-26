@@ -33,7 +33,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                         animate={{ x: 0 }}
                         exit={{ x: "100%" }}
                         transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                        className="fixed top-0 right-0 h-full w-full max-w-md bg-white z-[70] shadow-2xl flex flex-col"
+                        className="fixed top-0 right-0 h-full w-full max-w-md bg-white/80 backdrop-blur-xl z-[70] shadow-2xl flex flex-col border-l border-white/20"
                     >
                         <div className="flex items-center justify-between p-6 border-b border-gray-100">
                             <h2 className="text-xl font-black uppercase tracking-tighter">Your Cart</h2>

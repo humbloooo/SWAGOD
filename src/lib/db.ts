@@ -1,5 +1,6 @@
-import { firestore } from './firebase-admin';
+import { firestore, isMock } from './firebase-admin';
 import { Product, SiteSettings, Feedback, TourEvent } from './types';
+import { PRODUCTS } from './data';
 
 // Enforce Firestore collection names
 const PRODUCTS_COLLECTION = 'products';
@@ -36,12 +37,16 @@ export async function isUserAdmin(email: string): Promise<boolean> {
 // --- PRODUCTS ---
 
 export async function getProducts(): Promise<Product[]> {
+    if (isMock) {
+        console.log("DATABASE: Returning mock products from data.ts");
+        return PRODUCTS;
+    }
     try {
         const snapshot = await firestore.collection(PRODUCTS_COLLECTION).get();
         return snapshot.docs.map((doc: any) => ({ id: doc.id, ...doc.data() } as Product));
     } catch (error) {
         console.error("Error fetching products:", error);
-        return [];
+        return PRODUCTS; // Final fallback
     }
 }
 

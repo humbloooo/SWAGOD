@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import About from "@/components/About";
 import BackToTop from "@/components/BackToTop";
 import FeedbackForm from "@/components/FeedbackForm";
+import BackgroundBrackets from "@/components/BackgroundBrackets";
 import { getProducts, getAbout, getSettings } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
@@ -26,6 +27,7 @@ export default async function Home() {
   return (
     <main className="min-h-screen pb-[60px] bg-background">
       <Header />
+      <BackgroundBrackets />
       <Hero heroImage={settings?.heroImage} />
       <About data={aboutData} />
       <LatestDrops products={products} />

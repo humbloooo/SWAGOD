@@ -35,6 +35,7 @@ export const metadata: Metadata = {
 import { Providers } from "@/components/Providers";
 import Footer from "@/components/Footer";
 import { Toaster } from "sonner";
+import ScrollProgress from "@/components/ScrollProgress";
 
 export default function RootLayout({
   children,
@@ -48,12 +49,12 @@ export default function RootLayout({
         className={`${interTight.variable} antialiased bg-background text-text selection:bg-primary selection:text-white overflow-x-hidden`}
       >
         <Providers>
+          <div className="grain-overlay" />
+          <div className="scanline-overlay" />
+          <ScrollProgress />
           {children}
           <Footer />
-          <Toaster position="top-center" toastOptions={{
-            className: 'bg-black text-white border border-primary font-mono uppercase',
-            style: { borderRadius: '0px' }
-          }} />
+          <Toaster position="bottom-right" theme="dark" />
         </Providers>
       </body>
     </html>

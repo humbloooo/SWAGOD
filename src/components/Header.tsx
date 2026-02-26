@@ -6,20 +6,28 @@ import { Menu, X, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import CartDrawer from "@/components/CartDrawer";
-import { useCartStore } from "@/lib/store";
+import WishlistDrawer from "@/components/WishlistDrawer";
+import Search from "@/components/Search";
+import { useAppStore } from "@/lib/store";
+import { Search as SearchIcon, Heart } from "lucide-react";
 
 const MENU_LINKS = [
     { name: "HOME", href: "/" },
-    { name: "LATEST DROPS", href: "/#latest-drops" },
+    { name: "COLLECTIONS", href: "/#latest-drops" },
     { name: "SHOP", href: "/shop" },
     { name: "TOUR", href: "/tour" },
-    { name: "ARCHIVE", href: "/archive" },
+    { name: "GALLERY", href: "/archive" },
 ];
 
 export default function Header() {
     const [isOpen, setIsOpen] = useState(false);
     const [isCartOpen, setIsCartOpen] = useState(false);
-    const cartItems = useCartStore((state) => state.items);
+    const [isWishlistOpen, setIsWishlistOpen] = useState(false);
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
+
+    const cartItems = useAppStore((state) => state.items);
+    const wishlistItems = useAppStore((state) => state.wishlistItems);
+
     // Hydration fix for persist
     const [mounted, setMounted] = useState(false);
 
@@ -35,32 +43,70 @@ export default function Header() {
     }, []);
 
     const itemCount = mounted ? cartItems.reduce((acc, item) => acc + item.quantity, 0) : 0;
+    const wishlistCount = mounted ? wishlistItems.length : 0;
     const marqueeText = settings?.marqueeText || "WORLDWIDE SHIPPING AVAILABLE // FREE SHIPPING ON ORDERS OVER R2000 // NEW DROP: 'FUTURE REFLECTION' LIVE NOW // LIMITED QUANTITIES // WORLDWIDE SHIPPING AVAILABLE // FREE SHIPPING ON ORDERS OVER R2000";
 
     return (
         <>
             <header className="fixed top-0 left-0 w-full h-16 bg-primary z-50 flex items-center justify-between px-6 shadow-md">
-                <Link href="/" className="text-white font-black text-xl tracking-tighter">
+                <Link href="/" className="text-white font-black text-xl tracking-tighter hover:scale-105 transition-transform">
                     SWAGOD
                 </Link>
 
-                <div className="flex items-center gap-6">
+                <div className="flex items-center gap-4 md:gap-6">
+                    {/* Item 24: Currency Toggle Signal */}
+                    <div className="hidden lg:flex items-center gap-2 font-mono text-[10px] text-white/60 border-r border-white/20 pr-4 mr-2">
+                        <span className="text-white">ZAR</span>
+                        <span className="opacity-40">USD</span>
+                    </div>
+
                     <button
-                        onClick={() => setIsCartOpen(true)}
-                        className="relative text-white hover:opacity-80 transition-opacity"
+                        onClick={() => setIsSearchOpen(true)}
+                        className="text-white hover:opacity-80 transition-opacity"
+                        aria-label="Search Collection"
                     >
-                        <ShoppingBag size={24} />
-                        {itemCount > 0 && (
-                            <span className="absolute -top-2 -right-2 bg-black text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center border border-primary">
-                                {itemCount}
+                        <SearchIcon size={20} className="icon-industrial" />
+                    </button>
+
+                    <button
+                        onClick={() => setIsWishlistOpen(true)}
+                        className="relative text-white hover:opacity-80 transition-opacity"
+                        aria-label="View Saved Items"
+                    >
+                        <Heart size={20} className={cn("icon-industrial", wishlistCount > 0 ? "fill-white" : "")} />
+                        {wishlistCount > 0 && (
+                            <span className="absolute -top-2 -right-2 bg-black text-white text-[8px] font-bold w-4 h-4 rounded-full flex items-center justify-center border border-primary glow-primary">
+                                {wishlistCount}
                             </span>
                         )}
                     </button>
+
+                    <button
+                        onClick={() => setIsCartOpen(true)}
+                        className="group relative flex items-center gap-2 text-white hover:opacity-80 transition-opacity"
+                        aria-label="View Cart"
+                    >
+                        <div className="relative">
+                            <ShoppingBag size={20} className="icon-industrial" />
+                            {itemCount > 0 && (
+                                <span className="absolute -top-2 -right-2 bg-black text-white text-[8px] font-bold w-4 h-4 rounded-full flex items-center justify-center border border-primary glow-primary">
+                                    {itemCount}
+                                </span>
+                            )}
+                        </div>
+                        {mounted && cartItems.length > 0 && (
+                            <span className="hidden sm:block font-mono text-xs font-black">
+                                R {cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0).toFixed(2)}
+                            </span>
+                        )}
+                    </button>
+
                     <button
                         onClick={() => setIsOpen(true)}
-                        className="text-white hover:opacity-80 transition-opacity"
+                        className="text-white hover:opacity-80 transition-opacity pl-4 border-l border-white/20"
+                        aria-label="Open Navigation Menu"
                     >
-                        <Menu size={32} />
+                        <Menu size={28} className="icon-industrial" />
                     </button>
                 </div>
             </header>
@@ -69,14 +115,14 @@ export default function Header() {
             {settings?.showMarquee && (
                 <div className="fixed top-16 left-0 w-full z-[40] bg-black text-white text-[10px] font-bold py-1 overflow-hidden whitespace-nowrap border-b border-gray-800">
                     <div className="animate-marquee inline-block">
-                        <span className="mx-4">{marqueeText}</span>
-                        <span className="mx-4">//</span>
-                        <span className="mx-4">{marqueeText}</span>
+                        <span className="mx-4 uppercase">{marqueeText}</span>
                     </div>
                 </div>
             )}
 
             <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+            <WishlistDrawer isOpen={isWishlistOpen} onClose={() => setIsWishlistOpen(false)} />
+            <Search isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
 
             {/* Mobile Menu Overlay */}
             <AnimatePresence>

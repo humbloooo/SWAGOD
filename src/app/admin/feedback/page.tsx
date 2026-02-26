@@ -2,6 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { Feedback } from "@/lib/types";
+import { Trash2, Mail, User, Calendar, MessageSquare } from "lucide-react";
+import Header from "@/components/Header";
+import Navigation from "@/components/Navigation";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function AdminFeedback() {
     const [feedback, setFeedback] = useState<Feedback[]>([]);
@@ -17,43 +21,81 @@ export default function AdminFeedback() {
             .catch(() => setLoading(false));
     }, []);
 
-    if (loading) return <div className="p-24 text-center">LOADING...</div>;
+    const deleteMessage = async (id: string) => {
+        if (!confirm("DELETE THIS MESSAGE ARCHIVE?")) return;
+        try {
+            await fetch(`/api/feedback?id=${id}`, { method: "DELETE" });
+            setFeedback(feedback.filter(f => f.id !== id));
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    if (loading) return (
+        <div className="min-h-screen flex items-center justify-center">
+            <div className="text-white font-mono animate-pulse tracking-widest text-2xl uppercase">LOADING INTEL...</div>
+        </div>
+    );
 
     return (
-        <main className="min-h-screen bg-background pb-[60px] pt-24 px-6">
-            <div className="container mx-auto">
-                <h1 className="text-4xl font-black uppercase tracking-tighter mb-12">
-                    Client // <span className="text-primary">Feedback</span>
-                </h1>
+        <main className="pb-[100px] pt-32 px-6">
+            <div className="container mx-auto max-w-6xl">
+                <header className="mb-16">
+                    <h1 className="text-6xl md:text-8xl font-black uppercase tracking-tighter mb-4 leading-none glitch-hover inline-block">
+                        FEEDBACK
+                    </h1>
+                    <p className="text-primary font-mono uppercase tracking-[0.2em] text-sm">ARCHIVED CLIENT TRANSMISSIONS</p>
+                </header>
 
-                <div className="space-y-4">
-                    {feedback.length === 0 && <p className="text-gray-500 font-mono">No feedback received yet.</p>}
-                    {feedback.map((item) => (
-                        <div key={item.id} className="border border-black p-6 bg-surface">
-                            <div className="flex justify-between items-start mb-4">
-                                <div>
-                                    <h3 className="font-bold text-lg uppercase">{item.name}</h3>
-                                    <p className="font-mono text-sm text-gray-500">{item.email}</p>
-                                </div>
-                                <span className="font-mono text-xs text-gray-400">
-                                    {new Date(item.date).toLocaleDateString()}
-                                </span>
-                            </div>
-                            <p className="font-mono text-sm leading-relaxed whitespace-pre-wrap mb-4">
-                                {item.message}
-                            </p>
-                            <button
-                                onClick={async () => {
-                                    if (!confirm("Delete this message?")) return;
-                                    await fetch(`/api/feedback?id=${item.id}`, { method: "DELETE" });
-                                    setFeedback(feedback.filter(f => f.id !== item.id));
-                                }}
-                                className="text-xs font-bold text-red-500 underline"
-                            >
-                                DELETE MESSAGE
-                            </button>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    {feedback.length === 0 && (
+                        <div className="col-span-full py-24 border border-white/10 flex flex-col items-center justify-center space-y-4">
+                            <MessageSquare size={48} className="text-white/20" />
+                            <p className="text-white/30 font-mono uppercase italic tracking-widest text-center">NO DATA RECOVERED.</p>
                         </div>
-                    ))}
+                    )}
+
+                    <AnimatePresence mode="popLayout">
+                        {feedback.map((item, idx) => (
+                            <motion.div
+                                key={item.id}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, scale: 0.95 }}
+                                transition={{ delay: idx * 0.05 }}
+                                className="group relative border border-white/10 bg-white/5 backdrop-blur-md p-8 hover:border-primary transition-all duration-500 overflow-hidden"
+                            >
+                                <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <button
+                                        onClick={() => deleteMessage(item.id)}
+                                        className="p-2 text-red-500 hover:bg-red-500/10 transition-colors"
+                                    >
+                                        <Trash2 size={20} />
+                                    </button>
+                                </div>
+
+                                <div className="space-y-6">
+                                    <div className="flex flex-wrap gap-4 text-[10px] font-mono uppercase tracking-widest text-white/50">
+                                        <div className="flex items-center gap-2 border border-white/10 px-2 py-1 bg-white/5">
+                                            <User size={12} className="text-primary" /> {item.name}
+                                        </div>
+                                        <div className="flex items-center gap-2 border border-white/10 px-2 py-1 bg-white/5">
+                                            <Calendar size={12} className="text-primary" /> {new Date(item.date).toLocaleDateString()}
+                                        </div>
+                                        <div className="flex items-center gap-2 border border-white/10 px-2 py-1 bg-white/5">
+                                            <Mail size={12} className="text-primary" /> {item.email}
+                                        </div>
+                                    </div>
+
+                                    <div className="relative">
+                                        <p className="font-mono text-sm leading-relaxed text-white/80 whitespace-pre-wrap pl-6 border-l-2 border-primary/30 group-hover:border-primary transition-colors">
+                                            {item.message}
+                                        </p>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </AnimatePresence>
                 </div>
             </div>
         </main>

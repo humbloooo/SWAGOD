@@ -1,25 +1,57 @@
-import { useCartStore } from "@/lib/store";
-import { Product } from "@/lib/types";
-import { toast } from "sonner";
+"use client";
 
-export default function AddToCartButton({ product, selectedSize }: { product: Product, selectedSize?: string }) {
-    const addItem = useCartStore((state) => state.addItem) as (product: any, size?: string) => void;
+import { Product } from "@/lib/types";
+import { useAppStore } from "@/lib/store";
+import { useState } from "react";
+import { toast } from "sonner";
+import { ShoppingBag, Loader2 } from "lucide-react";
+import { motion } from "framer-motion";
+
+interface AddToCartButtonProps {
+    product: Product;
+    selectedSize?: string;
+    className?: string;
+}
+
+export default function AddToCartButton({ product, selectedSize, className }: AddToCartButtonProps) {
+    const addItem = useAppStore((state) => state.addItem);
+    const [isAdding, setIsAdding] = useState(false);
+
+    const handleAddToCart = () => {
+        if (product.sizes && product.sizes.length > 0 && !selectedSize) {
+            toast.error("PLEASE SELECT A SIZE", {
+                className: "font-mono font-bold uppercase",
+            });
+            return;
+        }
+
+        setIsAdding(true);
+
+        // Simulate a small delay for premium feel
+        setTimeout(() => {
+            const sizeToAdd = selectedSize || (product.sizes ? product.sizes[0] : undefined);
+            addItem(product, sizeToAdd);
+            toast.success(`${product.title} ADDED TO CART`, {
+                description: sizeToAdd ? `SIZE: ${sizeToAdd}` : undefined,
+                className: "font-mono font-bold uppercase",
+            });
+            setIsAdding(false);
+        }, 600);
+    };
 
     return (
-        <button
-            onClick={() => {
-                // @ts-ignore
-                if (product.sizes && product.sizes.length > 0 && !selectedSize) {
-                    toast.error("PLEASE SELECT A SIZE");
-                    return;
-                }
-                const sizeToAdd = selectedSize || (product.sizes ? product.sizes[0] : undefined);
-                addItem(product, sizeToAdd);
-                toast.success(`ADDED ${product.title} TO CART`);
-            }}
-            className="w-full py-6 bg-black text-white font-bold uppercase tracking-widest text-xl hover:bg-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        <motion.button
+            whileTap={{ scale: 0.98 }}
+            onClick={handleAddToCart}
+            disabled={isAdding}
+            className={`w-full py-6 bg-black text-white font-bold uppercase tracking-widest text-xl hover:bg-primary transition-all flex items-center justify-center gap-3 disabled:opacity-70 disabled:cursor-not-allowed ${className}`}
         >
-            Add to Order
-        </button>
+            {isAdding ? (
+                <Loader2 size={24} className="animate-spin" />
+            ) : (
+                <ShoppingBag size={24} />
+            )}
+            {isAdding ? "ADDING..." : "ADD TO ORDER"}
+        </motion.button>
     );
 }

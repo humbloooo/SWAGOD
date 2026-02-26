@@ -51,48 +51,52 @@ export default function AdminSettings() {
     if (!settings) return <div className="p-24 text-center">ERROR LOADING SETTINGS</div>;
 
     return (
-        <main className="min-h-screen bg-background pb-[60px] pt-24">
-            <Header />
-            <div className="container mx-auto px-6 max-w-2xl">
-                <h1 className="text-4xl font-black uppercase tracking-tighter mb-12">
-                    Admin // <span className="text-primary">Settings</span>
-                </h1>
+        <main className="pb-[100px] pt-32 px-6 text-white bg-black">
+            <div className="container mx-auto max-w-4xl">
+                <header className="mb-16">
+                    <h1 className="text-6xl md:text-8xl font-black uppercase tracking-tighter mb-4 leading-none">
+                        GLOBAL // <span className="text-primary">CORE</span>
+                    </h1>
+                    <p className="text-primary font-mono uppercase tracking-[0.2em] text-sm italic">SYSTEM CONFIGURATION AND PARAMETERS</p>
+                </header>
 
-                <form onSubmit={handleSubmit} className="space-y-8">
-                    <div className="bg-surface border border-black p-8">
-                        <h3 className="font-bold uppercase mb-6">Footer Content</h3>
-                        <div className="space-y-4">
-                            <div>
-                                <label className="block text-xs font-mono uppercase mb-2">Copyright Text</label>
+                <form onSubmit={handleSubmit} className="space-y-12">
+                    <div className="bg-white/5 border border-white/10 p-10 backdrop-blur-md">
+                        <h3 className="text-xl font-black uppercase mb-8 border-b border-white/10 pb-4 text-primary font-mono">FOOTER_DATA</h3>
+                        <div className="space-y-6">
+                            <div className="space-y-2">
+                                <label className="text-white/40 font-mono text-xs uppercase tracking-widest">COPYRIGHT_STRING</label>
                                 <input
                                     type="text"
                                     value={settings.footerText}
                                     onChange={(e) => setSettings({ ...settings, footerText: e.target.value })}
-                                    className="w-full p-3 border border-gray-200 focus:border-black outline-none font-mono text-sm"
+                                    className="w-full bg-white/5 border border-white/10 p-4 focus:border-primary outline-none transition-all font-mono text-sm"
                                 />
                             </div>
                         </div>
                     </div>
 
-                    <div className="bg-surface border border-black p-8">
-                        <h3 className="font-bold uppercase mb-6">Hero Wallpaper</h3>
-                        <div className="space-y-4">
-                            <div>
-                                <label className="block text-xs font-mono uppercase mb-2">Desktop Background</label>
-                                <ImageUpload
-                                    value={settings.heroImage}
-                                    onChange={(url) => setSettings({ ...settings, heroImage: url })}
-                                    folder="settings"
-                                />
+                    <div className="bg-white/5 border border-white/10 p-10 backdrop-blur-md">
+                        <h3 className="text-xl font-black uppercase mb-8 border-b border-white/10 pb-4 text-primary font-mono">VISUAL_OVERRIDE</h3>
+                        <div className="space-y-6">
+                            <div className="space-y-2">
+                                <label className="text-white/40 font-mono text-xs uppercase tracking-widest">HERO_WALLPAPER_SOURCE</label>
+                                <div className="p-4 border border-white/5 bg-black/20">
+                                    <ImageUpload
+                                        value={settings.heroImage}
+                                        onChange={(url) => setSettings({ ...settings, heroImage: url })}
+                                        folder="settings"
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div className="bg-surface border border-black p-8">
-                        <h3 className="font-bold uppercase mb-6">Social Links</h3>
-                        <div className="space-y-4">
-                            <div>
-                                <label className="block text-xs font-mono uppercase mb-2">Instagram URL</label>
+                    <div className="bg-white/5 border border-white/10 p-10 backdrop-blur-md">
+                        <h3 className="text-xl font-black uppercase mb-8 border-b border-white/10 pb-4 text-primary font-mono">SOCIAL_NODES</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div className="space-y-2">
+                                <label className="text-white/40 font-mono text-xs uppercase tracking-widest">INSTAGRAM_URI</label>
                                 <input
                                     type="text"
                                     value={settings.socials.instagram}
@@ -100,11 +104,11 @@ export default function AdminSettings() {
                                         ...settings,
                                         socials: { ...settings.socials, instagram: e.target.value }
                                     })}
-                                    className="w-full p-3 border border-gray-200 focus:border-black outline-none font-mono text-sm"
+                                    className="w-full bg-white/5 border border-white/10 p-4 focus:border-primary outline-none transition-all font-mono text-sm"
                                 />
                             </div>
-                            <div>
-                                <label className="block text-xs font-mono uppercase mb-2">Twitter / X URL</label>
+                            <div className="space-y-2">
+                                <label className="text-white/40 font-mono text-xs uppercase tracking-widest">TWITTER_URI</label>
                                 <input
                                     type="text"
                                     value={settings.socials.twitter}
@@ -112,11 +116,11 @@ export default function AdminSettings() {
                                         ...settings,
                                         socials: { ...settings.socials, twitter: e.target.value }
                                     })}
-                                    className="w-full p-3 border border-gray-200 focus:border-black outline-none font-mono text-sm"
+                                    className="w-full bg-white/5 border border-white/10 p-4 focus:border-primary outline-none transition-all font-mono text-sm"
                                 />
                             </div>
-                            <div>
-                                <label className="block text-xs font-mono uppercase mb-2">TikTok URL</label>
+                            <div className="space-y-2">
+                                <label className="text-white/40 font-mono text-xs uppercase tracking-widest">TIKTOK_URI</label>
                                 <input
                                     type="text"
                                     value={settings.socials.tiktok}
@@ -124,50 +128,49 @@ export default function AdminSettings() {
                                         ...settings,
                                         socials: { ...settings.socials, tiktok: e.target.value }
                                     })}
-                                    className="w-full p-3 border border-gray-200 focus:border-black outline-none font-mono text-sm"
+                                    className="w-full bg-white/5 border border-white/10 p-4 focus:border-primary outline-none transition-all font-mono text-sm"
                                 />
                             </div>
                         </div>
                     </div>
 
-
-
-                    <div className="bg-surface border border-black p-8">
-                        <h3 className="font-bold uppercase mb-6">Marquee Banner</h3>
-                        <div className="space-y-4">
-                            <label className="flex items-center gap-2 border p-4 cursor-pointer hover:bg-gray-100">
+                    <div className="bg-white/5 border border-white/10 p-10 backdrop-blur-md">
+                        <h3 className="text-xl font-black uppercase mb-8 border-b border-white/10 pb-4 text-primary font-mono">COMMUNICATION_ARRAY</h3>
+                        <div className="space-y-6">
+                            <label className="flex items-center gap-4 group cursor-pointer">
                                 <input
                                     type="checkbox"
+                                    className="w-6 h-6 bg-white/5 border border-white/10 checked:bg-primary accent-primary"
                                     checked={settings.showMarquee || false}
                                     onChange={(e) => setSettings({ ...settings, showMarquee: e.target.checked })}
                                 />
-                                <span className="font-bold uppercase">Show Banner</span>
+                                <span className="font-black uppercase tracking-widest group-hover:text-primary transition-colors">ACTIVATE_MARQUEE_BANNER</span>
                             </label>
 
                             {settings.showMarquee && (
-                                <div>
-                                    <label className="block text-xs font-mono uppercase mb-2">Banner Text (use // to separate)</label>
+                                <div className="space-y-2 pt-4">
+                                    <label className="text-white/40 font-mono text-xs uppercase tracking-widest">MARQUEE_TEXT_CONTENT (// DELIMITED)</label>
                                     <input
                                         type="text"
                                         value={settings.marqueeText || ""}
                                         onChange={(e) => setSettings({ ...settings, marqueeText: e.target.value })}
                                         placeholder="WORLDWIDE SHIPPING // NEW DROP AVAILABLE"
-                                        className="w-full p-3 border border-gray-200 focus:border-black outline-none font-mono text-sm"
+                                        className="w-full bg-white/5 border border-white/10 p-4 focus:border-primary outline-none transition-all font-mono text-sm"
                                     />
                                 </div>
                             )}
                         </div>
                     </div>
 
-                    <div className="bg-surface border border-black p-8">
-                        <h3 className="font-bold uppercase mb-6">Latest Drops</h3>
-                        <div className="space-y-4">
-                            <div className="mb-6">
-                                <label className="block mb-1">Latest Drops Limit (Min 3)</label>
+                    <div className="bg-white/5 border border-white/10 p-10 backdrop-blur-md">
+                        <h3 className="text-xl font-black uppercase mb-8 border-b border-white/10 pb-4 text-primary font-mono">LIMIT_PARAMETERS</h3>
+                        <div className="space-y-6">
+                            <div className="space-y-2">
+                                <label className="text-white/40 font-mono text-xs uppercase tracking-widest">LATEST_DROPS_QUERY_LIMIT (MIN_3)</label>
                                 <input
                                     type="number"
                                     min="3"
-                                    className="w-full border p-2"
+                                    className="w-full bg-white/5 border border-white/10 p-4 focus:border-primary outline-none transition-all font-mono text-sm"
                                     value={settings.latestDropsLimit || 7}
                                     onChange={e => setSettings({ ...settings, latestDropsLimit: Math.max(3, parseInt(e.target.value) || 3) })}
                                 />
@@ -177,13 +180,12 @@ export default function AdminSettings() {
 
                     <button
                         type="submit"
-                        className="w-full py-4 bg-black text-white font-bold uppercase tracking-widest hover:bg-primary transition-colors"
+                        className="w-full py-6 bg-primary text-black font-black uppercase tracking-[0.3em] hover:bg-white transition-all shadow-xl glitch-hover"
                     >
-                        Save Changes
+                        SYNC_SYSTEM_CHANGES
                     </button>
                 </form >
             </div >
-            <Navigation />
         </main >
     );
 }

@@ -59,29 +59,32 @@ export default function AdminPromos() {
     }
 
     return (
-        <main className="min-h-screen bg-background pb-[60px] pt-24 px-6">
+        <main className="pb-[100px] pt-32 px-6 text-white bg-black">
             <div className="container mx-auto">
-                <h1 className="text-4xl font-black uppercase tracking-tighter mb-12">
-                    Manage // <span className="text-primary">Promos</span>
-                </h1>
+                <header className="mb-16">
+                    <h1 className="text-6xl md:text-8xl font-black uppercase tracking-tighter mb-4 leading-none">
+                        MANAGE // <span className="text-primary">PROMOS</span>
+                    </h1>
+                    <p className="text-primary font-mono uppercase tracking-[0.2em] text-sm italic">CAMPAIGN CONTROLS AND DISCOUNTS</p>
+                </header>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                     {/* List */}
-                    <div className="space-y-4">
-                        <h2 className="text-xl font-bold uppercase">Active Codes</h2>
-                        {promos.length === 0 && <p className="text-gray-500 font-mono">No promos found.</p>}
+                    <div className="space-y-6">
+                        <h2 className="text-xl font-bold uppercase border-b border-primary/30 pb-4 text-primary font-mono">ACTIVE_ARCHIVE</h2>
+                        {promos.length === 0 && <p className="text-white/40 font-mono italic">NO PROMOS DETECTED.</p>}
                         {promos.map((p, i) => (
-                            <div key={i} className={`flex justify-between items-center p-4 border ${p.active ? 'border-primary bg-primary/5' : 'border-gray-200 bg-gray-100 opacity-50'}`}>
+                            <div key={i} className={`flex justify-between items-center p-8 border transition-all duration-300 ${p.active ? 'border-primary bg-primary/5' : 'border-white/10 bg-white/5 opacity-40'}`}>
                                 <div>
-                                    <div className="text-2xl font-black uppercase tracking-tighter">{p.code}</div>
-                                    <div className="font-mono text-sm">{p.discount}% OFF</div>
+                                    <div className="text-3xl font-black uppercase tracking-tighter">{p.code}</div>
+                                    <div className="font-mono text-xs text-primary mt-2">{p.discount}% OFF VOUCHER</div>
                                 </div>
-                                <div className="flex gap-2">
-                                    <button onClick={() => toggleActive(i)} className="text-xs font-bold underline">
+                                <div className="flex gap-4">
+                                    <button onClick={() => toggleActive(i)} className="text-[10px] font-black uppercase tracking-widest px-4 py-2 border border-white/20 hover:border-primary hover:text-primary transition-all">
                                         {p.active ? "DISABLE" : "ENABLE"}
                                     </button>
-                                    <button onClick={() => handleDelete(i)} className="text-xs font-bold text-red-500 underline">
-                                        DELETE
+                                    <button onClick={() => handleDelete(i)} className="text-[10px] font-black uppercase tracking-widest px-4 py-2 border border-red-500/30 text-red-500 hover:bg-red-500 hover:text-white transition-all">
+                                        PURGE
                                     </button>
                                 </div>
                             </div>
@@ -89,32 +92,32 @@ export default function AdminPromos() {
                     </div>
 
                     {/* Create */}
-                    <div className="bg-surface border border-black p-8 h-fit">
-                        <h2 className="text-xl font-bold uppercase mb-6">Create New</h2>
-                        <form onSubmit={handleSubmit} className="space-y-4 font-mono text-sm">
-                            <div>
-                                <label className="block mb-1 font-bold">Code</label>
+                    <div className="bg-white/5 border border-white/10 p-10 backdrop-blur-md h-fit">
+                        <h2 className="text-xl font-black uppercase mb-8 border-b border-white/10 pb-4">INITIALIZE // CODE</h2>
+                        <form onSubmit={handleSubmit} className="space-y-6 font-mono text-xs uppercase tracking-widest">
+                            <div className="space-y-2">
+                                <label className="text-white/40">CODE_STRING</label>
                                 <input
-                                    className="w-full border p-2 uppercase"
+                                    className="w-full bg-white/5 border border-white/10 p-4 focus:border-primary outline-none transition-all uppercase"
                                     value={newItem.code}
                                     onChange={e => setNewItem({ ...newItem, code: e.target.value.toUpperCase() })}
                                     placeholder="SUMMER2026"
                                     required
                                 />
                             </div>
-                            <div>
-                                <label className="block mb-1 font-bold">Discount (%)</label>
+                            <div className="space-y-2">
+                                <label className="text-white/40">DISCOUNT_PERCENTAGE</label>
                                 <input
                                     type="number"
-                                    className="w-full border p-2"
+                                    className="w-full bg-white/5 border border-white/10 p-4 focus:border-primary outline-none transition-all"
                                     value={newItem.discount}
                                     onChange={e => setNewItem({ ...newItem, discount: parseInt(e.target.value) })}
                                     min="1" max="100"
                                     required
                                 />
                             </div>
-                            <button type="submit" className="w-full py-3 bg-black text-white font-bold uppercase hover:bg-primary transition-colors">
-                                Create Promo
+                            <button type="submit" className="w-full py-5 bg-primary text-black font-black uppercase tracking-widest hover:bg-white transition-all mt-4">
+                                DEPLOY PROMO
                             </button>
                         </form>
                     </div>

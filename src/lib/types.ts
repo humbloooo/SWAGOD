@@ -5,9 +5,10 @@ export interface Product {
     image: string;
     category: "merch" | "accessories" | "clothing";
     description: string;
-    sizes?: string[]; // New for Phase 2
-    images?: string[]; // New for Gallery Support
-    createdAt?: string; // ISO String for "Newest" sorting
+    sizes?: string[];
+    images?: string[];
+    createdAt?: string;
+    likedBy?: string[]; // Array of user emails who liked the product
 }
 
 export interface CartItem extends Product {

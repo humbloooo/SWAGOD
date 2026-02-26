@@ -42,101 +42,116 @@ export default function AdminTour() {
     };
 
     return (
-        <main className="min-h-screen bg-background pb-[60px] pt-24 px-6">
-            <div className="container mx-auto max-w-4xl">
-                <div className="flex justify-between items-center mb-12">
-                    <h1 className="text-4xl font-black uppercase tracking-tighter">
-                        Manage // <span className="text-primary">Tours</span>
-                    </h1>
+        <main className="pb-[100px] pt-32 px-6 text-white bg-black">
+            <div className="container mx-auto max-w-5xl">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-16">
+                    <header>
+                        <h1 className="text-6xl md:text-8xl font-black uppercase tracking-tighter mb-4 leading-none">
+                            TOUR // <span className="text-primary">DATES</span>
+                        </h1>
+                        <p className="text-primary font-mono uppercase tracking-[0.2em] text-sm italic">SCHEDULING AND VENUE LOGISTICS</p>
+                    </header>
                     <button
                         onClick={() => { setIsEditing(true); setNewItem({}); }}
-                        className="px-6 py-3 bg-black text-white font-bold uppercase hover:bg-primary transition-colors"
+                        className="px-10 py-5 bg-primary text-black font-black uppercase tracking-widest hover:bg-white transition-all shadow-xl glitch-hover"
                     >
-                        + Add Date
+                        + ADD NEW EVENT
                     </button>
                 </div>
 
                 {isEditing && (
-                    <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-                        <div className="bg-white p-8 max-w-lg w-full">
-                            <h2 className="text-2xl font-bold uppercase mb-6">New Tour Date</h2>
-                            <form onSubmit={handleSubmit} className="space-y-4 font-mono text-sm">
-                                <div>
-                                    <label className="block mb-1">Date</label>
+                    <div className="fixed inset-0 bg-black/90 backdrop-blur-xl z-[100] flex items-center justify-center p-6">
+                        <div className="bg-black border border-white/20 p-10 max-w-xl w-full relative shadow-2xl">
+                            <h2 className="text-4xl font-black uppercase tracking-tighter mb-10 border-b border-white/10 pb-4">INITIALIZE // EVENT</h2>
+                            <form onSubmit={handleSubmit} className="space-y-8 font-mono text-xs uppercase tracking-widest">
+                                <div className="space-y-2">
+                                    <label className="text-white/40">TEMPORAL_MARKER (DATE)</label>
                                     <input
                                         type="date"
-                                        className="w-full border p-2"
+                                        className="w-full bg-white/5 border border-white/10 p-4 focus:border-primary outline-none transition-all uppercase"
                                         value={newItem.date || ""}
                                         onChange={e => setNewItem({ ...newItem, date: e.target.value })}
                                         required
                                     />
                                 </div>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label className="block mb-1">City</label>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    <div className="space-y-2">
+                                        <label className="text-white/40">CITY_NODE</label>
                                         <input
-                                            className="w-full border p-2"
+                                            className="w-full bg-white/5 border border-white/10 p-4 focus:border-primary outline-none transition-all"
                                             value={newItem.city || ""}
                                             onChange={e => setNewItem({ ...newItem, city: e.target.value })}
                                             required
                                         />
                                     </div>
-                                    <div>
-                                        <label className="block mb-1">Venue</label>
+                                    <div className="space-y-2">
+                                        <label className="text-white/40">VENUE_STATION</label>
                                         <input
-                                            className="w-full border p-2"
+                                            className="w-full bg-white/5 border border-white/10 p-4 focus:border-primary outline-none transition-all"
                                             value={newItem.venue || ""}
                                             onChange={e => setNewItem({ ...newItem, venue: e.target.value })}
                                             required
                                         />
                                     </div>
                                 </div>
-                                <div>
-                                    <label className="block mb-1">Ticket Link (Optional)</label>
+                                <div className="space-y-2">
+                                    <label className="text-white/40">PURCHASE_LINK_URI (OPTIONAL)</label>
                                     <input
-                                        className="w-full border p-2"
+                                        className="w-full bg-white/5 border border-white/10 p-4 focus:border-primary outline-none transition-all"
                                         value={newItem.ticketLink || ""}
                                         onChange={e => setNewItem({ ...newItem, ticketLink: e.target.value })}
-                                        placeholder="https://..."
+                                        placeholder="HTTPS://..."
                                     />
                                 </div>
-                                <div className="flex items-center gap-2">
+                                <label className="flex items-center gap-4 group cursor-pointer">
                                     <input
                                         type="checkbox"
-                                        checked={newItem.soldOut}
+                                        className="w-6 h-6 bg-white/5 border border-white/10 checked:bg-primary accent-primary"
+                                        checked={newItem.soldOut || false}
                                         onChange={e => setNewItem({ ...newItem, soldOut: e.target.checked })}
                                     />
-                                    <label>Mark as Sold Out</label>
-                                </div>
+                                    <span className="font-black uppercase tracking-widest group-hover:text-primary transition-colors">MARK_AS_SOLD_OUT</span>
+                                </label>
 
-                                <div className="flex justify-end gap-4 mt-6">
-                                    <button type="button" onClick={() => setIsEditing(false)} className="px-6 py-2 border border-black uppercase font-bold">Cancel</button>
-                                    <button type="submit" className="px-6 py-2 bg-black text-white uppercase font-bold hover:bg-primary">Save</button>
+                                <div className="flex justify-end gap-6 pt-10">
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsEditing(false)}
+                                        className="px-10 py-5 border border-white/20 font-black tracking-widest hover:bg-white/5 transition-all text-[10px]"
+                                    >
+                                        ABORT
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="px-10 py-5 bg-primary text-black font-black tracking-widest hover:bg-white transition-all text-[10px]"
+                                    >
+                                        EXECUTE_WRITE
+                                    </button>
                                 </div>
                             </form>
                         </div>
                     </div>
                 )}
 
-                <div className="space-y-4">
+                <div className="space-y-6">
                     {tours.map((tour, i) => (
-                        <div key={i} className="flex items-center justify-between p-4 border border-gray-200 bg-surface">
+                        <div key={i} className="flex items-center justify-between p-8 border border-white/10 bg-white/5 backdrop-blur-md hover:border-primary transition-all duration-300 group">
                             <div>
-                                <div className="font-mono text-xs text-gray-500">{tour.date}</div>
-                                <h3 className="font-bold uppercase text-lg">{tour.city} // {tour.venue}</h3>
-                                {tour.soldOut && <span className="text-red-500 font-bold text-xs">SOLD OUT</span>}
+                                <div className="font-mono text-[10px] text-primary mb-2 uppercase tracking-widest">{tour.date}</div>
+                                <h3 className="font-black uppercase text-2xl tracking-tighter group-hover:text-primary transition-colors">{tour.city} // {tour.venue}</h3>
+                                {tour.soldOut && <span className="inline-block mt-2 px-3 py-1 bg-red-500/10 text-red-500 border border-red-500/20 font-black text-[10px] tracking-widest">SOLD_OUT</span>}
                             </div>
                             <button
                                 onClick={() => handleDelete(tour.id)}
-                                className="text-red-500 hover:text-red-700 font-bold uppercase text-xs border border-red-200 px-3 py-1 hover:bg-red-50"
+                                className="px-6 py-2 border border-red-500/30 text-red-500 font-black uppercase text-[10px] tracking-widest hover:bg-red-500 hover:text-white transition-all"
                             >
-                                Delete
+                                PURGE
                             </button>
                         </div>
                     ))}
                     {tours.length === 0 && (
-                        <div className="text-center py-12 text-gray-400 font-mono">
-                            No tour dates found.
+                        <div className="text-center py-24 border border-white/10 border-dashed opacity-30 font-mono uppercase tracking-[0.3em] italic">
+                            NO TOUR DATA RECOVERED.
                         </div>
                     )}
                 </div>

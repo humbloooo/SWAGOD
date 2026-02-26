@@ -2,15 +2,17 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Product } from "@/lib/data";
+import { Product } from "@/lib/types"; // Fixed import
 import ImageUpload from "@/components/admin/ImageUpload";
 import MultiImageUpload from "@/components/admin/MultiImageUpload";
 import { toast } from "sonner";
-
+import { Trash2, Edit, Plus, Check, X, Box, MoreVertical } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 export default function AdminProducts() {
     const [products, setProducts] = useState<Product[]>([]);
     const [isEditing, setIsEditing] = useState(false);
     const [currentProduct, setCurrentProduct] = useState<Partial<Product>>({});
+    const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
     useEffect(() => {
         fetch("/api/products")
@@ -20,6 +22,13 @@ export default function AdminProducts() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        // Basic validation
+        if (!currentProduct.title || (currentProduct.price ?? 0) <= 0) {
+            toast.error("INVALID PRODUCT DATA");
+            return;
+        }
+
         const method = currentProduct.id ? "PUT" : "POST";
 
         const promise = new Promise(async (resolve, reject) => {
@@ -41,21 +50,20 @@ export default function AdminProducts() {
         });
 
         toast.promise(promise, {
-            loading: 'Saving product...',
+            loading: 'SYNCING WITH ARCHIVE...',
             success: async () => {
-                // Refresh
                 const updated = await fetch("/api/products").then(r => r.json());
                 setProducts(updated);
                 setIsEditing(false);
                 setCurrentProduct({});
-                return 'Product saved successfully!';
+                return 'ARCHIVE UPDATED';
             },
-            error: (err: any) => `Error: ${err.message}`
+            error: (err: any) => `SYNC ERROR: ${err.message}`
         });
     };
 
     const handleDelete = async (id: string) => {
-        if (!confirm("Delete this product?")) return;
+        if (!confirm("PURGE THIS ENTRY FROM ARCHIVE?")) return;
 
         toast.promise(
             async () => {
@@ -66,90 +74,209 @@ export default function AdminProducts() {
                 return res;
             },
             {
-                loading: 'Deleting product...',
+                loading: 'PURGING...',
                 success: () => {
                     setProducts(products.filter(p => p.id !== id));
-                    return 'Product deleted';
+                    return 'ENTRY PURGED';
                 },
-                error: 'Failed to delete product'
+                error: 'PURGE FAILED'
+            }
+        );
+    };
+
+    const toggleSelection = (id: string) => {
+        setSelectedIds(prev =>
+            prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+        );
+    };
+
+    const bulkDelete = async () => {
+        if (!confirm(`PURGE ${selectedIds.length} ENTRIES?`)) return;
+
+        toast.promise(
+            Promise.all(selectedIds.map(id => fetch(`/api/products?id=${id}`, { method: "DELETE" }))),
+            {
+                loading: 'BULK PURGING...',
+                success: () => {
+                    setProducts(products.filter(p => !selectedIds.includes(p.id)));
+                    setSelectedIds([]);
+                    return 'ARCHIVE CLEANED';
+                },
+                error: 'BULK PURGE FAILED'
             }
         );
     };
 
     return (
-        <main className="min-h-screen bg-background pb-[60px] pt-24 px-6">
-            <div className="container mx-auto">
-                <div className="flex justify-between items-center mb-12">
-                    <h1 className="text-4xl font-black uppercase tracking-tighter">
-                        Manage // <span className="text-primary">Products</span>
-                    </h1>
-                    <button
-                        onClick={() => { setIsEditing(true); setCurrentProduct({}); }}
-                        className="px-6 py-3 bg-black text-white font-bold uppercase hover:bg-primary transition-colors"
-                    >
-                        + Add Product
-                    </button>
+        <main className="pb-[100px] pt-32 px-6">
+            <div className="container mx-auto max-w-7xl">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-16">
+                    <header>
+                        <h1 className="text-6xl md:text-8xl font-black uppercase tracking-tighter mb-4 leading-none">
+                            PRODUCT // <span className="text-primary">ARCHIVES</span>
+                        </h1>
+                        <p className="text-primary font-mono uppercase tracking-[0.2em] text-sm">TOTAL ENTRIES DETECTED: {products.length}</p>
+                    </header>
+                    <div className="flex gap-4">
+                        {selectedIds.length > 0 && (
+                            <button
+                                onClick={bulkDelete}
+                                className="px-6 py-4 border border-red-500/50 text-red-500 font-black uppercase tracking-widest hover:bg-red-500 hover:text-white transition-all flex items-center gap-2"
+                            >
+                                <Trash2 size={18} /> PURGE SELECTED ({selectedIds.length})
+                            </button>
+                        )}
+                        <button
+                            onClick={() => { setIsEditing(true); setCurrentProduct({ category: 'clothing' }); }}
+                            className="px-8 py-4 bg-primary text-black font-black uppercase tracking-widest hover:bg-white transition-all flex items-center gap-2"
+                        >
+                            <Plus size={20} /> ADD ENTRY
+                        </button>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 gap-4">
+                    <AnimatePresence>
+                        {products.map((product, idx) => (
+                            <motion.div
+                                key={product.id}
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: idx * 0.05 }}
+                                className={`group relative flex items-center justify-between p-6 border transition-all duration-300 ${selectedIds.includes(product.id)
+                                    ? 'border-primary bg-primary/5'
+                                    : 'border-white/10 bg-white/5 backdrop-blur-md hover:border-white/20'
+                                    }`}
+                            >
+                                <div className="flex items-center gap-8">
+                                    <button
+                                        onClick={() => toggleSelection(product.id)}
+                                        className={`w-6 h-6 border flex items-center justify-center transition-colors ${selectedIds.includes(product.id) ? 'bg-primary border-primary' : 'border-white/20 hover:border-primary'
+                                            }`}
+                                    >
+                                        {selectedIds.includes(product.id) && <Check size={14} className="text-black font-black" />}
+                                    </button>
+
+                                    <div className="w-20 h-20 bg-white/10 border border-white/10 relative overflow-hidden">
+                                        {product.image ? (
+                                            <img src={product.image} alt={product.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                                        ) : (
+                                            <div className="w-full h-full flex items-center justify-center opacity-20">
+                                                <Box size={24} />
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <div>
+                                        <h3 className="text-xl font-black uppercase tracking-tight group-hover:text-primary transition-colors">{product.title}</h3>
+                                        <div className="flex gap-4 mt-1 font-mono text-[10px] uppercase tracking-widest text-white/40">
+                                            <span>PRICE: <span className="text-white">R {product.price?.toFixed(2)}</span></span>
+                                            <span>CAT: <span className="text-white">{product.category}</span></span>
+                                            {product.sizes && product.sizes.length > 0 && (
+                                                <span>SIZES: <span className="text-white">{product.sizes.join(', ')}</span></span>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="flex gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <button
+                                        onClick={() => { setCurrentProduct(product); setIsEditing(true); }}
+                                        className="p-3 border border-white/10 hover:border-primary hover:text-primary transition-all"
+                                    >
+                                        <Edit size={20} />
+                                    </button>
+                                    <button
+                                        onClick={() => handleDelete(product.id)}
+                                        className="p-3 border border-white/10 hover:border-red-500 hover:text-red-500 transition-all"
+                                    >
+                                        <Trash2 size={20} />
+                                    </button>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </AnimatePresence>
                 </div>
 
                 {isEditing && (
-                    <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-                        <div className="bg-white p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-                            <h2 className="text-2xl font-bold uppercase mb-6">{currentProduct.id ? "Edit Product" : "New Product"}</h2>
-                            <form onSubmit={handleSubmit} className="space-y-4 font-mono text-sm">
-                                <div>
-                                    <label className="block mb-1">Title</label>
+                    <div className="fixed inset-0 bg-black/90 backdrop-blur-xl z-[100] flex items-center justify-center p-6">
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            className="bg-black border border-white/20 p-10 max-w-3xl w-full max-h-[90vh] overflow-y-auto relative shadow-2xl"
+                        >
+                            <button onClick={() => setIsEditing(false)} className="absolute top-6 right-6 text-white/40 hover:text-white transition-colors">
+                                <X size={24} />
+                            </button>
+
+                            <header className="mb-10">
+                                <h2 className="text-4xl font-black uppercase tracking-tighter">
+                                    {currentProduct.id ? "OVERWRITE // ENTRY" : "INITIALIZE // ENTRY"}
+                                </h2>
+                                <p className="text-primary font-mono text-[10px] uppercase tracking-widest mt-2 italic">ENCRYPTING DATA FIELDS...</p>
+                            </header>
+
+                            <form onSubmit={handleSubmit} className="space-y-8 font-mono text-xs uppercase tracking-[0.15em]">
+                                <div className="space-y-2">
+                                    <label className="text-white/40">TITLE_STRING</label>
                                     <input
-                                        className="w-full border p-2"
+                                        className="w-full bg-white/5 border border-white/10 p-4 focus:border-primary outline-none transition-all"
                                         value={currentProduct.title || ""}
                                         onChange={e => setCurrentProduct({ ...currentProduct, title: e.target.value })}
                                         required
                                     />
                                 </div>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label className="block mb-1">Price (R)</label>
+
+                                <div className="grid grid-cols-2 gap-8">
+                                    <div className="space-y-2">
+                                        <label className="text-white/40">VALUE_ZAR</label>
                                         <input
                                             type="number"
-                                            className="w-full border p-2"
+                                            className="w-full bg-white/5 border border-white/10 p-4 focus:border-primary outline-none transition-all"
                                             value={currentProduct.price || ""}
                                             onChange={e => setCurrentProduct({ ...currentProduct, price: parseFloat(e.target.value) })}
                                             required
                                         />
                                     </div>
-                                    <div>
-                                        <label className="block mb-1">Category</label>
+                                    <div className="space-y-2">
+                                        <label className="text-white/40">CATEGORY_TYPE</label>
                                         <select
-                                            className="w-full border p-2"
+                                            className="w-full bg-white/5 border border-white/10 p-4 focus:border-primary outline-none transition-all appearance-none"
                                             value={currentProduct.category || "clothing"}
                                             onChange={e => setCurrentProduct({ ...currentProduct, category: e.target.value as any })}
                                         >
-                                            <option value="clothing">Clothing</option>
-                                            <option value="merch">Merch</option>
-                                            <option value="accessories">Accessories</option>
+                                            <option value="clothing">CLOTHING</option>
+                                            <option value="merch">MERCH</option>
+                                            <option value="accessories">ACCESSORIES</option>
                                         </select>
                                     </div>
                                 </div>
-                                <div>
-                                    <label className="block mb-1">Product Image</label>
-                                    <MultiImageUpload
-                                        values={currentProduct.images || (currentProduct.image ? [currentProduct.image] : [])}
-                                        onChange={(urls) => {
-                                            setCurrentProduct({
-                                                ...currentProduct,
-                                                images: urls,
-                                                image: urls[0] || "" // Keep main image synced with first gallery image
-                                            });
-                                        }}
-                                        folder="products"
-                                    />
+
+                                <div className="space-y-2">
+                                    <label className="text-white/40">VISUAL_ASSETS</label>
+                                    <div className="p-6 border border-white/10 bg-white/5">
+                                        <MultiImageUpload
+                                            values={currentProduct.images || (currentProduct.image ? [currentProduct.image] : [])}
+                                            onChange={(urls) => {
+                                                setCurrentProduct({
+                                                    ...currentProduct,
+                                                    images: urls,
+                                                    image: urls[0] || ""
+                                                });
+                                            }}
+                                            folder="products"
+                                        />
+                                    </div>
                                 </div>
-                                <div>
-                                    <label className="block mb-1">Sizes Available</label>
+
+                                <div className="space-y-4">
+                                    <label className="text-white/40">SIZE_MATRIX</label>
                                     <div className="flex gap-4 flex-wrap">
                                         {["S", "M", "L", "XL", "XXL"].map(size => (
-                                            <label key={size} className="flex items-center gap-2 border p-2 cursor-pointer hover:bg-gray-100">
+                                            <label key={size} className="group flex items-center gap-4 border border-white/10 p-4 cursor-pointer hover:border-primary transition-all flex-1 min-w-[80px] justify-center">
                                                 <input
                                                     type="checkbox"
+                                                    className="hidden"
                                                     checked={currentProduct.sizes?.includes(size) || false}
                                                     onChange={(e) => {
                                                         const currentSizes = currentProduct.sizes || [];
@@ -160,59 +287,41 @@ export default function AdminProducts() {
                                                         }
                                                     }}
                                                 />
-                                                <span className="font-bold">{size}</span>
+                                                <span className={`text-lg font-black transition-colors ${currentProduct.sizes?.includes(size) ? 'text-primary' : 'text-white/40 group-hover:text-white'}`}>{size}</span>
                                             </label>
                                         ))}
                                     </div>
                                 </div>
-                                <div>
-                                    <label className="block mb-1">Description</label>
+
+                                <div className="space-y-2">
+                                    <label className="text-white/40">INTEL_DESCRIPTION</label>
                                     <textarea
-                                        className="w-full border p-2 h-32"
+                                        className="w-full bg-white/5 border border-white/10 p-4 h-40 focus:border-primary outline-none transition-all resize-none"
                                         value={currentProduct.description || ""}
                                         onChange={e => setCurrentProduct({ ...currentProduct, description: e.target.value })}
                                         required
                                     />
                                 </div>
-                                <div className="flex justify-end gap-4 mt-6">
-                                    <button type="button" onClick={() => setIsEditing(false)} className="px-6 py-2 border border-black uppercase font-bold">Cancel</button>
-                                    <button type="submit" className="px-6 py-2 bg-black text-white uppercase font-bold hover:bg-primary">Save</button>
+
+                                <div className="flex justify-end gap-6 pt-10">
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsEditing(false)}
+                                        className="px-10 py-5 border border-white/20 font-black tracking-widest hover:bg-white/5 transition-all"
+                                    >
+                                        ABORT
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="px-10 py-5 bg-primary text-black font-black tracking-widest hover:bg-white transition-all"
+                                    >
+                                        EXECUTE_WRITE
+                                    </button>
                                 </div>
                             </form>
-                        </div>
+                        </motion.div>
                     </div>
                 )}
-
-                <div className="grid gap-4">
-                    {products.map(product => (
-                        <div key={product.id} className="flex items-center justify-between p-4 border border-gray-200 bg-surface">
-                            <div className="flex items-center gap-4">
-                                <div className="w-16 h-16 bg-gray-200 relative">
-                                    {/* Handle missing images gracefully */}
-                                    {product.image && <img src={product.image} alt={product.title} className="w-full h-full object-cover" />}
-                                </div>
-                                <div>
-                                    <h3 className="font-bold uppercase">{product.title}</h3>
-                                    <p className="font-mono text-xs text-gray-500">R {product.price?.toFixed(2)} / {product.category}</p>
-                                </div>
-                            </div>
-                            <div className="flex gap-2">
-                                <button
-                                    onClick={() => { setCurrentProduct(product); setIsEditing(true); }}
-                                    className="px-4 py-2 border border-black text-xs font-bold uppercase hover:bg-black hover:text-white"
-                                >
-                                    Edit
-                                </button>
-                                <button
-                                    onClick={() => handleDelete(product.id)}
-                                    className="px-4 py-2 border border-red-500 text-red-500 text-xs font-bold uppercase hover:bg-red-500 hover:text-white"
-                                >
-                                    Delete
-                                </button>
-                            </div>
-                        </div>
-                    ))}
-                </div>
             </div>
         </main>
     );
