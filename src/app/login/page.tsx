@@ -6,8 +6,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import Header from "@/components/Header";
-import Navigation from "@/components/Navigation";
+import Header from "@/components/layout/Header";
+import Navigation from "@/components/layout/Navigation";
 
 export default function LoginPage() {
     const router = useRouter();
@@ -19,7 +19,7 @@ export default function LoginPage() {
         setIsLoading("google");
         try {
             await signIn("google", { callbackUrl: "/admin" }); // Default to admin, middleware handles redirect if not admin
-        } catch (error) {
+        } catch {
             toast.error("Google sign in failed");
         } finally {
             setIsLoading(null);
@@ -117,7 +117,7 @@ export default function LoginPage() {
 
                     <div className="mt-8 text-center">
                         <p className="font-mono text-xs text-gray-500">
-                            Don't have an account?{" "}
+                            Don&apos;t have an account?{" "}
                             <Link href="/signup" className="text-black font-bold hover:text-primary underline decoration-2">
                                 JOIN THE CULT
                             </Link>

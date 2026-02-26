@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import ImageUpload from "./ImageUpload";
 import { X } from "lucide-react";
 import Image from "next/image";
@@ -49,7 +48,7 @@ export default function MultiImageUpload({ values = [], onChange, folder = "prod
                 </label>
                 <ImageUpload
                     value="" // Always empty to allow new uploads
-                    onChange={(url) => {
+                    onChange={(url: string) => {
                         if (url) handleAdd(url);
                     }}
                     folder={folder}

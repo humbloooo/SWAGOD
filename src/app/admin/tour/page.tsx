@@ -138,7 +138,7 @@ export default function AdminTour() {
                         <div key={i} className="flex items-center justify-between p-8 border border-white/10 bg-white/5 backdrop-blur-md hover:border-primary transition-all duration-300 group">
                             <div>
                                 <div className="font-mono text-[10px] text-primary mb-2 uppercase tracking-widest">{tour.date}</div>
-                                <h3 className="font-black uppercase text-2xl tracking-tighter group-hover:text-primary transition-colors">{tour.city} // {tour.venue}</h3>
+                                <h3 className="font-black uppercase text-2xl tracking-tighter group-hover:text-primary transition-colors">{tour.city} {"//"} {tour.venue}</h3>
                                 {tour.soldOut && <span className="inline-block mt-2 px-3 py-1 bg-red-500/10 text-red-500 border border-red-500/20 font-black text-[10px] tracking-widest">SOLD_OUT</span>}
                             </div>
                             <button

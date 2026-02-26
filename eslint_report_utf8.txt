@@ -1,0 +1,102 @@
+﻿
+C:\Users\kunta\Desktop\Projects\BIZ\AWA\Swagod\base_web\SWAGOD\src\app\admin\about\page.tsx
+  7:38  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\kunta\Desktop\Projects\BIZ\AWA\Swagod\base_web\SWAGOD\src\app\admin\archives\page.tsx
+  11:46  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  13:44  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\kunta\Desktop\Projects\BIZ\AWA\Swagod\base_web\SWAGOD\src\app\admin\feedback\page.tsx
+  6:8  warning  'Header' is defined but never used      @typescript-eslint/no-unused-vars
+  7:8  warning  'Navigation' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\kunta\Desktop\Projects\BIZ\AWA\Swagod\base_web\SWAGOD\src\app\admin\layout.tsx
+  19:5   error  Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free                                                     @typescript-eslint/ban-ts-comment
+  30:21  error  Do not use an `<a>` element to navigate to `/api/auth/signout/`. Use `<Link />` from `next/link` instead. See: https://nextjs.org/docs/messages/no-html-link-for-pages  @next/next/no-html-link-for-pages
+  36:21  error  Do not use an `<a>` element to navigate to `/`. Use `<Link />` from `next/link` instead. See: https://nextjs.org/docs/messages/no-html-link-for-pages                   @next/next/no-html-link-for-pages
+
+C:\Users\kunta\Desktop\Projects\BIZ\AWA\Swagod\base_web\SWAGOD\src\app\admin\page.tsx
+    1:10  warning  'getServerSession' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @typescript-eslint/no-unused-vars
+    2:10  warning  'authOptions' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         @typescript-eslint/no-unused-vars
+    3:10  warning  'redirect' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-unused-vars
+    4:8   warning  'Header' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @typescript-eslint/no-unused-vars
+    5:8   warning  'Navigation' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          @typescript-eslint/no-unused-vars
+  101:74  error    Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+C:\Users\kunta\Desktop\Projects\BIZ\AWA\Swagod\base_web\SWAGOD\src\app\admin\page.tsx:101:74
+   99 |                                         <td className="py-4 md:py-6 font-mono">SWG_RTN_{100 * i}X</td>
+  100 |                                         <td className="py-4 md:py-6 italic text-[7px] md:text-[10px] truncate max-w-[100px] md:max-w-none">USER_ACCOUNT_{i}@SWAGOD.COM</td>
+> 101 |                                         <td className="py-4 md:py-6">R {(Math.random() * 1000 + 500).toFixed(2)}</td>
+      |                                                                          ^^^^^^^^^^^^^ Cannot call impure function
+  102 |                                         <td className="py-4 md:py-6 text-primary">
+  103 |                                             <span className="px-2 md:px-3 py-0.5 md:py-1 bg-primary/20 text-primary border border-primary/20 text-[7px] md:text-[10px] font-black glow-primary">
+  104 |                                                 SUCCESS  react-hooks/purity
+
+C:\Users\kunta\Desktop\Projects\BIZ\AWA\Swagod\base_web\SWAGOD\src\app\admin\settings\page.tsx
+  43:18  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\kunta\Desktop\Projects\BIZ\AWA\Swagod\base_web\SWAGOD\src\app\api\archives\route.ts
+  17:14  warning  'e' is defined but never used  @typescript-eslint/no-unused-vars
+  31:14  warning  'e' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\kunta\Desktop\Projects\BIZ\AWA\Swagod\base_web\SWAGOD\src\app\api\feedback\route.ts
+  19:14  warning  'e' is defined but never used  @typescript-eslint/no-unused-vars
+  38:14  warning  'e' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\kunta\Desktop\Projects\BIZ\AWA\Swagod\base_web\SWAGOD\src\app\api\products\like\route.ts
+  36:14  warning  'e' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\kunta\Desktop\Projects\BIZ\AWA\Swagod\base_web\SWAGOD\src\app\error.tsx
+  8:12  warning  '_reset' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\kunta\Desktop\Projects\BIZ\AWA\Swagod\base_web\SWAGOD\src\app\loading.tsx
+  4:76  error  Comments inside children section of tag should be placed inside braces  react/jsx-no-comment-textnodes
+
+C:\Users\kunta\Desktop\Projects\BIZ\AWA\Swagod\base_web\SWAGOD\src\app\product\[id]\page.tsx
+  2:10  warning  'Product' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\kunta\Desktop\Projects\BIZ\AWA\Swagod\base_web\SWAGOD\src\auth.ts
+   9:5   error    Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  77:34  warning  'trigger' is defined but never used                                                                                  @typescript-eslint/no-unused-vars
+  77:43  warning  'session' is defined but never used                                                                                  @typescript-eslint/no-unused-vars
+  77:54  error    Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+  92:37  error    Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+
+C:\Users\kunta\Desktop\Projects\BIZ\AWA\Swagod\base_web\SWAGOD\src\components\Hero.tsx
+  13:11  warning  'scrambledTagline' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\kunta\Desktop\Projects\BIZ\AWA\Swagod\base_web\SWAGOD\src\components\admin\ImageUpload.tsx
+   4:10  warning  'uploadImage' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+  15:56  warning  'folder' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-unused-vars
+  81:32  error    Compilation Skipped: Existing memoization could not be preserved
+
+React Compiler has skipped optimizing this component because the existing manual memoization could not be preserved. The inferred dependencies did not match the manually specified dependencies, which could cause the value to change more or less frequently than expected. The inferred dependency was `handleUpload`, but the source dependencies were []. Inferred dependency not present in source.
+
+C:\Users\kunta\Desktop\Projects\BIZ\AWA\Swagod\base_web\SWAGOD\src\components\admin\ImageUpload.tsx:81:32
+  79 |     };
+  80 |
+> 81 |     const onDrop = useCallback((e: React.DragEvent<HTMLDivElement>) => {
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 82 |         e.preventDefault();
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 83 |         setIsDragging(false);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 84 |
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 85 |         if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 86 |             handleUpload(e.dataTransfer.files[0]);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 87 |         }
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 88 |     }, []);
+     | ^^^^^^ Could not preserve existing manual memoization
+  89 |
+  90 |     const onDragOver = useCallback((e: React.DragEvent<HTMLDivElement>) => {
+  91 |         e.preventDefault();  react-hooks/preserve-manual-memoization
+  88:8   warning  React Hook useCallback has a missing dependency: 'handleUpload'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             react-hooks/exhaustive-deps
+
+Ô£û 33 problems (12 errors, 21 warnings)
+

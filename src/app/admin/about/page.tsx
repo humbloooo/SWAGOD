@@ -3,8 +3,10 @@
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
+import { AboutData } from "@/lib/types";
+
 export default function AdminAbout() {
-    const [data, setData] = useState<any>({ heading: "", paragraphs: [], footer: "" });
+    const [data, setData] = useState<AboutData>({ heading: "", paragraphs: [], footer: "" });
 
     useEffect(() => {
         fetch("/api/about")

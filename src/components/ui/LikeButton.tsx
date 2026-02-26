@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { useSession, signIn } from "next-auth/react";
 import { Heart } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
@@ -65,7 +64,7 @@ export default function LikeButton({ productId, initialLikes = [], variant = "co
                 description: productId.substring(0, 8),
                 className: "font-mono uppercase",
             });
-        } catch (error) {
+        } catch {
             // Revert on error
             setIsLiked(!newIsLiked);
             toast.error("SYNC ERROR", { description: "FAILED TO UPDATE SAVED STATE." });

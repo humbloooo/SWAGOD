@@ -3,8 +3,6 @@
 import { useState, useEffect } from "react";
 import { Feedback } from "@/lib/types";
 import { Trash2, Mail, User, Calendar, MessageSquare } from "lucide-react";
-import Header from "@/components/Header";
-import Navigation from "@/components/Navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function AdminFeedback() {

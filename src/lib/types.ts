@@ -9,7 +9,19 @@ export interface Product {
     images?: string[];
     createdAt?: string;
     likes?: string[]; // Array of user emails who liked the product
+    active?: boolean; // Item 82: Soft Delete Flag
 }
+
+export interface AuditLog {
+    id?: string;
+    action: string;
+    entity: string;
+    entityId: string;
+    adminEmail: string;
+    timestamp?: string;
+    details?: string;
+}
+
 
 export interface CartItem extends Product {
     quantity: number;
@@ -28,6 +40,7 @@ export interface SiteSettings {
         twitter: string;
         tiktok: string;
     };
+    maintenanceMode?: boolean; // Item 98: Maintenance Mode Toggle
 }
 
 export interface Feedback {
@@ -45,4 +58,10 @@ export interface TourEvent {
     venue: string;
     ticketLink?: string;
     soldOut?: boolean;
+}
+
+export interface AboutData {
+    heading: string;
+    paragraphs: string[];
+    footer: string;
 }

@@ -1,15 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { useSession } from "next-auth/react";
 
 export default function FeedbackForm() {
     const { data: session } = useSession();
-    const [name, setName] = useState(session?.user?.name || "");
-    const [email, setEmail] = useState(session?.user?.email || "");
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
     const [message, setMessage] = useState("");
     const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+
+    // Sync session data once loaded to avoid hydration mismatch
+    useEffect(() => {
+        if (session?.user) {
+            setTimeout(() => {
+                if (session.user?.name) setName(session.user.name);
+                if (session.user?.email) setEmail(session.user.email);
+            }, 0);
+        }
+    }, [session]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -23,7 +33,7 @@ export default function FeedbackForm() {
             });
             setStatus("success");
             setMessage("");
-        } catch (error) {
+        } catch {
             setStatus("error");
         }
     };
@@ -36,7 +46,7 @@ export default function FeedbackForm() {
                         GET IN <span className="text-primary italic">TOUCH</span>
                     </h2>
                     <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-white/40 italic">
-                        // WE VALUE YOUR FEEDBACK AND SUGGESTIONS
+                        {"//"} WE VALUE YOUR FEEDBACK AND SUGGESTIONS
                     </p>
                 </header>
 
@@ -60,6 +70,7 @@ export default function FeedbackForm() {
                                 placeholder="FULL NAME"
                                 className="w-full bg-white/5 border border-white/10 p-4 font-mono text-[10px] uppercase tracking-widest focus:border-primary focus:outline-none transition-colors"
                                 required
+                                suppressHydrationWarning
                             />
                             <input
                                 type="email"
@@ -68,6 +79,7 @@ export default function FeedbackForm() {
                                 placeholder="EMAIL ADDRESS"
                                 className="w-full bg-white/5 border border-white/10 p-4 font-mono text-[10px] uppercase tracking-widest focus:border-primary focus:outline-none transition-colors"
                                 required
+                                suppressHydrationWarning
                             />
                         </div>
                         <textarea

@@ -1,20 +1,22 @@
 "use client";
+import React, { memo } from "react";
 
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { Product } from "@/lib/types";
 import { useAppStore } from "@/lib/store";
-import { ShoppingBag, ArrowUpRight } from "lucide-react";
+import { ShoppingBag } from "lucide-react";
 import { toast } from "sonner";
 import LikeButton from "./LikeButton";
+import { formatPrice } from "@/lib/utils";
 
 interface LatestDropsProps {
     products: Product[];
 }
 
 export default function LatestDrops({ products }: LatestDropsProps) {
-    const addItem = useAppStore((state) => state.addItem);
+    const { addItem, openCart, currency } = useAppStore();
     const sortedProducts = [...products].sort((a, b) => (b.createdAt || "").localeCompare(a.createdAt || ""));
 
     return (
@@ -26,7 +28,7 @@ export default function LatestDrops({ products }: LatestDropsProps) {
                     <h2 className="text-6xl md:text-9xl font-black uppercase tracking-tighter leading-none mb-4">
                         NEW <span className="text-primary italic">RELEASES</span>
                     </h2>
-                    <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-white/40 italic">// CURRENT INVENTORY ARCHIVE</p>
+                    <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-white/40 italic">{"//"} CURRENT INVENTORY ARCHIVE</p>
                 </header>
                 <div className="hidden md:flex flex-col items-end gap-2">
                     <span className="text-[10px] font-mono text-white/20 uppercase tracking-widest">COLLECTION STATUS: ACTIVE</span>
@@ -42,13 +44,14 @@ export default function LatestDrops({ products }: LatestDropsProps) {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {sortedProducts.filter(p => (p.category || "").toLowerCase() === 'clothing').slice(0, 4).length > 0 ? (
                         sortedProducts.filter(p => (p.category || "").toLowerCase() === 'clothing').slice(0, 4).map((product, index) => (
-                            <ProductCard key={product.id} product={product} index={index} addItem={addItem} />
+                            <ProductCard key={product.id} product={product} index={index} addItem={addItem} openCart={openCart} currency={currency} />
                         ))
                     ) : (
-                        <div className="col-span-full py-24 border border-white/5 bg-white/[0.02] flex flex-col items-center justify-center gap-4">
-                            <div className="w-12 h-12 border-t-2 border-primary rounded-full animate-spin"></div>
-                            <p className="font-mono text-white/40 uppercase tracking-widest text-sm">TRANSMITTING NEW COLLECTION...</p>
-                        </div>
+                        <>
+                            {[...Array(4)].map((_, i) => (
+                                <div key={i} className="aspect-[3/4] bg-white/5 animate-pulse border border-white/10 brutalist-card" />
+                            ))}
+                        </>
                     )}
                 </div>
             </div>
@@ -67,13 +70,14 @@ export default function LatestDrops({ products }: LatestDropsProps) {
                             const cat = (p.category || "").toLowerCase();
                             return cat === 'accessories' || cat === 'merch';
                         }).slice(0, 4).map((product, index) => (
-                            <ProductCard key={product.id} product={product} index={index} addItem={addItem} />
+                            <ProductCard key={product.id} product={product} index={index} addItem={addItem} openCart={openCart} currency={currency} />
                         ))
                     ) : (
-                        <div className="col-span-full py-24 border border-white/5 bg-white/[0.02] flex flex-col items-center justify-center gap-4">
-                            <div className="w-12 h-12 border-t-2 border-primary rounded-full animate-spin"></div>
-                            <p className="font-mono text-white/40 uppercase tracking-widest text-sm">TRANSMITTING NEW COLLECTION...</p>
-                        </div>
+                        <>
+                            {[...Array(4)].map((_, i) => (
+                                <div key={i} className="aspect-[3/4] bg-white/5 animate-pulse border border-white/10 brutalist-card" />
+                            ))}
+                        </>
                     )}
                 </div>
             </div>
@@ -87,7 +91,7 @@ export default function LatestDrops({ products }: LatestDropsProps) {
     );
 }
 
-function ProductCard({ product, index, addItem }: { product: Product, index: number, addItem: any }) {
+const ProductCard = memo(function ProductCard({ product, index, addItem, openCart, currency }: { product: Product, index: number, addItem: (p: Product, s?: string) => void, openCart: () => void, currency: "ZAR" | "USD" }) {
     return (
         <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -96,7 +100,7 @@ function ProductCard({ product, index, addItem }: { product: Product, index: num
             transition={{ duration: 0.6, delay: (index % 4) * 0.1 }}
             className="group relative aspect-[3/4] brutalist-card overflow-hidden hover:border-primary transition-all duration-500 border border-white/5"
         >
-            <Link href={`/product/${product.id}`} className="block relative w-full h-full">
+            <Link href={`/product/${product.id}`} prefetch={true} className="block relative w-full h-full">
                 <Image
                     src={product.image || "/assets/placeholder.png"}
                     alt={product.title}
@@ -134,7 +138,7 @@ function ProductCard({ product, index, addItem }: { product: Product, index: num
                         <h4 className="text-sm font-black uppercase tracking-tight line-clamp-1">{product.title}</h4>
                         <span className="text-[8px] font-mono text-white/40">{product.likes?.length || 0} SAVED</span>
                     </div>
-                    <p className="font-mono text-[10px] text-primary">R {product.price.toFixed(2)}</p>
+                    <p className="font-mono text-[10px] text-primary">{formatPrice(product.price, currency)}</p>
                 </div>
 
                 <button
@@ -146,6 +150,10 @@ function ProductCard({ product, index, addItem }: { product: Product, index: num
                         toast.success(`PRODUCT ADDED`, {
                             description: `${product.title} IS IN YOUR CART.`,
                             className: "font-mono font-bold uppercase",
+                            action: {
+                                label: "VIEW CART",
+                                onClick: () => openCart(),
+                            },
                         });
                     }}
                     className="w-full py-4 bg-primary text-white font-black uppercase tracking-widest text-[10px] hover:bg-white hover:text-black transition-all flex items-center justify-center gap-2 glow-primary"
@@ -160,4 +168,4 @@ function ProductCard({ product, index, addItem }: { product: Product, index: num
             </div>
         </motion.div>
     );
-}
+});

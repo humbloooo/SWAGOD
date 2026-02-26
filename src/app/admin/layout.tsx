@@ -1,9 +1,10 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
 import { redirect } from "next/navigation";
-import Header from "@/components/Header";
-import Navigation from "@/components/Navigation";
+import Header from "@/components/layout/Header";
+import Navigation from "@/components/layout/Navigation";
 import AdminBackButton from "@/components/admin/AdminBackButton";
+import Link from "next/link";
 
 export default async function AdminLayout({
     children,
@@ -16,7 +17,7 @@ export default async function AdminLayout({
         redirect("/api/auth/signin?callbackUrl=/admin");
     }
 
-    // @ts-ignore
+    // @ts-expect-error session.user is extended by NextAuth
     if (session.user.role !== "admin") {
         return (
             <main className="min-h-screen bg-background flex flex-col items-center justify-center p-6 text-center">
@@ -27,15 +28,16 @@ export default async function AdminLayout({
                     This account does not have admin permissions.
                 </p>
                 <div className="flex flex-col gap-4 w-full max-w-sm">
-                    <a
+                    <Link
                         href="/api/auth/signout?callbackUrl=/login"
+                        prefetch={false}
                         className="px-6 py-4 bg-black text-white uppercase font-bold hover:bg-primary transition-colors w-full"
                     >
                         Switch Account / Sign Out
-                    </a>
-                    <a href="/" className="px-6 py-4 border border-black uppercase font-bold hover:bg-gray-100 transition-colors w-full">
+                    </Link>
+                    <Link href="/" className="px-6 py-4 border border-black uppercase font-bold hover:bg-gray-100 transition-colors w-full">
                         Return to Store
-                    </a>
+                    </Link>
                 </div>
             </main>
         );

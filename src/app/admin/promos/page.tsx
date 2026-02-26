@@ -2,9 +2,16 @@
 
 import { useState, useEffect } from "react";
 
+interface Promo {
+    id?: string;
+    code: string;
+    discount: number;
+    active: boolean;
+}
+
 export default function AdminPromos() {
-    const [promos, setPromos] = useState<any[]>([]);
-    const [newItem, setNewItem] = useState<any>({ code: "", discount: 10, active: true });
+    const [promos, setPromos] = useState<Promo[]>([]);
+    const [newItem, setNewItem] = useState<Promo>({ code: "", discount: 10, active: true });
 
     useEffect(() => {
         fetch("/api/promos")
@@ -20,7 +27,7 @@ export default function AdminPromos() {
         });
 
         if (res.ok) {
-            const saved = await res.json();
+            await res.json();
             // If API returns single item, appned. If array, replace.
             // My API logic was mixed. Let's just refetch to be safe.
             const updated = await fetch("/api/promos").then(r => r.json());

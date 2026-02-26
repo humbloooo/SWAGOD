@@ -14,7 +14,7 @@ export async function POST(request: Request) {
         }
         await addArchive(newItem);
         return NextResponse.json({ success: true, item: newItem });
-    } catch (e) {
+    } catch {
         return NextResponse.json({ success: false, error: "Failed to add archive" }, { status: 500 });
     }
 }
@@ -28,7 +28,7 @@ export async function DELETE(request: Request) {
     try {
         await deleteArchive(id);
         return NextResponse.json({ success: true });
-    } catch (e) {
+    } catch {
         return NextResponse.json({ success: false, error: "Failed to delete" }, { status: 500 });
     }
 }

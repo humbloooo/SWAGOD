@@ -1,8 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { AboutData } from "@/lib/types";
 
-export default function About({ data }: { data: any }) {
+export default function About({ data }: { data: AboutData }) {
     // Fallback if no data
     if (!data) return null;
 

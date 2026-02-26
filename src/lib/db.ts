@@ -1,5 +1,5 @@
 import { firestore, isMock } from './firebase-admin';
-import { Product, SiteSettings, Feedback, TourEvent } from './types';
+import { Product, SiteSettings, Feedback, TourEvent, AuditLog, AboutData } from './types';
 import { PRODUCTS } from './data';
 
 // Enforce Firestore collection names
@@ -11,6 +11,7 @@ const SETTINGS_COLLECTION = 'settings';
 const ABOUT_COLLECTION = 'about';
 const ADMINS_COLLECTION = 'admins'; // New collection for authorized admin emails
 const TOURS_COLLECTION = 'tours';
+const AUDIT_LOGS_COLLECTION = 'audit_logs';
 
 export async function isUserAdmin(email: string): Promise<boolean> {
     if (!email) return false;
@@ -36,14 +37,22 @@ export async function isUserAdmin(email: string): Promise<boolean> {
 
 // --- PRODUCTS ---
 
-export async function getProducts(): Promise<Product[]> {
+export async function getProducts(limit?: number): Promise<Product[]> {
     if (isMock) {
-        console.log("DATABASE: Returning mock products from data.ts");
-        return PRODUCTS;
+        // console.log("DATABASE: Returning mock products from data.ts");
+        return limit ? PRODUCTS.slice(0, limit) : PRODUCTS;
     }
     try {
-        const snapshot = await firestore.collection(PRODUCTS_COLLECTION).get();
-        return snapshot.docs.map((doc: any) => ({ id: doc.id, ...doc.data() } as Product));
+        let query: FirebaseFirestore.Query<FirebaseFirestore.DocumentData> = firestore.collection(PRODUCTS_COLLECTION);
+
+        // Item 82: Filter by Active by default
+        query = query.where('active', '!=', false);
+
+        if (limit) {
+            query = query.limit(limit);
+        }
+        const snapshot = await query.get();
+        return snapshot.docs.map((doc: FirebaseFirestore.QueryDocumentSnapshot) => ({ id: doc.id, ...doc.data() } as Product));
     } catch (error) {
         console.error("Error fetching products:", error);
         return PRODUCTS; // Final fallback
@@ -79,8 +88,27 @@ export async function updateProduct(product: Product): Promise<void> {
     await firestore.collection(PRODUCTS_COLLECTION).doc(product.id).set(product, { merge: true });
 }
 
+export async function getAdminProducts(): Promise<Product[]> {
+    const snapshot = await firestore.collection(PRODUCTS_COLLECTION).get();
+    return snapshot.docs.map((doc: FirebaseFirestore.QueryDocumentSnapshot) => ({ id: doc.id, ...doc.data() } as Product));
+}
+
 export async function deleteProduct(id: string): Promise<void> {
+    // Item 82: Soft Delete implementation
+    await firestore.collection(PRODUCTS_COLLECTION).doc(id).update({ active: false });
+}
+
+export async function hardDeleteProduct(id: string): Promise<void> {
     await firestore.collection(PRODUCTS_COLLECTION).doc(id).delete();
+}
+
+// --- AUDIT LOGS ---
+
+export async function addAuditLog(log: AuditLog): Promise<void> {
+    await firestore.collection(AUDIT_LOGS_COLLECTION).add({
+        ...log,
+        timestamp: new Date().toISOString()
+    });
 }
 
 // For backward compatibility during migration, if any code still calls saveProducts(array)
@@ -90,18 +118,18 @@ export async function deleteProduct(id: string): Promise<void> {
 
 // --- ARCHIVES ---
 
-export async function getArchives(): Promise<any[]> {
+export async function getArchives(): Promise<Product[]> {
     try {
         const snapshot = await firestore.collection(ARCHIVES_COLLECTION).orderBy('date', 'desc').get();
-        return snapshot.docs.map((doc: any) => ({ id: doc.id, ...doc.data() }));
+        return snapshot.docs.map((doc: FirebaseFirestore.QueryDocumentSnapshot) => ({ id: doc.id, ...doc.data() } as Product));
     } catch (error) {
         console.error("Error fetching archives:", error);
         return [];
     }
 }
 
-export async function addArchive(item: any): Promise<void> {
-    const data = { ...item, date: item.date || new Date().toISOString() };
+export async function addArchive(item: Product): Promise<void> {
+    const data = { ...item, date: item.createdAt || new Date().toISOString() };
     if (item.id) {
         await firestore.collection(ARCHIVES_COLLECTION).doc(item.id).set(data);
     } else {
@@ -118,7 +146,7 @@ export async function deleteArchive(id: string): Promise<void> {
 export async function getFeedback(): Promise<Feedback[]> {
     try {
         const snapshot = await firestore.collection(FEEDBACK_COLLECTION).orderBy('date', 'desc').get();
-        return snapshot.docs.map((doc: any) => ({ id: doc.id, ...doc.data() } as Feedback));
+        return snapshot.docs.map((doc: FirebaseFirestore.QueryDocumentSnapshot) => ({ id: doc.id, ...doc.data() } as Feedback));
     } catch (error) {
         console.error("Error fetching feedback:", error);
         return [];
@@ -135,17 +163,17 @@ export async function deleteFeedback(id: string): Promise<void> {
 
 // --- PROMOS ---
 
-export async function getPromos(): Promise<any[]> {
+export async function getPromos(): Promise<Product[]> {
     try {
         const snapshot = await firestore.collection(PROMOS_COLLECTION).get();
-        return snapshot.docs.map((doc: any) => ({ id: doc.id, ...doc.data() }));
+        return snapshot.docs.map((doc: FirebaseFirestore.QueryDocumentSnapshot) => ({ id: doc.id, ...doc.data() } as Product));
     } catch (error) {
         console.error("Error fetching promos:", error);
         return [];
     }
 }
 
-export async function addPromo(promo: any): Promise<void> {
+export async function addPromo(promo: Product): Promise<void> {
     await firestore.collection(PROMOS_COLLECTION).add(promo);
 }
 
@@ -153,7 +181,7 @@ export async function deletePromo(id: string): Promise<void> {
     await firestore.collection(PROMOS_COLLECTION).doc(id).delete();
 }
 
-export async function updatePromo(promo: any): Promise<void> {
+export async function updatePromo(promo: Product): Promise<void> {
     if (!promo.id) throw new Error("Promo ID required");
     await firestore.collection(PROMOS_COLLECTION).doc(promo.id).set(promo, { merge: true });
 }
@@ -183,17 +211,17 @@ export async function saveSettings(settings: SiteSettings): Promise<void> {
 
 // --- ABOUT ---
 
-export async function getAbout(): Promise<any> {
+export async function getAbout(): Promise<AboutData | null> {
     try {
         const doc = await firestore.collection(ABOUT_COLLECTION).doc('main').get();
-        if (doc.exists) return doc.data();
+        if (doc.exists) return doc.data() as AboutData;
     } catch (error) {
         console.error("Error fetching about:", error);
     }
-    return {};
+    return null;
 }
 
-export async function saveAbout(data: any): Promise<void> {
+export async function saveAbout(data: AboutData): Promise<void> {
     await firestore.collection(ABOUT_COLLECTION).doc('main').set(data, { merge: true });
 }
 
@@ -202,7 +230,7 @@ export async function saveAbout(data: any): Promise<void> {
 export async function getTours(): Promise<TourEvent[]> {
     try {
         const snapshot = await firestore.collection(TOURS_COLLECTION).orderBy('date', 'asc').get();
-        return snapshot.docs.map((doc: any) => ({ id: doc.id, ...doc.data() } as TourEvent));
+        return snapshot.docs.map((doc: FirebaseFirestore.QueryDocumentSnapshot) => ({ id: doc.id, ...doc.data() } as TourEvent));
     } catch (error) {
         console.error("Error fetching tours:", error);
         return [];

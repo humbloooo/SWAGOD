@@ -27,11 +27,13 @@ if (!admin.apps.length) {
 // allowing the app to build/run with fallback data in db.ts
 export const isMock = !admin.apps.length;
 
-export const firestore = admin.apps.length
+export const firestore = (admin.apps.length
     ? admin.firestore()
     : {
-        collection: (name: string) => ({
-            doc: (id: string) => ({
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        collection: (_: string) => ({
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            doc: (__: string) => ({
                 get: async () => ({ exists: false, data: () => ({}) }),
                 set: async () => { },
                 delete: async () => { },
@@ -45,13 +47,13 @@ export const firestore = admin.apps.length
             get: async () => ({ empty: true, docs: [] }),
             add: async () => ({ id: 'mock-id' }),
         })
-    } as any;
+    }) as unknown as admin.firestore.Firestore;
 
-export const auth = admin.apps.length
+export const auth = (admin.apps.length
     ? admin.auth()
     : {
         verifyIdToken: async () => {
             console.warn("MOCK AUTH: verifyIdToken called but no Firebase keys found.");
             return { email: 'admin@swagod.com' }; // Default mock admin for local testing
         }
-    } as any;
+    }) as unknown as admin.auth.Auth;

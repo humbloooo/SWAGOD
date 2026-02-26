@@ -6,7 +6,6 @@ import { firestore } from "@/lib/firebase-admin";
 import { isUserAdmin } from "@/lib/db";
 
 export const authOptions: NextAuthOptions = {
-    // @ts-ignore - The adapter type definition might mismatch slightly with v4 but it works
     adapter: FirestoreAdapter(firestore),
     session: {
         strategy: "jwt", // We must use JWT strategy with Credentials provider, even with an adapter
@@ -74,10 +73,12 @@ export const authOptions: NextAuthOptions = {
         }),
     ],
     callbacks: {
-        async jwt({ token, user, trigger, session }: any) {
+        async jwt({ token, user }) {
             if (user) {
-                token.id = user.id;
-                token.role = user.role; // Initial login role
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const u = user as any;
+                token.id = u.id;
+                token.role = u.role; // Initial login role
 
                 // If logging in via Google, check if they are an Admin in Firestore
                 if (!token.role && user.email) {
@@ -89,9 +90,13 @@ export const authOptions: NextAuthOptions = {
             }
             return token;
         },
-        session({ session, token }: any) {
-            session.user.role = token.role;
-            session.user.id = token.id;
+        session({ session, token }) {
+            if (session.user) {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const s = session.user as any;
+                s.role = token.role;
+                s.id = token.id;
+            }
             return session;
         },
     },

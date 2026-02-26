@@ -16,7 +16,7 @@ export async function POST(request: Request) {
 
         await addFeedback(newFeedback);
         return NextResponse.json({ success: true, message: "Feedback received" });
-    } catch (e) {
+    } catch {
         return NextResponse.json({ success: false, error: "Failed to save feedback" }, { status: 500 });
     }
 }
@@ -35,7 +35,7 @@ export async function DELETE(request: Request) {
     try {
         await deleteFeedback(id);
         return NextResponse.json({ success: true });
-    } catch (e) {
+    } catch {
         return NextResponse.json({ success: false, error: "Failed to delete" }, { status: 500 });
     }
 }

@@ -12,7 +12,7 @@ export async function POST(request: Request) {
         const body = await request.json();
         await addTour(body as TourEvent);
         return NextResponse.json({ success: true });
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: 'Failed to add tour' }, { status: 500 });
     }
 }
@@ -25,7 +25,7 @@ export async function DELETE(request: Request) {
 
         await deleteTour(id);
         return NextResponse.json({ success: true });
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: 'Failed to delete tour' }, { status: 500 });
     }
 }

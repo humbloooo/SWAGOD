@@ -8,11 +8,31 @@ import Link from "next/link";
 import Image from "next/image";
 
 import { useRouter } from "next/navigation";
+import { useAppStore } from "@/lib/store";
+import { formatPrice } from "@/lib/utils";
+import { useEscapeKey } from "@/lib/hooks/useEscapeKey";
 
 interface SearchProps {
     isOpen: boolean;
     onClose: () => void;
 }
+
+const HighlightMatch = ({ text, highlight }: { text: string; highlight: string }) => {
+    if (!highlight.trim()) return <span>{text}</span>;
+
+    // Split on highlight term and include term in result array
+    const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
+
+    return (
+        <span>
+            {parts.map((part, i) => (
+                part.toLowerCase() === highlight.toLowerCase() ?
+                    <span key={i} className="text-primary glow-primary">{part}</span> :
+                    <span key={i}>{part}</span>
+            ))}
+        </span>
+    );
+};
 
 export default function Search({ isOpen, onClose }: SearchProps) {
     const [query, setQuery] = useState("");
@@ -20,6 +40,7 @@ export default function Search({ isOpen, onClose }: SearchProps) {
     const [isLoading, setIsLoading] = useState(false);
     const [popular, setPopular] = useState<Product[]>([]);
     const router = useRouter();
+    const { currency } = useAppStore();
 
     // Fetch popular/all items on open
     useEffect(() => {
@@ -27,12 +48,16 @@ export default function Search({ isOpen, onClose }: SearchProps) {
             fetch("/api/products")
                 .then(res => res.json())
                 .then(data => {
-                    const sorted = data.sort((a: any, b: any) => (b.likes?.length || 0) - (a.likes?.length || 0)).slice(0, 3);
+                    const sorted = data.sort((a: Product, b: Product) => (b.likes?.length || 0) - (a.likes?.length || 0)).slice(0, 3);
                     setPopular(sorted);
                 })
                 .catch(err => console.error("Failed to load popular items", err));
         }
-    }, [isOpen]);
+    }, [isOpen, popular.length]);
+
+    useEscapeKey(() => {
+        if (isOpen) onClose();
+    });
 
     useEffect(() => {
         if (query.length < 2) {
@@ -82,6 +107,7 @@ export default function Search({ isOpen, onClose }: SearchProps) {
                 >
                     <button
                         onClick={onClose}
+                        aria-label="Close Search"
                         className="self-end p-2 text-white hover:text-primary transition-colors"
                     >
                         <X size={48} />
@@ -117,8 +143,8 @@ export default function Search({ isOpen, onClose }: SearchProps) {
                                                     <Image src={product.image} alt={product.title} fill className="object-cover" />
                                                 </div>
                                                 <div>
-                                                    <h3 className="text-xl font-bold text-white uppercase">{product.title}</h3>
-                                                    <p className="text-primary font-mono text-sm">R {product.price.toFixed(2)}</p>
+                                                    <h3 className="text-xl font-bold text-white uppercase"><HighlightMatch text={product.title} highlight={query} /></h3>
+                                                    <p className="text-primary font-mono text-sm">{formatPrice(product.price, currency)}</p>
                                                 </div>
                                             </div>
                                             <ArrowRight className="text-white/20 group-hover:text-primary transition-colors" />
@@ -128,7 +154,7 @@ export default function Search({ isOpen, onClose }: SearchProps) {
                             )}
 
                             {!isLoading && query.length >= 2 && results.length === 0 && (
-                                <div className="text-white/30 font-mono italic">NO RESULTS FOUND FOR "{query}"</div>
+                                <div className="text-white/30 font-mono italic">NO RESULTS FOUND FOR &quot;{query}&quot;</div>
                             )}
 
                             {!isLoading && query.length < 2 && popular.length > 0 && (
@@ -148,7 +174,7 @@ export default function Search({ isOpen, onClose }: SearchProps) {
                                                     </div>
                                                     <div>
                                                         <h3 className="text-sm font-bold text-white uppercase">{product.title}</h3>
-                                                        <p className="text-primary font-mono text-xs">R {product.price.toFixed(2)}</p>
+                                                        <p className="text-primary font-mono text-xs">{formatPrice(product.price, currency)}</p>
                                                     </div>
                                                 </div>
                                                 <ArrowRight size={16} className="text-white/20 group-hover:text-primary transition-colors" />

@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { signIn } from "next-auth/react";
-import Header from "@/components/Header";
-import Navigation from "@/components/Navigation";
+import Header from "@/components/layout/Header";
+import Navigation from "@/components/layout/Navigation";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 // We need to implement the actual registration logic using Firebase Client SDK
@@ -67,9 +67,9 @@ export default function SignUpPage() {
             toast.success("Account created successfully!");
             router.push('/login');
 
-        } catch (err: any) {
+        } catch (err) {
             console.error(err);
-            setError(err.message || "Failed to create account");
+            setError(err instanceof Error ? err.message : "Failed to create account");
         } finally {
             setIsLoading(null);
         }

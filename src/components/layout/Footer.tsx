@@ -54,6 +54,19 @@ export default function Footer() {
                             )}
                         </ul>
                     </div>
+
+                    <div>
+                        <h4 className="font-bold uppercase mb-6 text-gray-400 text-xs tracking-widest">Transmissions</h4>
+                        <p className="font-mono text-[10px] text-gray-500 uppercase tracking-widest mb-4">RECEIVE ARCHIVE NOTIFICATIONS:</p>
+                        <div className="flex bg-gray-900/50 border border-gray-800 focus-within:border-primary transition-colors">
+                            <input
+                                type="email"
+                                placeholder="ACCESS@PROTO.COL"
+                                className="bg-transparent border-none px-3 py-2 font-mono text-[10px] w-full focus:outline-none uppercase"
+                            />
+                            <button className="px-3 py-2 bg-primary text-black font-black text-[10px] uppercase hover:bg-white transition-colors">JOIN</button>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-mono text-gray-600">

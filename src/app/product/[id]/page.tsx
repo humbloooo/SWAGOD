@@ -1,5 +1,4 @@
 import { getProducts } from "@/lib/db";
-import { Product } from "@/lib/types";
 import ProductClient from "./ProductClient";
 import { Metadata } from "next";
 

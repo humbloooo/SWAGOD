@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import GlitchText from "./GlitchText";
+import GlitchText from "./ui/GlitchText";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 
@@ -10,7 +10,6 @@ import { useTextScramble } from "@/hooks/useTextScramble";
 import Magnetic from "./motion/Magnetic";
 
 export default function Hero({ heroImage }: { heroImage?: string }) {
-    const scrambledTagline = useTextScramble("Wear the Future // Fear the Past");
 
     return (
         <section className="relative flex flex-col items-center justify-center h-screen w-full overflow-hidden bg-background">

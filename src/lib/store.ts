@@ -13,7 +13,18 @@ interface CartState {
     closeCart: () => void;
 }
 
-interface AppState extends CartState { }
+interface ProductCacheState {
+    cachedProducts: Product[];
+    lastFetch: number | null;
+    setCachedProducts: (products: Product[]) => void;
+}
+
+interface CurrencyState {
+    currency: "ZAR" | "USD";
+    setCurrency: (currency: "ZAR" | "USD") => void;
+}
+
+interface AppState extends CartState, ProductCacheState, CurrencyState { }
 
 export const useAppStore = create<AppState>()(
     persist(
@@ -49,9 +60,14 @@ export const useAppStore = create<AppState>()(
             total: () => {
                 return get().items.reduce((acc, item) => acc + item.price * item.quantity, 0);
             },
+            cachedProducts: [],
+            lastFetch: null,
+            setCachedProducts: (products) => set({ cachedProducts: products, lastFetch: Date.now() }),
+            currency: "ZAR",
+            setCurrency: (currency) => set({ currency }),
         }),
         {
-            name: 'swagod-store',
+            name: 'SWGD_STORE',
         }
     )
 );

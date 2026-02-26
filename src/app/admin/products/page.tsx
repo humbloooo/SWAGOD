@@ -1,19 +1,23 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import { Product } from "@/lib/types"; // Fixed import
-import ImageUpload from "@/components/admin/ImageUpload";
 import MultiImageUpload from "@/components/admin/MultiImageUpload";
 import { toast } from "sonner";
-import { Trash2, Edit, Plus, Check, X, Box, MoreVertical } from "lucide-react";
+import { Trash2, Edit, Plus, Check, X, Box } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
+import { useAppStore } from "@/lib/store";
+import { formatPrice } from "@/lib/utils";
+
 export default function AdminProducts() {
     const [products, setProducts] = useState<Product[]>([]);
     const [isEditing, setIsEditing] = useState(false);
     const [currentProduct, setCurrentProduct] = useState<Partial<Product>>({});
     const [selectedIds, setSelectedIds] = useState<string[]>([]);
     const [sortBy, setSortBy] = useState<"newest" | "price" | "likes">("newest");
+    const [visibleCount, setVisibleCount] = useState(50);
+    const { currency } = useAppStore();
 
     useEffect(() => {
         fetch("/api/products")
@@ -59,7 +63,7 @@ export default function AdminProducts() {
                 setCurrentProduct({});
                 return 'STORE UPDATED';
             },
-            error: (err: any) => `SYNC ERROR: ${err.message}`
+            error: (err: Error) => `SYNC ERROR: ${err.message}`
         });
     };
 
@@ -129,7 +133,7 @@ export default function AdminProducts() {
                         )}
                         <select
                             value={sortBy}
-                            onChange={(e) => setSortBy(e.target.value as any)}
+                            onChange={(e) => setSortBy(e.target.value as "newest" | "price" | "likes")}
                             className="px-4 py-4 bg-black border border-white/20 text-white font-black uppercase tracking-widest outline-none hover:border-white/40 transition-colors"
                         >
                             <option value="newest">SORT: NEWEST</option>
@@ -151,7 +155,7 @@ export default function AdminProducts() {
                             if (sortBy === "price") return (b.price || 0) - (a.price || 0);
                             if (sortBy === "likes") return (b.likes?.length || 0) - (a.likes?.length || 0);
                             return 0;
-                        }).map((product, idx) => (
+                        }).slice(0, visibleCount).map((product, idx) => (
                             <motion.div
                                 key={product.id}
                                 initial={{ opacity: 0, x: -20 }}
@@ -173,7 +177,7 @@ export default function AdminProducts() {
 
                                     <div className="w-20 h-20 bg-white/10 border border-white/10 relative overflow-hidden">
                                         {product.image ? (
-                                            <img src={product.image} alt={product.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                                            <Image src={product.image} alt={product.title} fill className="object-cover group-hover:scale-110 transition-transform duration-500" />
                                         ) : (
                                             <div className="w-full h-full flex items-center justify-center opacity-20">
                                                 <Box size={24} />
@@ -184,7 +188,7 @@ export default function AdminProducts() {
                                     <div>
                                         <h3 className="text-xl font-black uppercase tracking-tight group-hover:text-primary transition-colors">{product.title}</h3>
                                         <div className="flex gap-4 mt-1 font-mono text-[10px] uppercase tracking-widest text-white/40">
-                                            <span>PRICE: <span className="text-white">R {product.price?.toFixed(2)}</span></span>
+                                            <span>PRICE: <span className="text-white">{product.price ? formatPrice(product.price, currency) : 'N/A'}</span></span>
                                             <span>CAT: <span className="text-white">{product.category}</span></span>
                                             {product.sizes && product.sizes.length > 0 && (
                                                 <span>SIZES: <span className="text-white">{product.sizes.join(', ')}</span></span>
@@ -212,6 +216,31 @@ export default function AdminProducts() {
                         ))}
                     </AnimatePresence>
                 </div>
+
+                {products.length === 0 && (
+                    <div className="flex flex-col items-center justify-center py-32 border border-white/10 bg-white/5 backdrop-blur-md">
+                        <Box size={48} className="text-white/20 mb-6" />
+                        <h2 className="text-2xl font-black uppercase tracking-widest text-white/50 mb-2">ARCHIVE EMPTY</h2>
+                        <p className="font-mono text-xs uppercase tracking-[0.2em] text-white/30 text-center max-w-sm">No products found in the database. Add a new entry to initialize the catalog.</p>
+                        <button
+                            onClick={() => { setIsEditing(true); setCurrentProduct({ category: 'clothing' }); }}
+                            className="mt-8 px-6 py-3 border border-primary text-primary font-black uppercase tracking-widest hover:bg-primary hover:text-black transition-all"
+                        >
+                            INITIALIZE ENTRY
+                        </button>
+                    </div>
+                )}
+
+                {visibleCount < products.length && (
+                    <div className="flex justify-center mt-12">
+                        <button
+                            onClick={() => setVisibleCount(prev => prev + 50)}
+                            className="px-12 py-4 border border-white/20 text-white font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all"
+                        >
+                            LOAD MORE ENTRIES ({products.length - visibleCount} REMAINING)
+                        </button>
+                    </div>
+                )}
 
                 {isEditing && (
                     <div className="fixed inset-0 bg-black/90 backdrop-blur-xl z-[100] flex items-center justify-center p-6">
@@ -258,7 +287,7 @@ export default function AdminProducts() {
                                         <select
                                             className="w-full bg-white/5 border border-white/10 p-4 focus:border-primary outline-none transition-all appearance-none"
                                             value={currentProduct.category || "clothing"}
-                                            onChange={e => setCurrentProduct({ ...currentProduct, category: e.target.value as any })}
+                                            onChange={e => setCurrentProduct({ ...currentProduct, category: e.target.value as "clothing" | "merch" | "accessories" })}
                                         >
                                             <option value="clothing">CLOTHING</option>
                                             <option value="merch">MERCH</option>

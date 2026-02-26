@@ -14,7 +14,7 @@ interface AddToCartButtonProps {
 }
 
 export default function AddToCartButton({ product, selectedSize, className }: AddToCartButtonProps) {
-    const addItem = useAppStore((state) => state.addItem);
+    const { addItem, openCart } = useAppStore();
     const [isAdding, setIsAdding] = useState(false);
 
     const handleAddToCart = () => {
@@ -34,6 +34,10 @@ export default function AddToCartButton({ product, selectedSize, className }: Ad
             toast.success(`${product.title} ADDED TO CART`, {
                 description: sizeToAdd ? `SIZE: ${sizeToAdd}` : undefined,
                 className: "font-mono font-bold uppercase",
+                action: {
+                    label: "VIEW CART",
+                    onClick: () => openCart(),
+                },
             });
             setIsAdding(false);
         }, 600);

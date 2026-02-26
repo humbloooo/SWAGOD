@@ -5,11 +5,20 @@ import ImageUpload from "@/components/admin/ImageUpload";
 import { toast } from "sonner";
 import { X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
+
+interface ArchiveItem {
+    id: string;
+    title: string;
+    image: string;
+    description: string;
+    likes?: string[];
+}
 
 export default function AdminArchives() {
-    const [archives, setArchives] = useState<any[]>([]);
+    const [archives, setArchives] = useState<ArchiveItem[]>([]);
     const [isEditing, setIsEditing] = useState(false);
-    const [newItem, setNewItem] = useState<any>({});
+    const [newItem, setNewItem] = useState<Partial<ArchiveItem>>({});
 
     useEffect(() => {
         fetch("/api/archives")
@@ -117,7 +126,7 @@ export default function AdminArchives() {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {archives.map((item, i) => (
                         <div key={i} className="relative aspect-[3/4] group border border-white/10 overflow-hidden">
-                            <img src={item.image} alt={item.title} className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500" />
+                            <Image src={item.image} alt={item.title} fill className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500" />
                             <div className="absolute bottom-0 left-0 bg-black/80 backdrop-blur-md text-white p-3 text-[10px] w-full flex flex-col gap-1">
                                 <div className="font-black truncate uppercase">{item.title}</div>
                                 <div className="flex justify-between items-center">

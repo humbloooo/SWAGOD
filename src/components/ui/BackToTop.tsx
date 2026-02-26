@@ -9,15 +9,23 @@ export default function BackToTop() {
     const { scrollYProgress: scrollProgress } = useScroll();
 
     useEffect(() => {
+        let isThrottled = false;
+
         const toggleVisibility = () => {
-            if (window.scrollY > 500) {
-                setIsVisible(true);
-            } else {
-                setIsVisible(false);
-            }
+            if (isThrottled) return;
+            isThrottled = true;
+
+            setTimeout(() => {
+                if (window.scrollY > 500) {
+                    setIsVisible(true);
+                } else {
+                    setIsVisible(false);
+                }
+                isThrottled = false;
+            }, 100);
         };
 
-        window.addEventListener("scroll", toggleVisibility);
+        window.addEventListener("scroll", toggleVisibility, { passive: true });
         return () => window.removeEventListener("scroll", toggleVisibility);
     }, []);
 

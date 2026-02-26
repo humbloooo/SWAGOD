@@ -1,30 +1,23 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ShoppingBag, Search as SearchIcon } from "lucide-react";
 import Link from "next/link";
-import CartDrawer from "@/components/CartDrawer";
-import Search from "@/components/Search";
+import dynamic from "next/dynamic";
+const CartDrawer = dynamic(() => import("@/components/layout/CartDrawer"), { ssr: false });
+const Search = dynamic(() => import("@/components/layout/Search"), { ssr: false });
 import { useAppStore } from "@/lib/store";
-import { ThemeToggle } from "./ThemeToggle";
+import { formatPrice } from "@/lib/utils";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { useScrollThreshold } from "@/lib/hooks/useScrollThreshold";
+import { SiteSettings } from "@/lib/types";
 
 
 export default function Header() {
     const [isOpen, setIsOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
-    const [hidden, setHidden] = useState(false);
-
-    const { scrollY } = useScroll();
-
-    useMotionValueEvent(scrollY, "change", (latest) => {
-        const previous = scrollY.getPrevious() ?? 0;
-        if (latest > previous && latest > 150) {
-            setHidden(true);
-        } else {
-            setHidden(false);
-        }
-    });
+    const hidden = useScrollThreshold(150);
 
     useEffect(() => {
         if (isOpen) {
@@ -37,20 +30,18 @@ export default function Header() {
         };
     }, [isOpen]);
 
-    const { items: cartItems, openCart } = useAppStore();
+    const { items: cartItems, openCart, currency, setCurrency } = useAppStore();
 
     // Hydration fix for persist
     const [mounted, setMounted] = useState(false);
+    const [settings, setSettings] = useState<SiteSettings | null>(null);
 
     useEffect(() => {
-        setMounted(true);
-    }, []);
-
-    const [settings, setSettings] = useState<any>(null);
-
-    useEffect(() => {
-        setMounted(true);
-        fetch("/api/settings").then(res => res.json()).then(data => setSettings(data));
+        setTimeout(() => setMounted(true), 0);
+        fetch("/api/settings")
+            .then(res => res.json())
+            .then(data => setSettings(data))
+            .catch(err => console.error("Failed to load settings:", err));
     }, []);
 
     const itemCount = mounted ? cartItems.reduce((acc, item) => acc + item.quantity, 0) : 0;
@@ -72,10 +63,11 @@ export default function Header() {
                 </Link>
 
                 <div className="flex items-center gap-4 md:gap-6">
-                    {/* Item 24: Currency Toggle Signal */}
+                    {/* Item 34: Currency Toggle Signal */}
                     <div className="hidden lg:flex items-center gap-2 font-mono text-[10px] text-white/60 border-r border-white/20 pr-4 mr-2">
-                        <span className="text-white">ZAR</span>
-                        <span className="opacity-40">USD</span>
+                        <button onClick={() => setCurrency("ZAR")} className={`${currency === "ZAR" ? 'text-white font-bold' : 'opacity-40 hover:opacity-100'} transition-all`}>ZAR</button>
+                        <span className="opacity-20">/</span>
+                        <button onClick={() => setCurrency("USD")} className={`${currency === "USD" ? 'text-white font-bold' : 'opacity-40 hover:opacity-100'} transition-all`}>USD</button>
                     </div>
 
                     <div className="hidden md:block mr-2">
@@ -105,7 +97,7 @@ export default function Header() {
                         </div>
                         {mounted && cartItems.length > 0 && (
                             <span className="hidden sm:block font-mono text-xs font-black">
-                                R {cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0).toFixed(2)}
+                                {formatPrice(cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0), currency)}
                             </span>
                         )}
                     </button>
@@ -150,11 +142,11 @@ export default function Header() {
                         </button>
                         <div className="flex flex-col space-y-4 md:space-y-8 overflow-y-auto pt-20 pb-10">
                             {[
-                                { l: "Home", h: "/" },
-                                { l: "Shop", h: "/shop" },
+                                { l: "Index", h: "/" },
+                                { l: "Collections", h: "/shop" },
                                 { l: "Tour", h: "/tour" },
                                 { l: "Archive", h: "/archive" },
-                                { l: "Login", h: "/login" },
+                                { l: "Access", h: "/login" },
                             ].map((item, i) => (
                                 <motion.div
                                     key={item.l}
@@ -190,7 +182,7 @@ export default function Header() {
                             className="mt-auto pb-12"
                         >
                             <p className="text-gray-500 font-mono text-xs">
-                                SWAGOD // EST. 2026 // WORLDWIDE
+                                SWAGOD {"//"} EST. 2026 {"//"} WORLDWIDE
                             </p>
                         </motion.div>
                     </motion.div>

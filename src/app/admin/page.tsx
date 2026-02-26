@@ -1,10 +1,5 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/auth";
-import { redirect } from "next/navigation";
-import Header from "@/components/Header";
-import Navigation from "@/components/Navigation";
-import Link from "next/link";
 import AdminAnalytics from "@/components/admin/AdminAnalytics";
+import Link from "next/link";
 
 export default async function AdminPage() {
     return (
@@ -98,7 +93,7 @@ export default async function AdminPage() {
                                     <tr key={i} className="border-b border-white/5 hover:bg-white/5 transition-colors group">
                                         <td className="py-4 md:py-6 font-mono">SWG_RTN_{100 * i}X</td>
                                         <td className="py-4 md:py-6 italic text-[7px] md:text-[10px] truncate max-w-[100px] md:max-w-none">USER_ACCOUNT_{i}@SWAGOD.COM</td>
-                                        <td className="py-4 md:py-6">R {(Math.random() * 1000 + 500).toFixed(2)}</td>
+                                        <td className="py-4 md:py-6">R {(500 + i * 123.45).toFixed(2)}</td>
                                         <td className="py-4 md:py-6 text-primary">
                                             <span className="px-2 md:px-3 py-0.5 md:py-1 bg-primary/20 text-primary border border-primary/20 text-[7px] md:text-[10px] font-black glow-primary">
                                                 SUCCESS

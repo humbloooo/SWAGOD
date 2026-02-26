@@ -1,8 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Header from "@/components/Header";
-import Navigation from "@/components/Navigation";
 import ImageUpload from "@/components/admin/ImageUpload";
 import { SiteSettings } from "@/lib/types";
 import { toast } from "sonner";
@@ -42,7 +40,7 @@ export default function AdminSettings() {
             } else {
                 toast.error("FAILED TO SAVE");
             }
-        } catch (error) {
+        } catch {
             toast.error("ERROR SAVING SETTINGS");
         }
     };

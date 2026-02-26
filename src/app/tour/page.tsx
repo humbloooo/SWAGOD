@@ -1,8 +1,9 @@
-import Header from "@/components/Header";
-import Navigation from "@/components/Navigation";
+import Header from "@/components/layout/Header";
+import Navigation from "@/components/layout/Navigation";
 
 import Link from "next/link";
 import { getTours } from "@/lib/db";
+import NotifyButton from "@/components/ui/NotifyButton";
 
 export const dynamic = "force-dynamic";
 
@@ -14,7 +15,7 @@ export default async function Tour() {
             <Header />
             <div className="container mx-auto px-6">
                 <h1 className="text-5xl md:text-8xl font-black uppercase tracking-tighter mb-12">
-                    Our // <span className="text-primary">Tours</span>
+                    Our {"//"} <span className="text-primary">Tours</span>
                 </h1>
 
                 <div className="space-y-8">
@@ -23,17 +24,12 @@ export default async function Tour() {
                             <div>
                                 <span className="block text-sm font-mono text-gray-500 mb-2">{tour.date}</span>
                                 <h3 className="text-4xl font-bold uppercase group-hover:text-primary transition-colors">
-                                    {tour.city} // {tour.venue}
+                                    {tour.city} {"//"} {tour.venue}
                                 </h3>
                             </div>
 
                             {tour.soldOut ? (
-                                <button
-                                    onClick={() => alert('NOTIFICATION REGISTERED FOR: ' + tour.city)}
-                                    className="mt-4 md:mt-0 px-6 py-2 border border-primary text-primary hover:bg-primary hover:text-black font-bold uppercase text-sm transition-colors cursor-pointer"
-                                >
-                                    NOTIFY ME
-                                </button>
+                                <NotifyButton city={tour.city} />
                             ) : (
                                 <Link
                                     href={tour.ticketLink || "#"}

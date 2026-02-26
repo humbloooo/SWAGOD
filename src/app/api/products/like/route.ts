@@ -33,7 +33,7 @@ export async function POST(request: Request) {
         await productRef.update({ likedBy });
 
         return NextResponse.json({ success: true, count: likedBy.length });
-    } catch (e) {
+    } catch {
         return NextResponse.json({ error: "Sync failed" }, { status: 500 });
     }
 }

@@ -29,7 +29,7 @@ export default function BackgroundBrackets() {
                 transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
                 className="absolute top-1/2 left-1/4 text-4xl font-mono text-primary/10 select-none"
             >
-                // SYSTEM_ALPHA
+                {"//"} SYSTEM_ALPHA
             </motion.div>
         </div>
     );

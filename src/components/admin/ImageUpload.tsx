@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { uploadImage } from "@/lib/storage";
 import { Loader2, Upload, X } from "lucide-react";
 import Image from "next/image";
 import { toast } from "sonner";
@@ -12,7 +11,7 @@ interface ImageUploadProps {
     folder?: string;
 }
 
-export default function ImageUpload({ value, onChange, folder = "uploads" }: ImageUploadProps) {
+export default function ImageUpload({ value, onChange }: ImageUploadProps) {
     const [isLoading, setIsLoading] = useState(false);
     const [isDragging, setIsDragging] = useState(false);
 
@@ -45,7 +44,7 @@ export default function ImageUpload({ value, onChange, folder = "uploads" }: Ima
         });
     };
 
-    const handleUpload = async (file: File) => {
+    const handleUpload = useCallback(async (file: File) => {
         setIsLoading(true);
         try {
             // "Bypass" with Compression
@@ -76,7 +75,7 @@ export default function ImageUpload({ value, onChange, folder = "uploads" }: Ima
             toast.error("Upload failed. Try again.");
             setIsLoading(false);
         }
-    };
+    }, [onChange]);
 
     const onDrop = useCallback((e: React.DragEvent<HTMLDivElement>) => {
         e.preventDefault();
@@ -85,7 +84,7 @@ export default function ImageUpload({ value, onChange, folder = "uploads" }: Ima
         if (e.dataTransfer.files && e.dataTransfer.files[0]) {
             handleUpload(e.dataTransfer.files[0]);
         }
-    }, []);
+    }, [handleUpload]);
 
     const onDragOver = useCallback((e: React.DragEvent<HTMLDivElement>) => {
         e.preventDefault();
