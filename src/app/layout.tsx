@@ -33,6 +33,7 @@ export const metadata: Metadata = {
 };
 
 import { Providers } from "@/components/Providers";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import Footer from "@/components/Footer";
 import { Toaster } from "sonner";
 import ScrollProgress from "@/components/ScrollProgress";
@@ -43,19 +44,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        suppressHydrationWarning
         className={`${interTight.variable} antialiased bg-background text-text selection:bg-primary selection:text-white overflow-x-hidden`}
       >
-        <Providers>
-          <div className="grain-overlay" />
-          <div className="scanline-overlay" />
-          <ScrollProgress />
-          {children}
-          <Footer />
-          <Toaster position="bottom-right" theme="dark" />
-        </Providers>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <Providers>
+            <div className="grain-overlay" />
+            <div className="scanline-overlay" />
+            <ScrollProgress />
+            {children}
+            <Footer />
+            <Toaster position="bottom-right" theme="dark" />
+          </Providers>
+        </ThemeProvider>
       </body>
     </html>
   );

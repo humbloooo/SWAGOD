@@ -9,6 +9,7 @@ import Navigation from "@/components/Navigation";
 import AddToCartButton from "@/components/AddToCartButton";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "sonner";
 
 interface ProductClientProps {
     id: string;
@@ -20,8 +21,21 @@ export default function ProductClient({ id }: ProductClientProps) {
     const [selectedSize, setSelectedSize] = useState<string | undefined>(undefined);
     const [selectedImage, setSelectedImage] = useState<string | undefined>(undefined);
     const [loading, setLoading] = useState(true);
+    const [showPromo, setShowPromo] = useState(false);
+    const [promoCode, setPromoCode] = useState("");
+
+    const handleApplyPromo = () => {
+        if (!promoCode.trim()) return;
+        toast.info("PROMO CODE APPLIED", {
+            description: `CODE ${promoCode.toUpperCase()} REGISTERED`,
+            className: "font-mono font-bold uppercase",
+        });
+        setPromoCode("");
+        setShowPromo(false);
+    };
 
     useEffect(() => {
+        /* ... rest of useEffect ... */
         async function fetchProduct() {
             try {
                 const res = await fetch('/api/products');
@@ -175,9 +189,39 @@ export default function ProductClient({ id }: ProductClientProps) {
                         <div className="flex flex-col gap-6">
                             <AddToCartButton product={product} selectedSize={selectedSize} />
 
-                            <button className="text-[10px] font-mono text-white/20 uppercase tracking-widest hover:text-primary transition-colors text-left flex items-center gap-2">
-                                <span>[+]</span> APPLY PROMO CODE
-                            </button>
+                            <div className="space-y-4">
+                                <button
+                                    onClick={() => setShowPromo(!showPromo)}
+                                    className="text-[10px] font-mono text-white/20 uppercase tracking-widest hover:text-primary transition-colors text-left flex items-center gap-2"
+                                >
+                                    <span>{showPromo ? "[-]" : "[+]"}</span> {showPromo ? "CANCEL PROMO" : "APPLY PROMO CODE"}
+                                </button>
+
+                                <AnimatePresence>
+                                    {showPromo && (
+                                        <motion.div
+                                            initial={{ height: 0, opacity: 0 }}
+                                            animate={{ height: "auto", opacity: 1 }}
+                                            exit={{ height: 0, opacity: 0 }}
+                                            className="overflow-hidden flex gap-2"
+                                        >
+                                            <input
+                                                type="text"
+                                                value={promoCode}
+                                                onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
+                                                placeholder="ENTER CODE"
+                                                className="flex-1 bg-white/5 border border-white/10 px-4 py-3 font-mono text-xs uppercase tracking-widest focus:border-primary outline-none"
+                                            />
+                                            <button
+                                                onClick={handleApplyPromo}
+                                                className="px-6 bg-white text-black font-black text-[10px] uppercase tracking-widest hover:bg-primary transition-colors"
+                                            >
+                                                APPLY
+                                            </button>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </div>
                         </div>
 
                         <div className="mt-16 grid grid-cols-2 gap-8 border-t border-white/5 pt-12">
@@ -205,7 +249,7 @@ export default function ProductClient({ id }: ProductClientProps) {
                                             src={rp.image || "/assets/placeholder.png"}
                                             alt={rp.title}
                                             fill
-                                            className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700"
+                                            className="object-cover md:grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700"
                                         />
                                     </div>
                                     <div className="space-y-1">

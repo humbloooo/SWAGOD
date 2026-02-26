@@ -41,32 +41,30 @@ export default function SignUpPage() {
         try {
             // 1. Create User in Firebase Auth
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
 
             // 2. Update Profile Display Name
-            if (auth.currentUser) {
-                await updateProfile(auth.currentUser, {
-                    displayName: name
-                });
+            await updateProfile(user, {
+                displayName: name
+            });
+
+            // 3. Create document in Firestore 'users' collection for NextAuth compatibility
+            // This ensures the FirestoreAdapter can find this user.
+            const res = await fetch('/api/users/sync', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    uid: user.uid,
+                    email: user.email,
+                    name: name
+                })
+            });
+
+            if (!res.ok) {
+                console.error("Failed to sync user to Firestore");
             }
 
-            // 3. User is created. authenticating with NextAuth? 
-            // Since we are using CredentialsProvider for "email" logic in NextAuth, 
-            // we can try to sign them in immediately.
-            // However, NextAuth Credentials typically verifies against a backend.
-            // If we use Firebase Adapter, we should use 'email' provider (magic link) OR 
-            // we use the credentials provider that verifies the token.
-
-            // SIMPLER APPROACH FOR NOW:
-            // Just redirect to login and ask them to sign in? 
-            // OR auto-login via signIn('credentials', { ... }) 
-            // But our credentials provider currently only supports "admin".
-
-            // To make this work properly, we need to update src/auth.ts to 
-            // allow verifying firebase users or standard credentials.
-
             toast.success("Account created successfully!");
-
-            // For now, redirect to login
             router.push('/login');
 
         } catch (err: any) {

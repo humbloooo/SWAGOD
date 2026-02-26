@@ -99,7 +99,7 @@ function ProductCard({ product, index, addItem }: { product: Product, index: num
                     src={product.image || "/assets/placeholder.png"}
                     alt={product.title}
                     fill
-                    className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700 ease-out"
+                    className="object-cover md:grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700 ease-out"
                 />
 
                 {/* Advanced Overlay */}

@@ -10,6 +10,7 @@ import WishlistDrawer from "@/components/WishlistDrawer";
 import Search from "@/components/Search";
 import { useAppStore } from "@/lib/store";
 import { Search as SearchIcon, Heart } from "lucide-react";
+import { ThemeToggle } from "./ThemeToggle";
 
 const MENU_LINKS = [
     { name: "HOME", href: "/" },
@@ -59,6 +60,8 @@ export default function Header() {
                         <span className="text-white">ZAR</span>
                         <span className="opacity-40">USD</span>
                     </div>
+
+                    <ThemeToggle />
 
                     <button
                         onClick={() => setIsSearchOpen(true)}

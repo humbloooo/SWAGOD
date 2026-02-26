@@ -72,9 +72,18 @@
 :root {
   --background: #FFFFFF;
   --foreground: #000000;
+  --surface: #F5F5F5;
   --glow-primary: 0 0 15px rgba(255, 0, 0, 0.4);
   --brutalist-border: 0.5px solid rgba(0, 0, 0, 0.1);
   --brutalist-border-white: 0.5px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark {
+  --background: #000000;
+  --foreground: #FFFFFF;
+  --surface: #121212;
+  --glow-primary: 0 0 20px rgba(255, 0, 0, 0.6);
+  --brutalist-border: 0.5px solid rgba(255, 255, 255, 0.1);
 }
 
 body {

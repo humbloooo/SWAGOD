@@ -16,23 +16,23 @@ export default function AdminAnalytics() {
 
     return (
         <section className="mb-20">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-10">
                 {stats.map((stat, idx) => (
                     <motion.div
                         key={stat.label}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: idx * 0.1 }}
-                        className="bg-white/5 border border-white/10 p-6 backdrop-blur-md"
+                        className="bg-white/5 border border-white/10 p-4 md:p-6 backdrop-blur-md"
                     >
-                        <div className="flex justify-between items-start mb-4">
-                            <stat.icon size={20} className="text-white/40" />
-                            <span className={`text-[10px] font-mono font-bold ${stat.trend.startsWith('+') ? 'text-green-500' : 'text-red-500'}`}>
+                        <div className="flex justify-between items-start mb-2 md:mb-4">
+                            <stat.icon size={16} className="text-white/40 md:w-5 md:h-5" />
+                            <span className={`text-[8px] md:text-[10px] font-mono font-bold ${stat.trend.startsWith('+') ? 'text-green-500' : 'text-red-500'}`}>
                                 {stat.trend}
                             </span>
                         </div>
-                        <h3 className="text-white/40 font-mono text-[10px] uppercase tracking-widest mb-1">{stat.label}</h3>
-                        <p className="text-2xl font-black">{stat.value}</p>
+                        <h3 className="text-white/40 font-mono text-[8px] md:text-[10px] uppercase tracking-widest mb-1">{stat.label}</h3>
+                        <p className="text-xl md:text-2xl font-black">{stat.value}</p>
                     </motion.div>
                 ))}
             </div>
