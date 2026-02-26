@@ -1,33 +1,43 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ShoppingBag } from "lucide-react";
+import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
+import { Menu, X, ShoppingBag, Search as SearchIcon } from "lucide-react";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
 import CartDrawer from "@/components/CartDrawer";
-import WishlistDrawer from "@/components/WishlistDrawer";
 import Search from "@/components/Search";
 import { useAppStore } from "@/lib/store";
-import { Search as SearchIcon, Heart } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 
-const MENU_LINKS = [
-    { name: "HOME", href: "/" },
-    { name: "COLLECTIONS", href: "/#latest-drops" },
-    { name: "SHOP", href: "/shop" },
-    { name: "TOUR", href: "/tour" },
-    { name: "GALLERY", href: "/archive" },
-];
 
 export default function Header() {
     const [isOpen, setIsOpen] = useState(false);
-    const [isCartOpen, setIsCartOpen] = useState(false);
-    const [isWishlistOpen, setIsWishlistOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [hidden, setHidden] = useState(false);
 
-    const cartItems = useAppStore((state) => state.items);
-    const wishlistItems = useAppStore((state) => state.wishlistItems);
+    const { scrollY } = useScroll();
+
+    useMotionValueEvent(scrollY, "change", (latest) => {
+        const previous = scrollY.getPrevious() ?? 0;
+        if (latest > previous && latest > 150) {
+            setHidden(true);
+        } else {
+            setHidden(false);
+        }
+    });
+
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "";
+        }
+        return () => {
+            document.body.style.overflow = "";
+        };
+    }, [isOpen]);
+
+    const { items: cartItems, openCart } = useAppStore();
 
     // Hydration fix for persist
     const [mounted, setMounted] = useState(false);
@@ -44,12 +54,19 @@ export default function Header() {
     }, []);
 
     const itemCount = mounted ? cartItems.reduce((acc, item) => acc + item.quantity, 0) : 0;
-    const wishlistCount = mounted ? wishlistItems.length : 0;
     const marqueeText = settings?.marqueeText || "WORLDWIDE SHIPPING AVAILABLE // FREE SHIPPING ON ORDERS OVER R2000 // NEW DROP: 'FUTURE REFLECTION' LIVE NOW // LIMITED QUANTITIES // WORLDWIDE SHIPPING AVAILABLE // FREE SHIPPING ON ORDERS OVER R2000";
 
     return (
         <>
-            <header className="fixed top-0 left-0 w-full h-16 bg-primary z-50 flex items-center justify-between px-6 shadow-md">
+            <motion.header
+                variants={{
+                    visible: { y: 0 },
+                    hidden: { y: "-100%" },
+                }}
+                animate={hidden ? "hidden" : "visible"}
+                transition={{ duration: 0.35, ease: "easeInOut" }}
+                className="fixed top-0 left-0 w-full h-16 bg-primary z-50 flex items-center justify-between px-6 shadow-md"
+            >
                 <Link href="/" className="text-white font-black text-xl tracking-tighter hover:scale-105 transition-transform">
                     SWAGOD
                 </Link>
@@ -61,7 +78,9 @@ export default function Header() {
                         <span className="opacity-40">USD</span>
                     </div>
 
-                    <ThemeToggle />
+                    <div className="hidden md:block mr-2">
+                        <ThemeToggle />
+                    </div>
 
                     <button
                         onClick={() => setIsSearchOpen(true)}
@@ -72,20 +91,7 @@ export default function Header() {
                     </button>
 
                     <button
-                        onClick={() => setIsWishlistOpen(true)}
-                        className="relative text-white hover:opacity-80 transition-opacity"
-                        aria-label="View Saved Items"
-                    >
-                        <Heart size={20} className={cn("icon-industrial", wishlistCount > 0 ? "fill-white" : "")} />
-                        {wishlistCount > 0 && (
-                            <span className="absolute -top-2 -right-2 bg-black text-white text-[8px] font-bold w-4 h-4 rounded-full flex items-center justify-center border border-primary glow-primary">
-                                {wishlistCount}
-                            </span>
-                        )}
-                    </button>
-
-                    <button
-                        onClick={() => setIsCartOpen(true)}
+                        onClick={openCart}
                         className="group relative flex items-center gap-2 text-white hover:opacity-80 transition-opacity"
                         aria-label="View Cart"
                     >
@@ -112,7 +118,7 @@ export default function Header() {
                         <Menu size={28} className="icon-industrial" />
                     </button>
                 </div>
-            </header>
+            </motion.header>
 
             {/* MARQUEE BANNER - Dynamic */}
             {settings?.showMarquee && (
@@ -123,8 +129,7 @@ export default function Header() {
                 </div>
             )}
 
-            <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
-            <WishlistDrawer isOpen={isWishlistOpen} onClose={() => setIsWishlistOpen(false)} />
+            <CartDrawer />
             <Search isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
 
             {/* Mobile Menu Overlay */}
@@ -143,7 +148,7 @@ export default function Header() {
                         >
                             <X size={48} />
                         </button>
-                        <div className="flex flex-col space-y-8">
+                        <div className="flex flex-col space-y-4 md:space-y-8 overflow-y-auto pt-20 pb-10">
                             {[
                                 { l: "Home", h: "/" },
                                 { l: "Shop", h: "/shop" },
@@ -160,7 +165,7 @@ export default function Header() {
                                 >
                                     <Link
                                         href={item.h}
-                                        className="text-6xl font-black uppercase text-transparent stroke-white hover:text-primary transition-colors tracking-tighter"
+                                        className="text-5xl md:text-7xl font-black uppercase text-transparent stroke-white hover:text-primary transition-colors tracking-tighter drop-shadow-[0_0_10px_rgba(255,255,255,0.3)] hover:drop-shadow-[0_0_15px_rgba(255,100,0,0.8)]"
                                         style={{ WebkitTextStroke: "1px white" }}
                                         onClick={() => setIsOpen(false)}
                                     >
@@ -168,12 +173,21 @@ export default function Header() {
                                     </Link>
                                 </motion.div>
                             ))}
+
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 0.6 }}
+                                className="pt-8 border-t border-white/10 flex items-center justify-between"
+                            >
+                                <span className="text-white/40 font-mono text-[10px] uppercase tracking-widest text-center w-full">EST. 2026</span>
+                            </motion.div>
                         </div>
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
-                            transition={{ delay: 0.5 }}
-                            className="absolute bottom-12 left-12"
+                            transition={{ delay: 0.7 }}
+                            className="mt-auto pb-12"
                         >
                             <p className="text-gray-500 font-mono text-xs">
                                 SWAGOD // EST. 2026 // WORLDWIDE

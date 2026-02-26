@@ -32,8 +32,8 @@ export default function Footer() {
                     </div>
 
                     <div>
-                        <h4 className="font-bold uppercase mb-6 text-gray-400">Shop</h4>
-                        <ul className="space-y-4 font-mono text-sm">
+                        <h4 className="font-bold uppercase mb-6 text-gray-400 text-xs tracking-widest">Shop</h4>
+                        <ul className="space-y-4 font-mono text-xs text-gray-300">
                             <li><Link href="/shop" className="hover:text-primary transition-colors">ALL PRODUCTS</Link></li>
                             <li><Link href="/shop" className="hover:text-primary transition-colors">CLOTHING</Link></li>
                             <li><Link href="/shop" className="hover:text-primary transition-colors">ACCESSORIES</Link></li>
@@ -41,8 +41,8 @@ export default function Footer() {
                     </div>
 
                     <div>
-                        <h4 className="font-bold uppercase mb-6 text-gray-400">Connect</h4>
-                        <ul className="space-y-4 font-mono text-sm">
+                        <h4 className="font-bold uppercase mb-6 text-gray-400 text-xs tracking-widest">Connect</h4>
+                        <ul className="space-y-4 font-mono text-xs text-gray-300">
                             {settings?.socials ? (
                                 <>
                                     <li><a href={settings.socials.instagram} target="_blank" className="hover:text-primary transition-colors">INSTAGRAM</a></li>
@@ -56,11 +56,11 @@ export default function Footer() {
                     </div>
                 </div>
 
-                <div className="pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-mono text-gray-600">
+                <div className="pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-mono text-gray-600">
                     <p>{settings?.footerText || `© ${year} SWAGOD. ALL RIGHTS RESERVED.`}</p>
                     <div className="flex gap-4">
-                        <p>PRIVACY POLICY</p>
-                        <p>TERMS OF SERVICE</p>
+                        <Link href="/privacy" className="hover:text-primary transition-colors">PRIVACY POLICY</Link>
+                        <Link href="/terms" className="hover:text-primary transition-colors">TERMS OF SERVICE</Link>
                     </div>
                 </div>
             </div>

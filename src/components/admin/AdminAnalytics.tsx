@@ -6,10 +6,10 @@ import { TrendingUp, Users, ShoppingCart, DollarSign } from "lucide-react";
 export default function AdminAnalytics() {
     // Mock data for visualization
     const stats = [
-        { label: "TOTAL REVENUE", value: "R 124,500", icon: DollarSign, trend: "+12.5%", color: "text-green-500" },
-        { label: "ACTIVE SESSIONS", value: "1,240", icon: Users, trend: "+5.2%", color: "text-blue-500" },
+        { label: "SALES", value: "R 124,500", icon: DollarSign, trend: "+12.5%", color: "text-green-500" },
+        { label: "VISITS", value: "1,240", icon: Users, trend: "+5.2%", color: "text-blue-500" },
         { label: "ORDERS", value: "842", icon: ShoppingCart, trend: "+18.3%", color: "text-primary" },
-        { label: "CONVERSION RATE", value: "3.2%", icon: TrendingUp, trend: "+0.8%", color: "text-orange-500" },
+        { label: "CONVERSION", value: "3.2%", icon: TrendingUp, trend: "+0.8%", color: "text-orange-500" },
     ];
 
     const chartData = [40, 70, 45, 90, 65, 80, 95];
@@ -45,8 +45,8 @@ export default function AdminAnalytics() {
             >
                 <div className="flex justify-between items-end mb-12">
                     <div>
-                        <h3 className="text-white/40 font-mono text-[10px] uppercase tracking-widest mb-1">NETWORK_TRAFFIC</h3>
-                        <p className="text-3xl font-black uppercase">PERFORMANCE_NODE</p>
+                        <h3 className="text-white/40 font-mono text-[10px] uppercase tracking-widest mb-1">LIVE FEEDBACK</h3>
+                        <p className="text-3xl font-black uppercase">PERFORMANCE</p>
                     </div>
                     <div className="text-right font-mono text-[10px] text-white/40 uppercase tracking-widest">
                         LAST 7 DAYS

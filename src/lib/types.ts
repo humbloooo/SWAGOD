@@ -8,7 +8,7 @@ export interface Product {
     sizes?: string[];
     images?: string[];
     createdAt?: string;
-    likedBy?: string[]; // Array of user emails who liked the product
+    likes?: string[]; // Array of user emails who liked the product
 }
 
 export interface CartItem extends Product {

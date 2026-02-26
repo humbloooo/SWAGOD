@@ -13,7 +13,7 @@ export default async function Tour() {
         <main className="min-h-screen bg-background pb-[60px] pt-24">
             <Header />
             <div className="container mx-auto px-6">
-                <h1 className="text-6xl md:text-9xl font-black uppercase tracking-tighter mb-12">
+                <h1 className="text-5xl md:text-8xl font-black uppercase tracking-tighter mb-12">
                     Our // <span className="text-primary">Tours</span>
                 </h1>
 
@@ -28,9 +28,12 @@ export default async function Tour() {
                             </div>
 
                             {tour.soldOut ? (
-                                <span className="mt-4 md:mt-0 px-6 py-2 border border-red-500 text-red-500 font-bold cursor-not-allowed uppercase text-sm rotate-3">
-                                    Sold Out
-                                </span>
+                                <button
+                                    onClick={() => alert('NOTIFICATION REGISTERED FOR: ' + tour.city)}
+                                    className="mt-4 md:mt-0 px-6 py-2 border border-primary text-primary hover:bg-primary hover:text-black font-bold uppercase text-sm transition-colors cursor-pointer"
+                                >
+                                    NOTIFY ME
+                                </button>
                             ) : (
                                 <Link
                                     href={tour.ticketLink || "#"}

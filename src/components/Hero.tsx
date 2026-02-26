@@ -71,9 +71,15 @@ export default function Hero({ heroImage }: { heroImage?: string }) {
             </div>
 
             {/* Background subtleties could go here */}
-            <div className="absolute bottom-10 left-0 w-full flex justify-center opacity-50">
+            <button
+                onClick={() => {
+                    const nextSection = document.getElementById('latest-drops');
+                    nextSection?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="absolute bottom-10 left-0 w-full flex justify-center opacity-50 hover:opacity-100 hover:text-primary transition-all cursor-pointer"
+            >
                 <span className="text-xs uppercase tracking-[0.2em] animate-pulse">Scroll to Explore</span>
-            </div>
+            </button>
         </section>
     );
 }

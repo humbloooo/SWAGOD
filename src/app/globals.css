@@ -87,8 +87,8 @@
 }
 
 body {
-  background-color: var(--color-background);
-  color: var(--color-text);
+  background-color: var(--background);
+  color: var(--foreground);
   font-family: var(--font-sans);
   letter-spacing: -0.05em;
   cursor: auto !important;

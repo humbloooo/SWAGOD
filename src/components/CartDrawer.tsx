@@ -6,24 +6,19 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 
-interface CartDrawerProps {
-    isOpen: boolean;
-    onClose: () => void;
-}
-
-export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
-    const { items, addItem, removeItem, clearCart, total } = useCartStore();
+export default function CartDrawer() {
+    const { items, isCartOpen, closeCart, removeItem, clearCart, total } = useCartStore();
 
     return (
         <AnimatePresence>
-            {isOpen && (
+            {isCartOpen && (
                 <>
                     {/* Backdrop */}
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        onClick={onClose}
+                        onClick={closeCart}
                         className="fixed inset-0 bg-black/50 z-[60] backdrop-blur-sm"
                     />
 
@@ -37,16 +32,22 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                     >
                         <div className="flex items-center justify-between p-6 border-b border-gray-100">
                             <h2 className="text-xl font-black uppercase tracking-tighter">Your Cart</h2>
-                            <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                            <button onClick={closeCart} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
                                 <X size={24} />
                             </button>
                         </div>
 
                         <div className="flex-1 overflow-y-auto p-6 space-y-6">
                             {items.length === 0 ? (
-                                <div className="h-full flex flex-col items-center justify-center text-gray-400 space-y-4">
+                                <div className="h-full flex flex-col items-center justify-center text-gray-400 space-y-6">
                                     <span className="text-4xl">🛒</span>
-                                    <p className="font-mono uppercase">Your cart is empty</p>
+                                    <p className="font-mono uppercase text-center">Your cart is empty</p>
+                                    <button
+                                        onClick={closeCart}
+                                        className="px-8 py-4 bg-black text-white font-bold uppercase tracking-widest text-xs hover:bg-primary transition-colors"
+                                    >
+                                        EXPLORE LATEST DROPS
+                                    </button>
                                 </div>
                             ) : (
                                 items.map((item) => (
@@ -62,11 +63,8 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                                             <div className="flex items-center gap-4">
                                                 <div className="flex items-center border border-gray-200">
                                                     <button onClick={() => {
-                                                        // Decrease logic not strictly in store but we can implement remove for single item or similar. 
-                                                        // For MVP just standard add/remove item (pop). 
-                                                        removeItem(item.id); // For simplicty this removes the item entirely in my store logic. 
-                                                        // Let's stick to remove for now or add "decrease" action later.
-                                                    }} className="p-1 hover:bg-gray-100"><Trash2 size={14} /></button>
+                                                        removeItem(item.id);
+                                                    }} className="p-3 hover:bg-gray-100 transition-colors"><Trash2 size={16} /></button>
                                                 </div>
                                                 <span className="text-xs font-mono">QTY: {item.quantity}</span>
                                             </div>

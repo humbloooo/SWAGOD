@@ -7,7 +7,7 @@ import { Product } from "@/lib/types";
 import Header from "@/components/Header";
 import Navigation from "@/components/Navigation";
 import AddToCartButton from "@/components/AddToCartButton";
-import Breadcrumbs from "@/components/Breadcrumbs";
+import { ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 
@@ -85,7 +85,13 @@ export default function ProductClient({ id }: ProductClientProps) {
             <Header />
             <div className="container mx-auto px-6">
                 <div className="mb-12">
-                    <Breadcrumbs />
+                    <nav className="flex items-center gap-2 text-[10px] font-mono uppercase text-white/40">
+                        <Link href="/shop" className="hover:text-primary transition-colors">SHOP</Link>
+                        <ChevronRight size={10} />
+                        <Link href={`/shop#${product.category}`} className="hover:text-primary transition-colors">{product.category}</Link>
+                        <ChevronRight size={10} />
+                        <span className="text-white font-bold">{product.title}</span>
+                    </nav>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-32">

@@ -13,6 +13,7 @@ export default function AdminProducts() {
     const [isEditing, setIsEditing] = useState(false);
     const [currentProduct, setCurrentProduct] = useState<Partial<Product>>({});
     const [selectedIds, setSelectedIds] = useState<string[]>([]);
+    const [sortBy, setSortBy] = useState<"newest" | "price" | "likes">("newest");
 
     useEffect(() => {
         fetch("/api/products")
@@ -56,14 +57,14 @@ export default function AdminProducts() {
                 setProducts(updated);
                 setIsEditing(false);
                 setCurrentProduct({});
-                return 'ARCHIVE UPDATED';
+                return 'STORE UPDATED';
             },
             error: (err: any) => `SYNC ERROR: ${err.message}`
         });
     };
 
     const handleDelete = async (id: string) => {
-        if (!confirm("PURGE THIS ENTRY FROM ARCHIVE?")) return;
+        if (!confirm("DELETE THIS PRODUCT?")) return;
 
         toast.promise(
             async () => {
@@ -113,9 +114,9 @@ export default function AdminProducts() {
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-16">
                     <header>
                         <h1 className="text-6xl md:text-8xl font-black uppercase tracking-tighter mb-4 leading-none">
-                            PRODUCT // <span className="text-primary">ARCHIVES</span>
+                            STORE // <span className="text-primary">COLLECTIONS</span>
                         </h1>
-                        <p className="text-primary font-mono uppercase tracking-[0.2em] text-sm">TOTAL ENTRIES DETECTED: {products.length}</p>
+                        <p className="text-primary font-mono uppercase tracking-[0.2em] text-sm">TOTAL PRODUCTS: {products.length}</p>
                     </header>
                     <div className="flex gap-4">
                         {selectedIds.length > 0 && (
@@ -126,6 +127,15 @@ export default function AdminProducts() {
                                 <Trash2 size={18} /> PURGE SELECTED ({selectedIds.length})
                             </button>
                         )}
+                        <select
+                            value={sortBy}
+                            onChange={(e) => setSortBy(e.target.value as any)}
+                            className="px-4 py-4 bg-black border border-white/20 text-white font-black uppercase tracking-widest outline-none hover:border-white/40 transition-colors"
+                        >
+                            <option value="newest">SORT: NEWEST</option>
+                            <option value="price">SORT: PRICE (HIGH)</option>
+                            <option value="likes">SORT: LIKES (HIGH)</option>
+                        </select>
                         <button
                             onClick={() => { setIsEditing(true); setCurrentProduct({ category: 'clothing' }); }}
                             className="px-8 py-4 bg-primary text-black font-black uppercase tracking-widest hover:bg-white transition-all flex items-center gap-2"
@@ -137,7 +147,11 @@ export default function AdminProducts() {
 
                 <div className="grid grid-cols-1 gap-4">
                     <AnimatePresence>
-                        {products.map((product, idx) => (
+                        {[...products].sort((a, b) => {
+                            if (sortBy === "price") return (b.price || 0) - (a.price || 0);
+                            if (sortBy === "likes") return (b.likes?.length || 0) - (a.likes?.length || 0);
+                            return 0;
+                        }).map((product, idx) => (
                             <motion.div
                                 key={product.id}
                                 initial={{ opacity: 0, x: -20 }}
@@ -175,6 +189,7 @@ export default function AdminProducts() {
                                             {product.sizes && product.sizes.length > 0 && (
                                                 <span>SIZES: <span className="text-white">{product.sizes.join(', ')}</span></span>
                                             )}
+                                            <span className="text-primary font-bold">LIKES: {product.likes?.length || 0}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -211,9 +226,9 @@ export default function AdminProducts() {
 
                             <header className="mb-10">
                                 <h2 className="text-4xl font-black uppercase tracking-tighter">
-                                    {currentProduct.id ? "OVERWRITE // ENTRY" : "INITIALIZE // ENTRY"}
+                                    {currentProduct.id ? "EDIT // PRODUCT" : "NEW // PRODUCT"}
                                 </h2>
-                                <p className="text-primary font-mono text-[10px] uppercase tracking-widest mt-2 italic">ENCRYPTING DATA FIELDS...</p>
+                                <p className="text-primary font-mono text-[10px] uppercase tracking-widest mt-2 italic">SAVING TO DATABASE...</p>
                             </header>
 
                             <form onSubmit={handleSubmit} className="space-y-8 font-mono text-xs uppercase tracking-[0.15em]">

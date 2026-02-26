@@ -4,25 +4,24 @@ import { Product, CartItem } from './types';
 
 interface CartState {
     items: CartItem[];
+    isCartOpen: boolean;
     addItem: (product: Product, size?: string) => void;
     removeItem: (productId: string, size?: string) => void;
     clearCart: () => void;
     total: () => number;
+    openCart: () => void;
+    closeCart: () => void;
 }
 
-interface WishlistState {
-    wishlistItems: Product[];
-    addToWishlist: (product: Product) => void;
-    removeFromWishlist: (productId: string) => void;
-    isInWishlist: (productId: string) => boolean;
-}
-
-interface AppState extends CartState, WishlistState { }
+interface AppState extends CartState { }
 
 export const useAppStore = create<AppState>()(
     persist(
         (set, get) => ({
             items: [],
+            isCartOpen: false,
+            openCart: () => set({ isCartOpen: true }),
+            closeCart: () => set({ isCartOpen: false }),
             addItem: (product, size) => {
                 const currentItems = get().items;
                 const selectedSize = size || "M";
@@ -39,6 +38,7 @@ export const useAppStore = create<AppState>()(
                 } else {
                     set({ items: [...currentItems, { ...product, quantity: 1, selectedSize }] });
                 }
+                get().openCart();
             },
             removeItem: (productId, size) => {
                 set({
@@ -49,20 +49,6 @@ export const useAppStore = create<AppState>()(
             total: () => {
                 return get().items.reduce((acc, item) => acc + item.price * item.quantity, 0);
             },
-
-            // Wishlist
-            wishlistItems: [],
-            addToWishlist: (product) => {
-                if (!get().wishlistItems.find(p => p.id === product.id)) {
-                    set({ wishlistItems: [...get().wishlistItems, product] });
-                }
-            },
-            removeFromWishlist: (productId) => {
-                set({ wishlistItems: get().wishlistItems.filter(p => p.id !== productId) });
-            },
-            isInWishlist: (productId) => {
-                return get().wishlistItems.some(p => p.id === productId);
-            }
         }),
         {
             name: 'swagod-store',

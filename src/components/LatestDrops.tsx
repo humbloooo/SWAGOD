@@ -39,14 +39,15 @@ export default function LatestDrops({ products }: LatestDropsProps) {
                 <h3 className="text-xs font-mono font-bold uppercase tracking-[0.3em] mb-12 flex items-center gap-4">
                     <span className="w-8 h-[1px] bg-primary glow-primary"></span> CLOTHING
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {sortedProducts.filter(p => (p.category || "").toLowerCase() === 'clothing').slice(0, 4).length > 0 ? (
                         sortedProducts.filter(p => (p.category || "").toLowerCase() === 'clothing').slice(0, 4).map((product, index) => (
                             <ProductCard key={product.id} product={product} index={index} addItem={addItem} />
                         ))
                     ) : (
-                        <div className="col-span-full py-24 border border-white/5 bg-white/[0.02] flex items-center justify-center">
-                            <p className="font-mono text-white/20 uppercase italic tracking-widest text-sm">NO ITEMS FOUND IN THIS CATEGORY</p>
+                        <div className="col-span-full py-24 border border-white/5 bg-white/[0.02] flex flex-col items-center justify-center gap-4">
+                            <div className="w-12 h-12 border-t-2 border-primary rounded-full animate-spin"></div>
+                            <p className="font-mono text-white/40 uppercase tracking-widest text-sm">TRANSMITTING NEW COLLECTION...</p>
                         </div>
                     )}
                 </div>
@@ -57,7 +58,7 @@ export default function LatestDrops({ products }: LatestDropsProps) {
                 <h3 className="text-xs font-mono font-bold uppercase tracking-[0.3em] mb-12 flex items-center gap-4">
                     <span className="w-8 h-[1px] bg-primary"></span> ACCESSORIES
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {sortedProducts.filter(p => {
                         const cat = (p.category || "").toLowerCase();
                         return cat === 'accessories' || cat === 'merch';
@@ -69,8 +70,9 @@ export default function LatestDrops({ products }: LatestDropsProps) {
                             <ProductCard key={product.id} product={product} index={index} addItem={addItem} />
                         ))
                     ) : (
-                        <div className="col-span-full py-24 border border-white/5 bg-white/[0.02] flex items-center justify-center">
-                            <p className="font-mono text-white/20 uppercase italic tracking-widest text-sm">NO ITEMS FOUND IN THIS CATEGORY</p>
+                        <div className="col-span-full py-24 border border-white/5 bg-white/[0.02] flex flex-col items-center justify-center gap-4">
+                            <div className="w-12 h-12 border-t-2 border-primary rounded-full animate-spin"></div>
+                            <p className="font-mono text-white/40 uppercase tracking-widest text-sm">TRANSMITTING NEW COLLECTION...</p>
                         </div>
                     )}
                 </div>
@@ -92,31 +94,45 @@ function ProductCard({ product, index, addItem }: { product: Product, index: num
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.6, delay: (index % 4) * 0.1 }}
-            className="group relative aspect-[3/4] brutalist-card overflow-hidden hover:border-primary transition-all duration-500"
+            className="group relative aspect-[3/4] brutalist-card overflow-hidden hover:border-primary transition-all duration-500 border border-white/5"
         >
             <Link href={`/product/${product.id}`} className="block relative w-full h-full">
                 <Image
                     src={product.image || "/assets/placeholder.png"}
                     alt={product.title}
                     fill
-                    className="object-cover md:grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700 ease-out"
+                    className={`object-cover md:grayscale group-hover:grayscale-0 transition-all duration-500 ease-out ${product.images && product.images.length > 1 ? 'group-hover:opacity-0' : 'group-hover:scale-110'}`}
                 />
+
+                {product.images && product.images.length > 1 && (
+                    <Image
+                        src={product.images[1]}
+                        alt={`${product.title} alternate`}
+                        fill
+                        className="object-cover absolute inset-0 opacity-0 transition-all duration-500 ease-out group-hover:opacity-100 group-hover:scale-105"
+                    />
+                )}
 
                 {/* Advanced Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-40 group-hover:opacity-60 transition-opacity" />
 
                 {/* Corner Accent */}
                 <div className="absolute top-4 right-4 z-30">
-                    <LikeButton productId={product.id} initialLikes={product.likedBy} />
+                    <LikeButton productId={product.id} initialLikes={product.likes} />
                 </div>
             </Link>
 
+            {/* Active Inventory Indicator */}
+            <div className="absolute top-4 left-4 flex items-center gap-2 pointer-events-none z-30 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+            </div>
+
             {/* Quick Add Actions */}
-            <div className="absolute bottom-6 left-6 right-6 z-20 flex flex-col gap-4 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
+            <div className="absolute bottom-4 left-4 right-4 z-20 flex flex-col gap-2 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
                 <div className="space-y-1 backdrop-blur-lg bg-black/60 p-4 border border-white/10 glow-primary">
                     <div className="flex justify-between items-start">
                         <h4 className="text-sm font-black uppercase tracking-tight line-clamp-1">{product.title}</h4>
-                        <span className="text-[8px] font-mono text-white/40">{product.likedBy?.length || 0} SAVED</span>
+                        <span className="text-[8px] font-mono text-white/40">{product.likes?.length || 0} SAVED</span>
                     </div>
                     <p className="font-mono text-[10px] text-primary">R {product.price.toFixed(2)}</p>
                 </div>

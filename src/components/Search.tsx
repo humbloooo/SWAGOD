@@ -7,6 +7,8 @@ import { Product } from "@/lib/types";
 import Link from "next/link";
 import Image from "next/image";
 
+import { useRouter } from "next/navigation";
+
 interface SearchProps {
     isOpen: boolean;
     onClose: () => void;
@@ -16,6 +18,21 @@ export default function Search({ isOpen, onClose }: SearchProps) {
     const [query, setQuery] = useState("");
     const [results, setResults] = useState<Product[]>([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [popular, setPopular] = useState<Product[]>([]);
+    const router = useRouter();
+
+    // Fetch popular/all items on open
+    useEffect(() => {
+        if (isOpen && popular.length === 0) {
+            fetch("/api/products")
+                .then(res => res.json())
+                .then(data => {
+                    const sorted = data.sort((a: any, b: any) => (b.likes?.length || 0) - (a.likes?.length || 0)).slice(0, 3);
+                    setPopular(sorted);
+                })
+                .catch(err => console.error("Failed to load popular items", err));
+        }
+    }, [isOpen]);
 
     useEffect(() => {
         if (query.length < 2) {
@@ -43,6 +60,17 @@ export default function Search({ isOpen, onClose }: SearchProps) {
         return () => clearTimeout(timer);
     }, [query]);
 
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (results.length > 0) {
+            router.push(`/product/${results[0].id}`);
+            onClose();
+        } else if (popular.length > 0 && query.length < 2) {
+            router.push(`/product/${popular[0].id}`);
+            onClose();
+        }
+    };
+
     return (
         <AnimatePresence>
             {isOpen && (
@@ -60,7 +88,7 @@ export default function Search({ isOpen, onClose }: SearchProps) {
                     </button>
 
                     <div className="max-w-4xl mx-auto w-full mt-12">
-                        <div className="relative border-b-2 border-white/20 pb-4 flex items-center gap-4">
+                        <form onSubmit={handleSearch} className="relative border-b-2 border-white/20 pb-4 flex items-center gap-4">
                             <SearchIcon size={32} className="text-white/50" />
                             <input
                                 autoFocus
@@ -70,7 +98,7 @@ export default function Search({ isOpen, onClose }: SearchProps) {
                                 value={query}
                                 onChange={(e) => setQuery(e.target.value)}
                             />
-                        </div>
+                        </form>
 
                         <div className="mt-12 overflow-y-auto max-h-[60vh] no-scrollbar">
                             {isLoading && <div className="text-white font-mono animate-pulse">SEARCHING...</div>}
@@ -101,6 +129,33 @@ export default function Search({ isOpen, onClose }: SearchProps) {
 
                             {!isLoading && query.length >= 2 && results.length === 0 && (
                                 <div className="text-white/30 font-mono italic">NO RESULTS FOUND FOR "{query}"</div>
+                            )}
+
+                            {!isLoading && query.length < 2 && popular.length > 0 && (
+                                <div>
+                                    <h4 className="text-white/40 font-mono text-xs uppercase tracking-widest mb-6 border-b border-white/10 pb-2">SUGGESTED DISCOVERIES</h4>
+                                    <div className="grid gap-4">
+                                        {popular.map((product) => (
+                                            <Link
+                                                key={product.id}
+                                                href={`/product/${product.id}`}
+                                                onClick={onClose}
+                                                className="group flex items-center justify-between p-4 border border-white/5 hover:border-primary transition-colors bg-white/5"
+                                            >
+                                                <div className="flex items-center gap-4">
+                                                    <div className="w-12 h-12 relative overflow-hidden">
+                                                        <Image src={product.image} alt={product.title} fill className="object-cover" />
+                                                    </div>
+                                                    <div>
+                                                        <h3 className="text-sm font-bold text-white uppercase">{product.title}</h3>
+                                                        <p className="text-primary font-mono text-xs">R {product.price.toFixed(2)}</p>
+                                                    </div>
+                                                </div>
+                                                <ArrowRight size={16} className="text-white/20 group-hover:text-primary transition-colors" />
+                                            </Link>
+                                        ))}
+                                    </div>
+                                </div>
                             )}
                         </div>
                     </div>

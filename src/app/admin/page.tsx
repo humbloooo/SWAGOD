@@ -14,7 +14,7 @@ export default async function AdminPage() {
                     <h1 className="text-6xl md:text-9xl font-black uppercase tracking-tighter mb-4 leading-none">
                         SWAGOD // <span className="text-primary italic">ADMIN</span>
                     </h1>
-                    <p className="text-primary font-mono uppercase tracking-[0.2em] text-[10px] md:text-sm italic mb-12 md:mb-16">AUTHORIZED PERSONNEL ACCESS ONLY</p>
+                    <p className="text-primary font-mono uppercase tracking-[0.2em] text-[10px] md:text-sm italic mb-12 md:mb-16">DASHBOARD CONTROL CENTER</p>
 
                     <AdminAnalytics />
                 </header>
@@ -22,21 +22,21 @@ export default async function AdminPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-16 md:mb-20">
                     <Link href="/admin/products" className="group relative p-6 md:p-10 border border-white/10 bg-white/5 backdrop-blur-md hover:border-primary transition-all duration-500 overflow-hidden">
                         <div className="absolute top-0 right-0 p-4 text-white/10 group-hover:text-primary transition-colors text-[10px] md:text-sm">01</div>
-                        <h3 className="font-mono text-primary text-[10px] md:text-xs uppercase tracking-[0.3em] mb-2 md:mb-4">COMMERCE</h3>
+                        <h3 className="font-mono text-primary text-[10px] md:text-xs uppercase tracking-[0.3em] mb-2 md:mb-4">STORE</h3>
                         <p className="text-2xl md:text-3xl font-black uppercase tracking-tight mb-1 md:mb-2">PRODUCTS</p>
-                        <p className="text-white/40 font-mono text-[8px] md:text-[10px] uppercase">MANAGE ACTIVE COLLECTIONS</p>
+                        <p className="text-white/40 font-mono text-[8px] md:text-[10px] uppercase">MANAGE SHOP ITEMS</p>
                         <div className="mt-6 md:mt-8 flex items-center gap-2 text-[8px] md:text-[10px] font-bold uppercase tracking-widest group-hover:gap-4 transition-all">
-                            ENTER HUB <span className="text-primary">→</span>
+                            ENTER <span className="text-primary">→</span>
                         </div>
                     </Link>
 
                     <Link href="/admin/archives" className="group relative p-6 md:p-10 border border-white/10 bg-white/5 backdrop-blur-md hover:border-primary transition-all duration-500 overflow-hidden">
                         <div className="absolute top-0 right-0 p-4 text-white/10 group-hover:text-primary transition-colors text-[10px] md:text-sm">02</div>
-                        <h3 className="font-mono text-primary text-[10px] md:text-xs uppercase tracking-[0.3em] mb-2 md:mb-4">HISTORY</h3>
-                        <p className="text-2xl md:text-3xl font-black uppercase tracking-tight mb-1 md:mb-2">ARCHIVES</p>
-                        <p className="text-white/40 font-mono text-[8px] md:text-[10px] uppercase">LEGACY ENTRY MANAGEMENT</p>
+                        <h3 className="font-mono text-primary text-[10px] md:text-xs uppercase tracking-[0.3em] mb-2 md:mb-4">ARCHIVE</h3>
+                        <p className="text-2xl md:text-3xl font-black uppercase tracking-tight mb-1 md:mb-2">OLD DROPS</p>
+                        <p className="text-white/40 font-mono text-[8px] md:text-[10px] uppercase">MANAGE PAST ITEMS</p>
                         <div className="mt-6 md:mt-8 flex items-center gap-2 text-[8px] md:text-[10px] font-bold uppercase tracking-widest group-hover:gap-4 transition-all">
-                            VIEW ARCHIVE <span className="text-primary">→</span>
+                            VIEW <span className="text-primary">→</span>
                         </div>
                     </Link>
 

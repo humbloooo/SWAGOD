@@ -87,7 +87,7 @@ export default function LikeButton({ productId, initialLikes = [], variant = "co
                 )}
             >
                 <Heart size={14} className={cn("transition-transform duration-300", isLiked && "fill-current scale-110")} />
-                {isLiked ? "SAVED" : "SAVE TO WISHLIST"}
+                {isLiked ? "SAVED" : "SAVE"}
                 {likes.length > 0 && <span className="opacity-40 ml-1">[{likes.length}]</span>}
             </button>
         );
