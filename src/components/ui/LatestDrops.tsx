@@ -20,7 +20,7 @@ export default function LatestDrops({ products }: LatestDropsProps) {
     const sortedProducts = [...products].sort((a, b) => (b.createdAt || "").localeCompare(a.createdAt || ""));
 
     return (
-        <section id="latest-drops" className="py-24 bg-black text-white relative overflow-hidden">
+        <section id="latest-drops" className="py-24 bg-background text-foreground relative overflow-hidden">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,100,0,0.05),transparent)] pointer-events-none"></div>
 
             <div className="container mx-auto px-6 mb-16 flex items-end justify-between relative z-10">
@@ -28,7 +28,7 @@ export default function LatestDrops({ products }: LatestDropsProps) {
                     <h2 className="text-6xl md:text-9xl font-black uppercase tracking-tighter leading-none mb-4">
                         NEW <span className="text-primary italic">RELEASES</span>
                     </h2>
-                    <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-white/40 italic">{"//"} CURRENT INVENTORY ARCHIVE</p>
+                    <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-foreground/40 italic">{"//"} CURRENT INVENTORY ARCHIVE</p>
                 </header>
                 <div className="hidden md:flex flex-col items-end gap-2">
                     <span className="text-[10px] font-mono text-white/20 uppercase tracking-widest">COLLECTION STATUS: ACTIVE</span>
@@ -42,16 +42,22 @@ export default function LatestDrops({ products }: LatestDropsProps) {
                     <span className="w-8 h-[1px] bg-primary glow-primary"></span> CLOTHING
                 </h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {sortedProducts.filter(p => (p.category || "").toLowerCase() === 'clothing').slice(0, 4).length > 0 ? (
+                    {sortedProducts.filter(p => (p.category || "").toLowerCase() === 'clothing').length > 0 ? (
                         sortedProducts.filter(p => (p.category || "").toLowerCase() === 'clothing').slice(0, 4).map((product, index) => (
                             <ProductCard key={product.id} product={product} index={index} addItem={addItem} openCart={openCart} currency={currency} />
                         ))
-                    ) : (
+                    ) : products.length === 0 ? (
                         <>
                             {[...Array(4)].map((_, i) => (
-                                <div key={i} className="aspect-[3/4] bg-white/5 animate-pulse border border-white/10 brutalist-card" />
+                                <div key={i} className="aspect-[3/4] bg-foreground/5 dark:bg-white/5 animate-pulse border border-white/10 brutalist-card" />
                             ))}
                         </>
+                    ) : (
+                        <div className="col-span-full py-12 text-center border border-white/10 bg-white/5 backdrop-blur-sm">
+                            <span className="text-4xl block mb-4">🦇</span>
+                            <h3 className="text-xl font-black uppercase tracking-widest text-foreground/50">NO ACTIVE INVENTORY</h3>
+                            <p className="font-mono text-xs text-foreground/30 tracking-widest mt-2 uppercase">Check back later for new releases.</p>
+                        </div>
                     )}
                 </div>
             </div>
@@ -65,25 +71,31 @@ export default function LatestDrops({ products }: LatestDropsProps) {
                     {sortedProducts.filter(p => {
                         const cat = (p.category || "").toLowerCase();
                         return cat === 'accessories' || cat === 'merch';
-                    }).slice(0, 4).length > 0 ? (
+                    }).length > 0 ? (
                         sortedProducts.filter(p => {
                             const cat = (p.category || "").toLowerCase();
                             return cat === 'accessories' || cat === 'merch';
                         }).slice(0, 4).map((product, index) => (
                             <ProductCard key={product.id} product={product} index={index} addItem={addItem} openCart={openCart} currency={currency} />
                         ))
-                    ) : (
+                    ) : products.length === 0 ? (
                         <>
                             {[...Array(4)].map((_, i) => (
-                                <div key={i} className="aspect-[3/4] bg-white/5 animate-pulse border border-white/10 brutalist-card" />
+                                <div key={i} className="aspect-[3/4] bg-foreground/5 dark:bg-white/5 animate-pulse border border-white/10 brutalist-card" />
                             ))}
                         </>
+                    ) : (
+                        <div className="col-span-full py-12 text-center border border-white/10 bg-white/5 backdrop-blur-sm">
+                            <span className="text-4xl block mb-4">🦇</span>
+                            <h3 className="text-xl font-black uppercase tracking-widest text-foreground/50">NO ACTIVE INVENTORY</h3>
+                            <p className="font-mono text-xs text-foreground/30 tracking-widest mt-2 uppercase">Check back later for new releases.</p>
+                        </div>
                     )}
                 </div>
             </div>
 
             <div className="flex justify-center mt-32 relative z-10 px-6">
-                <Link href="/shop" className="w-full md:w-auto text-center px-16 py-6 bg-white text-black font-black uppercase tracking-[0.2em] text-sm hover:bg-primary transition-all duration-500 group">
+                <Link href="/shop" className="w-full md:w-auto text-center px-16 py-6 bg-foreground text-background font-black uppercase tracking-[0.2em] text-sm hover:bg-primary hover:text-white transition-all duration-500 group border border-foreground/10 dark:border-white/10">
                     SHOP ALL PRODUCTS <span className="inline-block group-hover:translate-x-2 transition-transform">→</span>
                 </Link>
             </div>
@@ -98,7 +110,7 @@ const ProductCard = memo(function ProductCard({ product, index, addItem, openCar
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.6, delay: (index % 4) * 0.1 }}
-            className="group relative aspect-[3/4] brutalist-card overflow-hidden hover:border-primary transition-all duration-500 border border-white/5"
+            className="group relative aspect-[3/4] brutalist-card overflow-hidden hover:border-primary transition-all duration-500 border border-foreground/5 dark:border-white/5"
         >
             <Link href={`/product/${product.id}`} prefetch={true} className="block relative w-full h-full">
                 <Image
@@ -133,10 +145,10 @@ const ProductCard = memo(function ProductCard({ product, index, addItem, openCar
 
             {/* Quick Add Actions */}
             <div className="absolute bottom-4 left-4 right-4 z-20 flex flex-col gap-2 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
-                <div className="space-y-1 backdrop-blur-lg bg-black/60 p-4 border border-white/10 glow-primary">
+                <div className="space-y-1 backdrop-blur-lg bg-background/60 p-4 border border-foreground/10 dark:border-white/10 glow-primary text-foreground">
                     <div className="flex justify-between items-start">
                         <h4 className="text-sm font-black uppercase tracking-tight line-clamp-1">{product.title}</h4>
-                        <span className="text-[8px] font-mono text-white/40">{product.likes?.length || 0} SAVED</span>
+                        <span className="text-[8px] font-mono text-foreground/40">{product.likes?.length || 0} SAVED</span>
                     </div>
                     <p className="font-mono text-[10px] text-primary">{formatPrice(product.price, currency)}</p>
                 </div>

@@ -47,31 +47,11 @@ export default function BackToTop() {
                 >
                     <button
                         onClick={scrollToTop}
-                        className="relative w-14 h-14 bg-black text-white flex items-center justify-center hover:bg-primary transition-colors group"
+                        className="flex items-center gap-2 px-6 py-4 bg-background border border-foreground/20 text-foreground font-black uppercase tracking-widest text-[10px] hover:border-primary hover:text-primary transition-all group brutalist-card shadow-[0_0_15px_rgba(255,0,0,0)] hover:shadow-[0_0_15px_rgba(255,0,0,0.5)]"
                         aria-label="Back to top"
                     >
-                        {/* Item 29: Circular Scroll Progress */}
-                        <svg className="absolute inset-0 w-full h-full -rotate-90 pointer-events-none">
-                            <circle
-                                cx="28"
-                                cy="28"
-                                r="26"
-                                stroke="rgba(255, 255, 255, 0.1)"
-                                strokeWidth="2"
-                                fill="none"
-                            />
-                            <motion.circle
-                                cx="28"
-                                cy="28"
-                                r="26"
-                                stroke="var(--color-primary)"
-                                strokeWidth="2"
-                                fill="none"
-                                style={{ pathLength: scrollProgress }}
-                            />
-                        </svg>
-
-                        <ArrowUp size={20} className="group-hover:-translate-y-1 transition-transform" />
+                        <span>BACK TO TOP</span>
+                        <ArrowUp size={14} className="group-hover:-translate-y-1 transition-transform" />
                     </button>
                 </motion.div>
             )}

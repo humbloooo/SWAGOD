@@ -90,7 +90,7 @@ export default function Shop() {
                 {mounted && recentlyViewed.length > 0 && (
                     <div className="border-t border-white/10 pt-24 mb-24">
                         <h2 className="text-2xl font-black uppercase tracking-widest mb-12">
-                            RECENTLY <span className="text-primary">CLASSIFIED</span>
+                            RECENTLY <span className="text-primary">VIEWED</span>
                         </h2>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
                             {recentlyViewed.map(product => (

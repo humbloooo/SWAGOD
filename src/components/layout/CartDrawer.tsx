@@ -54,7 +54,7 @@ export default function CartDrawer() {
                         animate={{ x: 0 }}
                         exit={{ x: "100%" }}
                         transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                        className="fixed top-0 right-0 h-full w-full max-w-md bg-white/80 backdrop-blur-xl z-[70] shadow-2xl flex flex-col border-l border-white/20"
+                        className="fixed top-0 right-0 h-full w-full max-w-md bg-background/90 backdrop-blur-xl z-[70] shadow-2xl flex flex-col border-l border-foreground/10 text-foreground"
                     >
                         <div className="flex items-center justify-between p-6 border-b border-gray-100">
                             <h2 className="text-xl font-black uppercase tracking-tighter">Your Cart</h2>
@@ -70,7 +70,7 @@ export default function CartDrawer() {
                                     <p className="font-mono uppercase text-center">Your cart is empty</p>
                                     <button
                                         onClick={closeCart}
-                                        className="px-8 py-4 bg-black text-white font-bold uppercase tracking-widest text-xs hover:bg-primary transition-colors"
+                                        className="px-8 py-4 bg-foreground text-background font-bold uppercase tracking-widest text-xs hover:bg-primary transition-colors"
                                     >
                                         EXPLORE LATEST DROPS
                                     </button>
@@ -160,14 +160,14 @@ function CheckoutButton() {
         <div className="flex flex-col gap-3">
             <button
                 onClick={handleCheckout}
-                className="w-full py-4 bg-primary text-white font-bold uppercase tracking-widest hover:bg-black transition-colors"
+                className="w-full py-4 bg-primary text-white font-bold uppercase tracking-widest hover:brightness-110 transition-colors"
             >
                 Checkout
             </button>
             {!session && (
                 <button
                     onClick={() => signIn("google")}
-                    className="w-full py-3 bg-white text-black text-xs font-bold uppercase tracking-widest border border-black hover:bg-gray-50 transition-colors"
+                    className="w-full py-3 bg-background text-foreground text-xs font-bold uppercase tracking-widest border border-foreground hover:bg-foreground/5 transition-colors"
                 >
                     Login to Save Order
                 </button>

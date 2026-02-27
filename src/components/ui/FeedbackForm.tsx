@@ -39,7 +39,7 @@ export default function FeedbackForm() {
     };
 
     return (
-        <section className="py-24 bg-black text-white">
+        <section className="py-24 bg-background text-foreground">
             <div className="container mx-auto px-6 max-w-2xl text-center">
                 <header className="mb-12">
                     <h2 className="text-4xl font-black uppercase tracking-tighter mb-4">
@@ -92,9 +92,9 @@ export default function FeedbackForm() {
                         <button
                             type="submit"
                             disabled={status === "submitting"}
-                            className="w-full py-5 bg-white text-black font-black uppercase tracking-[0.3em] text-xs hover:bg-primary hover:text-white transition-all duration-500 disabled:opacity-50 flex items-center justify-center gap-3 group"
+                            className="w-full py-5 bg-foreground text-background font-black uppercase tracking-[0.3em] text-xs hover:bg-primary hover:text-white transition-all duration-500 disabled:opacity-50 flex items-center justify-center gap-3 group"
                         >
-                            {status === "submitting" ? "TRANSMITTING..." : "DISPATCH ENQUIRY"}
+                            {status === "submitting" ? "SENDING..." : "SEND FEEDBACK"}
                             <span className="inline-block group-hover:translate-x-2 transition-transform">→</span>
                         </button>
                     </form>

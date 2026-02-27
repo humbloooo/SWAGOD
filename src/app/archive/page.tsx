@@ -24,7 +24,7 @@ export default async function Archive() {
                                 src={item.image}
                                 alt={item.title}
                                 fill
-                                className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                                className="object-cover grayscale-0 hover:grayscale transition-all duration-700"
                             />
                             <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/80 backdrop-blur-sm pointer-events-none p-6">
                                 <div className="text-center translate-y-4 group-hover:translate-y-0 transition-transform duration-500">

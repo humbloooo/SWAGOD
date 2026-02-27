@@ -27,9 +27,9 @@ export default async function AdminPage() {
 
                     <Link href="/admin/archives" className="group relative p-6 md:p-10 border border-white/10 bg-white/5 backdrop-blur-md hover:border-primary transition-all duration-500 overflow-hidden">
                         <div className="absolute top-0 right-0 p-4 text-white/10 group-hover:text-primary transition-colors text-[10px] md:text-sm">02</div>
-                        <h3 className="font-mono text-primary text-[10px] md:text-xs uppercase tracking-[0.3em] mb-2 md:mb-4">ARCHIVE</h3>
-                        <p className="text-2xl md:text-3xl font-black uppercase tracking-tight mb-1 md:mb-2">OLD DROPS</p>
-                        <p className="text-white/40 font-mono text-[8px] md:text-[10px] uppercase">MANAGE PAST ITEMS</p>
+                        <h3 className="font-mono text-primary text-[10px] md:text-xs uppercase tracking-[0.3em] mb-2 md:mb-4">STORIES</h3>
+                        <p className="text-2xl md:text-3xl font-black uppercase tracking-tight mb-1 md:mb-2">BLOG / EVENTS</p>
+                        <p className="text-white/40 font-mono text-[8px] md:text-[10px] uppercase">MANAGE BLOG CONTENT</p>
                         <div className="mt-6 md:mt-8 flex items-center gap-2 text-[8px] md:text-[10px] font-bold uppercase tracking-widest group-hover:gap-4 transition-all">
                             VIEW <span className="text-primary">→</span>
                         </div>

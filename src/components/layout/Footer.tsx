@@ -20,7 +20,7 @@ export default function Footer() {
     const year = new Date().getFullYear();
 
     return (
-        <footer className="bg-black text-white pt-24 pb-12 border-t border-gray-900">
+        <footer className="bg-background text-foreground pt-24 pb-12 border-t border-foreground/10 dark:border-gray-900">
             <div className="container mx-auto px-6">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-24">
                     <div className="col-span-1 md:col-span-2">
@@ -43,20 +43,22 @@ export default function Footer() {
                         </ul>
                     </div>
 
-                    <div>
-                        <h4 className="font-bold uppercase mb-6 text-gray-400 text-xs tracking-widest">Connect</h4>
-                        <ul className="space-y-4 font-mono text-xs text-gray-300">
-                            {mounted && settings?.socials ? (
-                                <>
-                                    <li><a href={settings.socials.instagram} target="_blank" className="hover:text-primary transition-colors">INSTAGRAM</a></li>
-                                    <li><a href={settings.socials.twitter} target="_blank" className="hover:text-primary transition-colors">TWITTER</a></li>
-                                    <li><a href={settings.socials.tiktok} target="_blank" className="hover:text-primary transition-colors">TIKTOK</a></li>
-                                </>
-                            ) : (
-                                <li className="text-gray-600">UNLINKED</li>
-                            )}
-                        </ul>
-                    </div>
+                    {mounted && settings?.showSocials !== false && (
+                        <div>
+                            <h4 className="font-bold uppercase mb-6 text-foreground/50 text-xs tracking-widest">Connect</h4>
+                            <ul className="space-y-4 font-mono text-xs text-foreground/70">
+                                {mounted && settings?.socials ? (
+                                    <>
+                                        <li><a href={settings.socials.instagram} target="_blank" className="hover:text-primary transition-colors">INSTAGRAM</a></li>
+                                        <li><a href={settings.socials.twitter} target="_blank" className="hover:text-primary transition-colors">TWITTER</a></li>
+                                        <li><a href={settings.socials.tiktok} target="_blank" className="hover:text-primary transition-colors">TIKTOK</a></li>
+                                    </>
+                                ) : (
+                                    <li className="text-foreground/40">UNLINKED</li>
+                                )}
+                            </ul>
+                        </div>
+                    )}
 
                     <div>
                         <h4 className="font-bold uppercase mb-6 text-gray-400 text-xs tracking-widest">Transmissions</h4>

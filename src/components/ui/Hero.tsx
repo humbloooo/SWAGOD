@@ -8,20 +8,33 @@ import Image from "next/image";
 import Link from "next/link";
 import { useTextScramble } from "@/hooks/useTextScramble";
 import Magnetic from "@/components/motion/Magnetic";
+import { useTheme } from "next-themes";
+import { useState, useEffect } from "react";
 
-export default function Hero({ heroImage }: { heroImage?: string }) {
+export default function Hero({ heroImage, lightModeWallpaper }: { heroImage?: string, lightModeWallpaper?: string }) {
+    const { resolvedTheme } = useTheme();
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    const currentImage = mounted && resolvedTheme === 'light'
+        ? (lightModeWallpaper || "/assets/hero-bg-light.png")
+        : (heroImage || "/assets/hero-bg.png");
+
     return (
         <section className="relative flex flex-col items-center justify-center h-screen w-full overflow-hidden bg-background">
             {/* Background Image */}
             <div className="absolute inset-0 z-0">
                 <Image
-                    src={heroImage || "/assets/hero-bg.png"}
+                    src={currentImage}
                     alt="Hero Background"
                     fill
                     className="object-cover opacity-80"
                     priority
                 />
-                <div className="absolute inset-0 bg-black/40" /> {/* Darker overlay */}
+                <div className="absolute inset-0 bg-background/40" /> {/* Adaptive overlay */}
             </div>
 
             {/* Glitch Content */}

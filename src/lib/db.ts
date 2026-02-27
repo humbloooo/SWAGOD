@@ -52,6 +52,10 @@ export async function getProducts(limit?: number): Promise<Product[]> {
             query = query.limit(limit);
         }
         const snapshot = await query.get();
+        if (snapshot.empty) {
+            // Fallback to mock data if DB is completely empty (helps fix empty Shop/LatestDrops issue)
+            return limit ? PRODUCTS.slice(0, limit) : PRODUCTS;
+        }
         return snapshot.docs.map((doc: FirebaseFirestore.QueryDocumentSnapshot) => ({ id: doc.id, ...doc.data() } as Product));
     } catch (error) {
         console.error("Error fetching products:", error);

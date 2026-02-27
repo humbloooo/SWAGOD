@@ -26,7 +26,7 @@ export default async function Home() {
     <main id="main-content" className="min-h-screen pb-[60px] bg-background">
       <Header />
       <BackgroundBrackets />
-      <Hero heroImage={settings?.heroImage} />
+      <Hero heroImage={settings?.heroImage} lightModeWallpaper={settings?.lightModeWallpaper} />
       {aboutData && <About data={aboutData} />}
       <LatestDrops products={products} />
       <FeedbackForm />
