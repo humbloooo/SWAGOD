@@ -78,6 +78,16 @@ export default function AdminSettings() {
                         <h3 className="text-xl font-black uppercase mb-8 border-b border-white/10 pb-4 text-primary font-mono">VISUAL_OVERRIDE</h3>
                         <div className="space-y-6">
                             <div className="space-y-2">
+                                <label className="text-white/40 font-mono text-xs uppercase tracking-widest">HERO_SLOGAN</label>
+                                <input
+                                    type="text"
+                                    value={settings.heroSlogan || ""}
+                                    onChange={(e) => setSettings({ ...settings, heroSlogan: e.target.value })}
+                                    className="w-full bg-white/5 border border-white/10 p-4 focus:border-primary outline-none transition-all font-mono text-sm"
+                                    placeholder="TIMELESS COLLECTIONS // MODERN STYLES"
+                                />
+                            </div>
+                            <div className="space-y-2">
                                 <label className="text-white/40 font-mono text-xs uppercase tracking-widest">HERO_WALLPAPER_SOURCE (DARK MODE)</label>
                                 <div className="p-4 border border-white/5 bg-black/20">
                                     <ImageUpload

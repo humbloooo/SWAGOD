@@ -27,7 +27,7 @@ export default function Navigation() {
                         <Link
                             href={link.href}
                             className={cn(
-                                "relative text-white font-bold text-[12px] tracking-widest hover:opacity-80 transition-opacity",
+                                "relative text-foreground font-bold text-[12px] tracking-widest hover:opacity-80 transition-opacity",
                                 pathname === link.href && "opacity-100"
                             )}
                         >

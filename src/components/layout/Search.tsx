@@ -127,7 +127,7 @@ export default function Search({ isOpen, onClose }: SearchProps) {
                         </form>
 
                         <div className="mt-12 overflow-y-auto max-h-[60vh] no-scrollbar">
-                            {isLoading && <div className="text-white font-mono animate-pulse">SEARCHING...</div>}
+                            {isLoading && <div className="text-foreground font-mono animate-pulse">SEARCHING...</div>}
 
                             {!isLoading && results.length > 0 && (
                                 <div className="grid gap-6">
@@ -166,7 +166,7 @@ export default function Search({ isOpen, onClose }: SearchProps) {
                                                 key={product.id}
                                                 href={`/product/${product.id}`}
                                                 onClick={onClose}
-                                                className="group flex items-center justify-between p-4 border border-white/5 hover:border-primary transition-colors bg-white/5"
+                                                className="group flex items-center justify-between p-4 border border-foreground/5 dark:border-white/5 hover:border-primary transition-colors bg-foreground/5 dark:bg-white/5"
                                             >
                                                 <div className="flex items-center gap-4">
                                                     <div className="w-12 h-12 relative overflow-hidden">

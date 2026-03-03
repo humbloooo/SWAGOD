@@ -45,7 +45,7 @@ export default function FeedbackForm() {
                     <h2 className="text-4xl font-black uppercase tracking-tighter mb-4">
                         GET IN <span className="text-primary italic">TOUCH</span>
                     </h2>
-                    <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-white/40 italic">
+                    <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-foreground/40 dark:text-foreground/40 italic">
                         {"//"} WE VALUE YOUR FEEDBACK AND SUGGESTIONS
                     </p>
                 </header>
@@ -55,7 +55,7 @@ export default function FeedbackForm() {
                         MESSAGE SENT. THANK YOU FOR REACHING OUT.
                         <button
                             onClick={() => setStatus("idle")}
-                            className="block mx-auto mt-6 text-[10px] underline hover:text-white transition-colors"
+                            className="block mx-auto mt-6 text-[10px] underline hover:text-foreground dark:hover:text-foreground transition-colors"
                         >
                             SEND ANOTHER MESSAGE
                         </button>
@@ -68,7 +68,7 @@ export default function FeedbackForm() {
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 placeholder="FULL NAME"
-                                className="w-full bg-white/5 border border-white/10 p-4 font-mono text-[10px] uppercase tracking-widest focus:border-primary focus:outline-none transition-colors"
+                                className="w-full bg-foreground/5 dark:bg-white/5 border border-foreground/10 dark:border-foreground/10 p-4 font-mono text-[10px] uppercase tracking-widest focus:border-primary focus:outline-none transition-colors"
                                 required
                                 suppressHydrationWarning
                             />
@@ -77,7 +77,7 @@ export default function FeedbackForm() {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 placeholder="EMAIL ADDRESS"
-                                className="w-full bg-white/5 border border-white/10 p-4 font-mono text-[10px] uppercase tracking-widest focus:border-primary focus:outline-none transition-colors"
+                                className="w-full bg-foreground/5 dark:bg-white/5 border border-foreground/10 dark:border-foreground/10 p-4 font-mono text-[10px] uppercase tracking-widest focus:border-primary focus:outline-none transition-colors"
                                 required
                                 suppressHydrationWarning
                             />
@@ -86,13 +86,13 @@ export default function FeedbackForm() {
                             value={message}
                             onChange={(e) => setMessage(e.target.value)}
                             placeholder="MESSAGE CONTENT..."
-                            className="w-full h-40 bg-white/5 border border-white/10 p-4 font-mono text-[10px] uppercase tracking-widest focus:border-primary focus:outline-none transition-colors"
+                            className="w-full h-40 bg-foreground/5 dark:bg-white/5 border border-foreground/10 dark:border-foreground/10 p-4 font-mono text-[10px] uppercase tracking-widest focus:border-primary focus:outline-none transition-colors"
                             required
                         />
                         <button
                             type="submit"
                             disabled={status === "submitting"}
-                            className="w-full py-5 bg-foreground text-background font-black uppercase tracking-[0.3em] text-xs hover:bg-primary hover:text-white transition-all duration-500 disabled:opacity-50 flex items-center justify-center gap-3 group"
+                            className="w-full py-5 bg-foreground text-background font-black uppercase tracking-[0.3em] text-xs hover:bg-primary hover:text-foreground transition-all duration-500 disabled:opacity-50 flex items-center justify-center gap-3 group"
                         >
                             {status === "submitting" ? "SENDING..." : "SEND FEEDBACK"}
                             <span className="inline-block group-hover:translate-x-2 transition-transform">→</span>

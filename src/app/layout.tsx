@@ -45,7 +45,8 @@ export default async function RootLayout({
         <link rel="preconnect" href="https://firebasestorage.googleapis.com" />
       </head>
       <body
-        className={`${interTight.variable} antialiased bg-background text-text selection:bg-primary selection:text-white overflow-x-hidden`}
+        className={`${interTight.variable} antialiased bg-background text-foreground selection:bg-primary selection:text-white overflow-x-hidden`}
+        suppressHydrationWarning
       >
         <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-primary focus:text-black focus:font-black uppercase tracking-widest outline-none ring-2 ring-white">
           SKIP TO MAIN CONTENT

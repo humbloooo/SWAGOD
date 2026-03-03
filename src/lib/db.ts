@@ -64,6 +64,9 @@ export async function getProducts(limit?: number): Promise<Product[]> {
 }
 
 export async function getProductById(id: string): Promise<Product | null> {
+    if (isMock) {
+        return PRODUCTS.find(p => p.id === id) || { id, title: "Mock Product", price: 0, category: "clothing" } as Product;
+    }
     try {
         const doc = await firestore.collection(PRODUCTS_COLLECTION).doc(id).get();
         if (!doc.exists) return null;
@@ -98,6 +101,7 @@ export async function getAdminProducts(): Promise<Product[]> {
 }
 
 export async function deleteProduct(id: string): Promise<void> {
+    if (isMock) return;
     // Item 82: Soft Delete implementation
     await firestore.collection(PRODUCTS_COLLECTION).doc(id).update({ active: false });
 }

@@ -1,7 +1,12 @@
-const admin = require('firebase-admin');
-const fs = require('fs');
-const path = require('path');
-require('dotenv').config({ path: '.env.local' });
+import admin from 'firebase-admin';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import * as dotenv from 'dotenv';
+dotenv.config({ path: '.env.local' });
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Initialize Firebase Admin
 if (!admin.apps.length) {

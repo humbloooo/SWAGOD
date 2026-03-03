@@ -9,7 +9,7 @@ export default function BackgroundBrackets() {
             <motion.div
                 animate={{ x: [0, 20, 0], y: [0, 20, 0] }}
                 transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-                className="absolute top-20 left-10 text-8xl font-black text-white/20 select-none"
+                className="absolute top-20 left-10 text-8xl font-black text-foreground/20 select-none"
             >
                 [
             </motion.div>
@@ -18,7 +18,7 @@ export default function BackgroundBrackets() {
             <motion.div
                 animate={{ x: [0, -30, 0], y: [0, -20, 0] }}
                 transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-                className="absolute bottom-40 right-10 text-[12rem] font-black text-white/20 select-none"
+                className="absolute bottom-40 right-10 text-[12rem] font-black text-foreground/20 select-none"
             >
                 ]
             </motion.div>

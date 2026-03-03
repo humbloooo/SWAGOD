@@ -65,8 +65,9 @@ export default function Header() {
                         onClick={() => setIsOpen(true)}
                         className="text-white hover:opacity-80 transition-opacity flex items-center gap-2"
                         aria-label="Open Navigation Menu"
+                        suppressHydrationWarning
                     >
-                        <Menu size={28} className="icon-industrial" />
+                        <Menu size={28} className="icon-industrial" suppressHydrationWarning />
                     </button>
                 </div>
 
@@ -74,40 +75,37 @@ export default function Header() {
                 <div className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center gap-2">
                     <Link href="/" className="flex items-center gap-3 hover:scale-105 transition-transform">
                         <div className="relative w-8 h-8 rounded-full overflow-hidden border-2 border-white shadow-sm glow-primary bg-white">
-                            <Image src="/assets/swagod-logo.png" alt="Swagod Logo" fill className="object-cover" />
+                            <Image src="/assets/swagod-logo.png" alt="Swagod Logo" fill className="object-cover" suppressHydrationWarning />
                         </div>
                         <span className="text-white font-black text-xl tracking-widest uppercase">SWAGOD</span>
                     </Link>
                 </div>
 
-                {/* Right Side: Tools, Currency, Theme & Cart */}
+                {/* Right Side: Currency & Cart */}
                 <div className="flex items-center justify-end w-[150px] md:w-[250px] gap-3 md:gap-5">
-                    {/* Item 34: Currency Toggle Signal */}
                     <div className="hidden lg:flex items-center gap-2 font-mono text-[10px] text-white/60 border-r border-white/20 pr-4 mr-2">
                         <button onClick={() => setCurrency("ZAR")} className={`${currency === "ZAR" ? 'text-white font-bold' : 'opacity-40 hover:opacity-100'} transition-all`}>ZAR</button>
                         <span className="opacity-20">/</span>
                         <button onClick={() => setCurrency("USD")} className={`${currency === "USD" ? 'text-white font-bold' : 'opacity-40 hover:opacity-100'} transition-all`}>USD</button>
                     </div>
 
-                    <div className="hidden md:block mr-2">
-                        <ThemeToggle />
-                    </div>
-
                     <button
                         onClick={() => setIsSearchOpen(true)}
                         className="text-white hover:opacity-80 transition-opacity"
                         aria-label="Search Collection"
+                        suppressHydrationWarning
                     >
-                        <SearchIcon size={20} className="icon-industrial" />
+                        <SearchIcon size={20} className="icon-industrial" suppressHydrationWarning />
                     </button>
 
                     <button
                         onClick={openCart}
                         className="group relative flex items-center gap-2 text-white hover:opacity-80 transition-opacity"
                         aria-label="View Cart"
+                        suppressHydrationWarning
                     >
                         <div className="relative">
-                            <ShoppingBag size={20} className="icon-industrial" />
+                            <ShoppingBag size={20} className="icon-industrial" suppressHydrationWarning />
                             {itemCount > 0 && (
                                 <span className="absolute -top-2 -right-2 bg-black text-white text-[8px] font-bold w-4 h-4 rounded-full flex items-center justify-center border border-primary glow-primary">
                                     {itemCount}
@@ -124,13 +122,20 @@ export default function Header() {
             </motion.header>
 
             {/* MARQUEE BANNER - Dynamic */}
-            {mounted && settings?.showMarquee && (
-                <div className="fixed top-16 left-0 w-full z-[40] bg-black text-white text-[10px] font-bold py-1 overflow-hidden whitespace-nowrap border-b border-gray-800">
-                    <div className="animate-marquee inline-block">
-                        <span className="mx-4 uppercase">{marqueeText}</span>
-                    </div>
-                </div>
-            )}
+            <AnimatePresence>
+                {mounted && settings?.showMarquee && !hidden && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        className="fixed top-16 left-0 w-full z-[40] bg-black text-white text-[10px] font-bold py-1 overflow-hidden whitespace-nowrap border-b border-gray-800"
+                    >
+                        <div className="animate-marquee inline-block">
+                            <span className="mx-4 uppercase">{marqueeText}</span>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
             <CartDrawer />
             <Search isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
@@ -145,19 +150,22 @@ export default function Header() {
                         transition={{ duration: 0.4, ease: "easeInOut" }}
                         className="fixed inset-y-0 left-0 w-[85vw] md:w-[40vw] bg-black/95 backdrop-blur-md z-[60] border-r border-white/10 flex flex-col px-8 md:px-12 shadow-[0_0_40px_rgba(255,100,0,0.15)]"
                     >
-                        <button
-                            onClick={() => setIsOpen(false)}
-                            className="absolute top-6 right-6 text-white hover:text-primary transition-colors"
-                        >
-                            <X size={32} />
-                        </button>
-                        <div className="flex flex-col space-y-6 md:space-y-8 overflow-y-auto pt-24 pb-10">
+                        <div className="absolute top-6 left-8 right-8 flex items-center justify-between z-[70]">
+                            <ThemeToggle />
+                            <button
+                                onClick={() => setIsOpen(false)}
+                                className="text-white hover:text-primary transition-colors"
+                            >
+                                <X size={32} />
+                            </button>
+                        </div>
+                        <div className="flex flex-col space-y-6 md:space-y-8 overflow-y-auto no-scrollbar pt-24 pb-10">
                             {[
                                 { l: "Home", h: "/" },
                                 { l: "Collections", h: "/shop" },
                                 { l: "Tour", h: "/tour" },
                                 { l: "Archive", h: "/archive" },
-                                { l: "Admin Login", h: "/login" },
+                                { l: "Login", h: "/login" },
                             ].map((item, i) => (
                                 <motion.div
                                     key={item.l}
@@ -168,8 +176,8 @@ export default function Header() {
                                 >
                                     <Link
                                         href={item.h}
-                                        className="text-4xl md:text-5xl lg:text-6xl font-black uppercase text-transparent stroke-white hover:text-primary transition-colors tracking-widest drop-shadow-[0_0_10px_rgba(255,255,255,0.3)] hover:drop-shadow-[0_0_15px_rgba(255,100,0,0.8)] leading-tight"
-                                        style={{ WebkitTextStroke: "1px white" }}
+                                        className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-black uppercase text-transparent stroke-foreground hover:text-primary transition-colors tracking-widest drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] hover:drop-shadow-[0_0_15px_rgba(255,100,0,0.8)] leading-tight"
+                                        style={{ WebkitTextStroke: "1px var(--foreground)" }}
                                         onClick={() => setIsOpen(false)}
                                     >
                                         {item.l}

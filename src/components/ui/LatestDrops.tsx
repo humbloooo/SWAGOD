@@ -28,10 +28,10 @@ export default function LatestDrops({ products }: LatestDropsProps) {
                     <h2 className="text-6xl md:text-9xl font-black uppercase tracking-tighter leading-none mb-4">
                         NEW <span className="text-primary italic">RELEASES</span>
                     </h2>
-                    <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-foreground/40 italic">{"//"} CURRENT INVENTORY ARCHIVE</p>
+                    <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-foreground/70 dark:text-foreground/40 italic">{"//"} CURRENT INVENTORY ARCHIVE</p>
                 </header>
                 <div className="hidden md:flex flex-col items-end gap-2">
-                    <span className="text-[10px] font-mono text-white/20 uppercase tracking-widest">COLLECTION STATUS: ACTIVE</span>
+                    <span className="text-[10px] font-mono text-foreground/20 uppercase tracking-widest">COLLECTION STATUS: ACTIVE</span>
                     <div className="w-24 h-[1px] bg-primary/30 shadow-[0_0_10px_rgba(255,0,0,0.5)]"></div>
                 </div>
             </div>
@@ -49,14 +49,14 @@ export default function LatestDrops({ products }: LatestDropsProps) {
                     ) : products.length === 0 ? (
                         <>
                             {[...Array(4)].map((_, i) => (
-                                <div key={i} className="aspect-[3/4] bg-foreground/5 dark:bg-white/5 animate-pulse border border-white/10 brutalist-card" />
+                                <div key={i} className="aspect-[3/4] bg-foreground/5 animate-pulse border border-foreground/10 brutalist-card" />
                             ))}
                         </>
                     ) : (
-                        <div className="col-span-full py-12 text-center border border-white/10 bg-white/5 backdrop-blur-sm">
+                        <div className="col-span-full py-12 text-center border border-foreground/10 bg-foreground/5 backdrop-blur-sm">
                             <span className="text-4xl block mb-4">🦇</span>
-                            <h3 className="text-xl font-black uppercase tracking-widest text-foreground/50">NO ACTIVE INVENTORY</h3>
-                            <p className="font-mono text-xs text-foreground/30 tracking-widest mt-2 uppercase">Check back later for new releases.</p>
+                            <h3 className="text-xl font-black uppercase tracking-widest text-foreground/80 dark:text-foreground/50">NO ACTIVE INVENTORY</h3>
+                            <p className="font-mono text-xs text-foreground/60 dark:text-foreground/30 tracking-widest mt-2 uppercase">Check back later for new releases.</p>
                         </div>
                     )}
                 </div>
@@ -81,21 +81,21 @@ export default function LatestDrops({ products }: LatestDropsProps) {
                     ) : products.length === 0 ? (
                         <>
                             {[...Array(4)].map((_, i) => (
-                                <div key={i} className="aspect-[3/4] bg-foreground/5 dark:bg-white/5 animate-pulse border border-white/10 brutalist-card" />
+                                <div key={i} className="aspect-[3/4] bg-foreground/5 animate-pulse border border-foreground/10 brutalist-card" />
                             ))}
                         </>
                     ) : (
-                        <div className="col-span-full py-12 text-center border border-white/10 bg-white/5 backdrop-blur-sm">
+                        <div className="col-span-full py-12 text-center border border-foreground/10 bg-foreground/5 backdrop-blur-sm">
                             <span className="text-4xl block mb-4">🦇</span>
-                            <h3 className="text-xl font-black uppercase tracking-widest text-foreground/50">NO ACTIVE INVENTORY</h3>
-                            <p className="font-mono text-xs text-foreground/30 tracking-widest mt-2 uppercase">Check back later for new releases.</p>
+                            <h3 className="text-xl font-black uppercase tracking-widest text-foreground/80 dark:text-foreground/50">NO ACTIVE INVENTORY</h3>
+                            <p className="font-mono text-xs text-foreground/60 dark:text-foreground/30 tracking-widest mt-2 uppercase">Check back later for new releases.</p>
                         </div>
                     )}
                 </div>
             </div>
 
             <div className="flex justify-center mt-32 relative z-10 px-6">
-                <Link href="/shop" className="w-full md:w-auto text-center px-16 py-6 bg-foreground text-background font-black uppercase tracking-[0.2em] text-sm hover:bg-primary hover:text-white transition-all duration-500 group border border-foreground/10 dark:border-white/10">
+                <Link href="/shop" className="w-full md:w-auto text-center px-16 py-6 bg-foreground text-background font-black uppercase tracking-[0.2em] text-sm hover:bg-primary hover:text-white transition-all duration-500 group border border-foreground/10">
                     SHOP ALL PRODUCTS <span className="inline-block group-hover:translate-x-2 transition-transform">→</span>
                 </Link>
             </div>
@@ -110,7 +110,7 @@ const ProductCard = memo(function ProductCard({ product, index, addItem, openCar
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.6, delay: (index % 4) * 0.1 }}
-            className="group relative aspect-[3/4] brutalist-card overflow-hidden hover:border-primary transition-all duration-500 border border-foreground/5 dark:border-white/5"
+            className="group relative aspect-[3/4] brutalist-card overflow-hidden hover:border-primary transition-all duration-500 border border-foreground/5"
         >
             <Link href={`/product/${product.id}`} prefetch={true} className="block relative w-full h-full">
                 <Image
@@ -118,6 +118,7 @@ const ProductCard = memo(function ProductCard({ product, index, addItem, openCar
                     alt={product.title}
                     fill
                     className={`object-cover md:grayscale group-hover:grayscale-0 transition-all duration-500 ease-out ${product.images && product.images.length > 1 ? 'group-hover:opacity-0' : 'group-hover:scale-110'}`}
+                    suppressHydrationWarning
                 />
 
                 {product.images && product.images.length > 1 && (
@@ -126,6 +127,7 @@ const ProductCard = memo(function ProductCard({ product, index, addItem, openCar
                         alt={`${product.title} alternate`}
                         fill
                         className="object-cover absolute inset-0 opacity-0 transition-all duration-500 ease-out group-hover:opacity-100 group-hover:scale-105"
+                        suppressHydrationWarning
                     />
                 )}
 
@@ -138,19 +140,29 @@ const ProductCard = memo(function ProductCard({ product, index, addItem, openCar
                 </div>
             </Link>
 
-            {/* Active Inventory Indicator */}
-            <div className="absolute top-4 left-4 flex items-center gap-2 pointer-events-none z-30 opacity-0 group-hover:opacity-100 transition-opacity">
-                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+            {/* Active Inventory / Scarcity Indicator */}
+            <div className="absolute top-4 left-4 flex flex-col gap-2 pointer-events-none z-30 transition-opacity">
+                <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse glow-primary"></div>
+                </div>
+                {product.id.charCodeAt(0) % 2 === 0 && ( /* Pseudo-random low stock for demonstration */
+                    <div className="bg-primary/90 text-white font-mono text-[8px] px-2 py-1 uppercase tracking-widest animate-pulse border border-foreground/20 whitespace-nowrap glow-primary shadow-[0_0_15px_rgba(255,0,0,0.8)] backdrop-blur-md">
+                        ONLY 2 LEFT
+                    </div>
+                )}
             </div>
 
             {/* Quick Add Actions */}
             <div className="absolute bottom-4 left-4 right-4 z-20 flex flex-col gap-2 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
-                <div className="space-y-1 backdrop-blur-lg bg-background/60 p-4 border border-foreground/10 dark:border-white/10 glow-primary text-foreground">
+                <div className="space-y-1 backdrop-blur-lg bg-background/60 p-4 border border-foreground/10 glow-primary text-foreground">
                     <div className="flex justify-between items-start">
                         <h4 className="text-sm font-black uppercase tracking-tight line-clamp-1">{product.title}</h4>
                         <span className="text-[8px] font-mono text-foreground/40">{product.likes?.length || 0} SAVED</span>
                     </div>
-                    <p className="font-mono text-[10px] text-primary">{formatPrice(product.price, currency)}</p>
+                    <div className="flex items-center gap-2">
+                        <p className="font-mono text-[10px] text-primary font-bold">{formatPrice(product.price, currency)}</p>
+                        <p className="font-mono text-[10px] text-foreground/40 line-through">{formatPrice(product.price * 1.3, currency)}</p>
+                    </div>
                 </div>
 
                 <button
@@ -168,14 +180,15 @@ const ProductCard = memo(function ProductCard({ product, index, addItem, openCar
                             },
                         });
                     }}
-                    className="w-full py-4 bg-primary text-white font-black uppercase tracking-widest text-[10px] hover:bg-white hover:text-black transition-all flex items-center justify-center gap-2 glow-primary"
+                    className="w-full py-4 bg-primary text-white font-black uppercase tracking-widest text-[10px] hover:bg-foreground hover:text-background transition-all flex items-center justify-center gap-2 glow-primary"
+                    suppressHydrationWarning
                 >
-                    <ShoppingBag size={14} /> ADD TO CART
+                    <ShoppingBag size={14} suppressHydrationWarning /> ADD TO CART
                 </button>
             </div>
 
             {/* Product ID Indicator */}
-            <div className="absolute top-4 left-4 font-mono text-[8px] text-white/20 uppercase tracking-widest vertical-text group-hover:text-primary transition-colors">
+            <div className="absolute top-4 left-4 font-mono text-[8px] text-foreground/20 uppercase tracking-widest vertical-text group-hover:text-primary transition-colors">
                 ITEM_{product.id.substring(0, 8)}
             </div>
         </motion.div>

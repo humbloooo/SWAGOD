@@ -31,7 +31,7 @@ export default function AdminQuickLinks() {
             </Link>
             <Link
                 href="/admin/products"
-                className="group flex items-center gap-3 bg-black/80 backdrop-blur-md text-white border border-white/10 px-4 py-3 font-black text-[10px] uppercase tracking-widest hover:border-primary transition-all"
+                className="group flex items-center gap-3 bg-background/80 backdrop-blur-md text-foreground border border-foreground/10 px-4 py-3 font-black text-[10px] uppercase tracking-widest hover:border-primary transition-all"
             >
                 <ExternalLink size={16} />
                 <span>QUICK INV_MGMT</span>

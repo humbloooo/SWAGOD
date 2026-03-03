@@ -33,8 +33,9 @@ export default function FAQDrawer() {
                 onClick={() => setIsOpen(true)}
                 className="fixed bottom-24 right-6 z-[60] p-4 bg-foreground text-background font-black hover:bg-primary transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)]"
                 aria-label="Open Support FAQ"
+                suppressHydrationWarning
             >
-                <HelpCircle size={24} />
+                <HelpCircle size={24} suppressHydrationWarning />
             </button>
 
             <AnimatePresence>

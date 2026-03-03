@@ -81,11 +81,12 @@ export default function LikeButton({ productId, initialLikes = [], variant = "co
                 className={cn(
                     "flex-1 py-4 border font-black uppercase tracking-widest text-[10px] transition-all flex items-center justify-center gap-3",
                     isLiked
-                        ? "bg-primary text-white border-primary glow-primary"
-                        : "bg-white/5 text-white border-white/10 hover:border-primary"
+                        ? "bg-primary text-foreground border-primary glow-primary"
+                        : "bg-foreground/5 text-foreground border-foreground/10 hover:border-primary dark:bg-foreground/5 dark:text-foreground dark:border-foreground/10"
                 )}
+                suppressHydrationWarning
             >
-                <Heart size={14} className={cn("transition-transform duration-300", isLiked && "fill-current scale-110")} />
+                <Heart size={14} className={cn("transition-transform duration-300", isLiked && "fill-current scale-110")} suppressHydrationWarning />
                 {isLiked ? "SAVED" : "SAVE"}
                 {likes.length > 0 && <span className="opacity-40 ml-1">[{likes.length}]</span>}
             </button>
@@ -97,17 +98,18 @@ export default function LikeButton({ productId, initialLikes = [], variant = "co
             onClick={handleLike}
             className="flex items-center gap-2 group"
             aria-label="Save Item"
+            suppressHydrationWarning
         >
             <div className={cn(
                 "p-2 rounded-full border transition-all duration-300",
                 isLiked
                     ? "bg-primary/20 border-primary text-primary"
-                    : "bg-black/40 border-white/10 text-white/40 group-hover:border-primary group-hover:text-primary"
+                    : "bg-foreground/10 border-foreground/10 text-foreground/40 dark:bg-background/40 dark:border-foreground/10 dark:text-foreground/40 group-hover:border-primary group-hover:text-primary"
             )}>
-                <Heart size={16} className={cn(isLiked && "fill-current")} />
+                <Heart size={16} className={cn(isLiked && "fill-current")} suppressHydrationWarning />
             </div>
             {likes.length > 0 && (
-                <span className="font-mono text-[9px] text-white/40 uppercase tracking-tighter">
+                <span className="font-mono text-[9px] text-foreground/40 dark:text-foreground/40 uppercase tracking-tighter">
                     {likes.length} SAVED
                 </span>
             )}

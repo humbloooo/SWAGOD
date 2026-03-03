@@ -144,7 +144,7 @@ export default function AdminProducts() {
                             onClick={() => { setIsEditing(true); setCurrentProduct({ category: 'clothing' }); }}
                             className="px-8 py-4 bg-primary text-black font-black uppercase tracking-widest hover:bg-white transition-all flex items-center gap-2"
                         >
-                            <Plus size={20} /> ADD ENTRY
+                            <Plus size={20} suppressHydrationWarning /> ADD ENTRY
                         </button>
                     </div>
                 </div>
@@ -219,7 +219,7 @@ export default function AdminProducts() {
 
                 {products.length === 0 && (
                     <div className="flex flex-col items-center justify-center py-32 border border-white/10 bg-white/5 backdrop-blur-md">
-                        <Box size={48} className="text-white/20 mb-6" />
+                        <Box size={48} className="text-white/20 mb-6" suppressHydrationWarning />
                         <h2 className="text-2xl font-black uppercase tracking-widest text-white/50 mb-2">ARCHIVE EMPTY</h2>
                         <p className="font-mono text-xs uppercase tracking-[0.2em] text-white/30 text-center max-w-sm">No products found in the database. Add a new entry to initialize the catalog.</p>
                         <button

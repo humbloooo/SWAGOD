@@ -88,11 +88,20 @@ export default function CartDrawer() {
                                             </div>
                                             <div className="flex items-center gap-4">
                                                 <div className="flex items-center border border-gray-200">
+                                                    <button onClick={() => {
+                                                        if (item.quantity > 1) {
+                                                            // Decrease quantity (needs store update if updateItem exists, else remove and re-add or handle in store)
+                                                            addItem(item, item.selectedSize, -1);
+                                                        } else {
+                                                            removeItem(item.id);
+                                                        }
+                                                    }} className="px-3 py-1 hover:bg-gray-100 transition-colors">-</button>
+                                                    <span className="text-xs font-mono px-2 w-8 text-center">{item.quantity}</span>
+                                                    <button onClick={() => addItem(item, item.selectedSize, 1)} className="px-3 py-1 hover:bg-gray-100 transition-colors">+</button>
                                                     <button aria-label={`Remove ${item.title} from cart`} onClick={() => {
                                                         removeItem(item.id);
-                                                    }} className="p-3 hover:bg-gray-100 transition-colors"><Trash2 size={16} /></button>
+                                                    }} className="p-2 ml-2 text-red-500 hover:bg-red-50 transition-colors"><Trash2 size={14} /></button>
                                                 </div>
-                                                <span className="text-xs font-mono">QTY: {item.quantity}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -134,6 +143,19 @@ export default function CartDrawer() {
                         </div>
 
                         <div className="p-6 border-t border-gray-100 bg-surface">
+                            {/* Free Shipping Progress */}
+                            <div className="mb-6 space-y-2">
+                                <div className="flex justify-between text-[10px] font-mono font-bold uppercase">
+                                    <span>{total() >= 2000 ? "FREE SHIPPING UNLOCKED" : "FREE WORLDWIDE SHIPPING AT ZAR 2000"}</span>
+                                </div>
+                                <div className="h-1 w-full bg-foreground/10 overflow-hidden">
+                                    <div
+                                        className="h-full bg-primary transition-all duration-500"
+                                        style={{ width: `${Math.min((total() / 2000) * 100, 100)}%` }}
+                                    />
+                                </div>
+                            </div>
+
                             <div className="flex justify-between items-center mb-6 text-lg font-bold uppercase">
                                 <span>Total</span>
                                 <span>{formatPrice(total(), currency)}</span>
@@ -160,9 +182,9 @@ function CheckoutButton() {
         <div className="flex flex-col gap-3">
             <button
                 onClick={handleCheckout}
-                className="w-full py-4 bg-primary text-white font-bold uppercase tracking-widest hover:brightness-110 transition-colors"
+                className="w-full py-4 bg-primary text-white font-bold uppercase tracking-widest hover:brightness-110 transition-all glow-primary hover:scale-[1.02] active:scale-[0.98]"
             >
-                Checkout
+                Secure Yours
             </button>
             {!session && (
                 <button

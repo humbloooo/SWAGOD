@@ -11,12 +11,12 @@ import Magnetic from "@/components/motion/Magnetic";
 import { useTheme } from "next-themes";
 import { useState, useEffect } from "react";
 
-export default function Hero({ heroImage, lightModeWallpaper }: { heroImage?: string, lightModeWallpaper?: string }) {
+export default function Hero({ heroImage, lightModeWallpaper, heroSlogan }: { heroImage?: string, lightModeWallpaper?: string, heroSlogan?: string }) {
     const { resolvedTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
-        setMounted(true);
+        setTimeout(() => setMounted(true), 0);
     }, []);
 
     const currentImage = mounted && resolvedTheme === 'light'
@@ -33,6 +33,7 @@ export default function Hero({ heroImage, lightModeWallpaper }: { heroImage?: st
                     fill
                     className="object-cover opacity-80"
                     priority
+                    suppressHydrationWarning
                 />
                 <div className="absolute inset-0 bg-background/40" /> {/* Adaptive overlay */}
             </div>
@@ -44,9 +45,9 @@ export default function Hero({ heroImage, lightModeWallpaper }: { heroImage?: st
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.5 }}
-                    className="text-white/90 font-mono text-[10px] md:text-sm tracking-[0.5em] uppercase bg-black/60 px-8 py-4 backdrop-blur-md border border-white/10 glow-primary"
+                    className="text-foreground/90 font-mono text-[10px] md:text-sm tracking-[0.5em] uppercase bg-background/60 px-8 py-4 backdrop-blur-md border border-foreground/10 glow-primary"
                 >
-                    {useTextScramble("TIMELESS COLLECTIONS // MODERN STYLES")}
+                    {useTextScramble(heroSlogan || "TIMELESS COLLECTIONS // MODERN STYLES")}
                 </motion.p>
 
                 <div className="flex flex-col sm:flex-row items-center gap-6 mt-12">
@@ -59,7 +60,7 @@ export default function Hero({ heroImage, lightModeWallpaper }: { heroImage?: st
                                 const element = document.getElementById('latest-drops');
                                 element?.scrollIntoView({ behavior: 'smooth' });
                             }}
-                            className="px-10 py-5 bg-primary text-white font-black text-xs tracking-[0.3em] hover:bg-black transition-all uppercase border border-white/10 glow-primary"
+                            className="px-10 py-5 bg-primary text-white font-black text-xs tracking-[0.3em] hover:bg-foreground hover:text-background transition-all uppercase border border-foreground/10 glow-primary"
                         >
                             BROWSE COLLECTIONS
                         </motion.button>
@@ -72,9 +73,10 @@ export default function Hero({ heroImage, lightModeWallpaper }: { heroImage?: st
                                 whileHover={{ scale: 1.05, backgroundColor: "rgba(255, 0, 0, 0.05)" }}
                                 whileTap={{ scale: 0.95 }}
                                 className="group flex items-center gap-2 px-8 py-4 bg-transparent text-primary font-bold text-lg tracking-wider border border-primary uppercase hover:border-red-600 transition-colors cursor-pointer"
+                                suppressHydrationWarning
                             >
                                 <span>Tour</span>
-                                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" suppressHydrationWarning />
                             </motion.div>
                         </Magnetic>
                     </Link>

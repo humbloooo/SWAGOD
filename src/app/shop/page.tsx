@@ -51,7 +51,7 @@ export default function Shop() {
                 <div className="flex flex-wrap gap-4 mb-12">
                     <button
                         onClick={() => setSelectedSize(null)}
-                        className={`px-6 py-2 border font-mono text-sm uppercase transition-colors ${!selectedSize ? 'bg-primary border-primary text-white glow-primary' : 'border-white/20 text-white hover:border-primary'}`}
+                        className={`px-6 py-2 border font-mono text-sm uppercase transition-colors ${!selectedSize ? 'bg-primary border-primary text-white glow-primary' : 'border-foreground/20 text-foreground dark:border-white/20 dark:text-white hover:border-primary'}`}
                     >
                         ALL
                     </button>
@@ -59,7 +59,7 @@ export default function Shop() {
                         <button
                             key={size}
                             onClick={() => setSelectedSize(size)}
-                            className={`px-6 py-2 border font-mono text-sm uppercase transition-colors ${selectedSize === size ? 'bg-primary border-primary text-white glow-primary' : 'border-white/20 text-white hover:border-primary'}`}
+                            className={`px-6 py-2 border font-mono text-sm uppercase transition-colors ${selectedSize === size ? 'bg-primary border-primary text-white glow-primary' : 'border-foreground/20 text-foreground dark:border-white/20 dark:text-white hover:border-primary'}`}
                         >
                             {size}
                         </button>
@@ -69,7 +69,7 @@ export default function Shop() {
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8 mb-24">
                     {isLoading ? (
                         [...Array(8)].map((_, i) => (
-                            <div key={i} className="aspect-[3/4] bg-white/5 animate-pulse border border-white/10" />
+                            <div key={i} className="aspect-[3/4] bg-foreground/5 dark:bg-white/5 animate-pulse border border-foreground/10 dark:border-white/10" />
                         ))
                     ) : (
                         <>
@@ -77,10 +77,10 @@ export default function Shop() {
                                 <ShopProductCard key={product.id} product={product} currency={currency} />
                             ))}
                             {filteredProducts.length === 0 && (
-                                <div className="col-span-full py-24 text-center border border-white/10 bg-white/5 backdrop-blur-sm">
+                                <div className="col-span-full py-24 text-center border border-foreground/10 dark:border-white/10 bg-foreground/5 dark:bg-white/5 backdrop-blur-sm">
                                     <span className="text-4xl block mb-4">🦇</span>
-                                    <h3 className="text-xl font-black uppercase tracking-widest text-white/50">NO INVENTORY FOUND</h3>
-                                    <p className="font-mono text-xs text-white/30 tracking-widest mt-2 uppercase">Try adjusting your filters.</p>
+                                    <h3 className="text-xl font-black uppercase tracking-widest text-foreground/50 dark:text-white/50">NO INVENTORY FOUND</h3>
+                                    <p className="font-mono text-xs text-foreground/30 dark:text-white/30 tracking-widest mt-2 uppercase">Try adjusting your filters.</p>
                                 </div>
                             )}
                         </>
@@ -88,7 +88,7 @@ export default function Shop() {
                 </div>
 
                 {mounted && recentlyViewed.length > 0 && (
-                    <div className="border-t border-white/10 pt-24 mb-24">
+                    <div className="border-t border-foreground/10 dark:border-white/10 pt-24 mb-24">
                         <h2 className="text-2xl font-black uppercase tracking-widest mb-12">
                             RECENTLY <span className="text-primary">VIEWED</span>
                         </h2>
@@ -108,7 +108,7 @@ export default function Shop() {
 const ShopProductCard = memo(function ShopProductCard({ product, currency }: { product: Product, currency: "ZAR" | "USD" }) {
     return (
         <Link href={`/product/${product.id}`} prefetch={true} className="group block">
-            <div className="relative aspect-[3/4] border border-white/5 mb-4 overflow-hidden bg-surface group-hover:border-primary transition-colors">
+            <div className="relative aspect-[3/4] border border-foreground/5 dark:border-white/5 mb-4 overflow-hidden bg-surface group-hover:border-primary transition-colors">
                 <Image
                     src={product.image || "/assets/placeholder.png"}
                     alt={product.title}

@@ -3,7 +3,6 @@ import LatestDrops from "@/components/ui/LatestDrops";
 import Navigation from "@/components/layout/Navigation";
 import Header from "@/components/layout/Header";
 import About from "@/components/ui/About";
-import BackToTop from "@/components/ui/BackToTop";
 import FeedbackForm from "@/components/ui/FeedbackForm";
 import BackgroundBrackets from "@/components/ui/BackgroundBrackets";
 import { getProducts, getAbout, getSettings } from "@/lib/db";
@@ -26,12 +25,11 @@ export default async function Home() {
     <main id="main-content" className="min-h-screen pb-[60px] bg-background">
       <Header />
       <BackgroundBrackets />
-      <Hero heroImage={settings?.heroImage} lightModeWallpaper={settings?.lightModeWallpaper} />
-      {aboutData && <About data={aboutData} />}
+      <Hero heroImage={settings?.heroImage} lightModeWallpaper={settings?.lightModeWallpaper} heroSlogan={settings?.heroSlogan} />
       <LatestDrops products={products} />
       <FeedbackForm />
+      {aboutData && <About data={aboutData} />}
       <Navigation />
-      <BackToTop />
     </main>
   );
 }

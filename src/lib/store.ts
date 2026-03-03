@@ -5,7 +5,7 @@ import { Product, CartItem } from './types';
 interface CartState {
     items: CartItem[];
     isCartOpen: boolean;
-    addItem: (product: Product, size?: string) => void;
+    addItem: (product: Product, size?: string, quantityModifier?: number) => void;
     removeItem: (productId: string, size?: string) => void;
     clearCart: () => void;
     total: () => number;
@@ -33,7 +33,7 @@ export const useAppStore = create<AppState>()(
             isCartOpen: false,
             openCart: () => set({ isCartOpen: true }),
             closeCart: () => set({ isCartOpen: false }),
-            addItem: (product, size) => {
+            addItem: (product, size, quantityModifier = 1) => {
                 const currentItems = get().items;
                 const selectedSize = size || "M";
                 const existingItem = currentItems.find((item) => item.id === product.id && item.selectedSize === selectedSize);
@@ -42,12 +42,12 @@ export const useAppStore = create<AppState>()(
                     set({
                         items: currentItems.map((item) =>
                             item.id === product.id && item.selectedSize === selectedSize
-                                ? { ...item, quantity: item.quantity + 1 }
+                                ? { ...item, quantity: item.quantity + quantityModifier }
                                 : item
                         ),
                     });
                 } else {
-                    set({ items: [...currentItems, { ...product, quantity: 1, selectedSize }] });
+                    set({ items: [...currentItems, { ...product, quantity: Math.max(1, quantityModifier), selectedSize }] });
                 }
                 get().openCart();
             },

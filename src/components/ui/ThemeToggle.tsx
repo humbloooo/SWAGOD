@@ -14,8 +14,8 @@ export function ThemeToggle() {
 
     if (!mounted) {
         return (
-            <button className="w-10 h-10 flex items-center justify-center opacity-0">
-                <Sun size={20} />
+            <button className="w-10 h-10 flex items-center justify-center opacity-0" suppressHydrationWarning>
+                <Sun size={20} suppressHydrationWarning />
             </button>
         );
     }
@@ -23,13 +23,14 @@ export function ThemeToggle() {
     return (
         <button
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="w-10 h-10 flex items-center justify-center text-white hover:text-primary transition-colors"
+            className="w-10 h-10 flex items-center justify-center text-foreground hover:text-primary transition-colors"
             aria-label="Toggle Theme"
+            suppressHydrationWarning
         >
             {theme === "dark" ? (
-                <Sun size={20} className="icon-industrial" />
+                <Sun size={20} className="icon-industrial" suppressHydrationWarning />
             ) : (
-                <Moon size={20} className="icon-industrial" />
+                <Moon size={20} className="icon-industrial" suppressHydrationWarning />
             )}
         </button>
     );

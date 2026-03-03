@@ -2,11 +2,11 @@ import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { FirestoreAdapter } from "@next-auth/firebase-adapter";
-import { firestore } from "@/lib/firebase-admin";
+import { firestore, isMock } from "@/lib/firebase-admin";
 import { isUserAdmin } from "@/lib/db";
 
 export const authOptions: NextAuthOptions = {
-    adapter: FirestoreAdapter(firestore),
+    ...(isMock ? {} : { adapter: FirestoreAdapter(firestore) }),
     session: {
         strategy: "jwt", // We must use JWT strategy with Credentials provider, even with an adapter
     },

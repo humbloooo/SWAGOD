@@ -15,7 +15,7 @@ export default function CurrencySwitcher() {
 
     return (
         <div className="flex items-center gap-4 font-mono text-[10px] tracking-widest uppercase">
-            <div className="flex items-center gap-2 text-white/40">
+            <div className="flex items-center gap-2 text-foreground/40">
                 <Globe size={12} />
                 <span>REGION // {currencies.find(c => c.code === currency)?.label}</span>
             </div>
@@ -27,7 +27,7 @@ export default function CurrencySwitcher() {
                             setCurrency(c.code);
                             // In a real app, this would update a global state/context
                         }}
-                        className={`transition-colors ${currency === c.code ? 'text-primary font-bold' : 'text-white/20 hover:text-white'}`}
+                        className={`transition-colors ${currency === c.code ? 'text-primary font-bold' : 'text-foreground/20 hover:text-foreground'}`}
                     >
                         {c.code}
                     </button>

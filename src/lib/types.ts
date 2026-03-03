@@ -29,6 +29,7 @@ export interface CartItem extends Product {
 }
 
 export interface SiteSettings {
+    heroSlogan?: string; // New field for dynamic slogan
     heroImage?: string; // New field for Hero Wallpaper
     lightModeWallpaper?: string; // Wallpaper specifically for light mode
     latestDropsLimit?: number; // Control number of items on home page
