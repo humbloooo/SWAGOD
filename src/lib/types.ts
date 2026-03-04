@@ -1,5 +1,5 @@
 export interface Product {
-    id: string;
+    id?: string;
     title: string;
     price: number;
     image: string;
@@ -51,7 +51,7 @@ export interface SiteSettings {
 }
 
 export interface Feedback {
-    id: string;
+    id?: string;
     name: string;
     email: string;
     message: string;
@@ -59,7 +59,7 @@ export interface Feedback {
 }
 
 export interface TourEvent {
-    id: string;
+    id?: string;
     date: string; // ISO String
     city: string;
     venue: string;

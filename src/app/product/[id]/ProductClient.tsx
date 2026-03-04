@@ -209,7 +209,7 @@ export default function ProductClient({ id }: ProductClientProps) {
                             animate={{ opacity: 1, x: 0 }}
                             className="mb-12"
                         >
-                            <h1 className="text-6xl md:text-8xl font-black uppercase tracking-tighter leading-none mb-6">
+                            <h1 className="text-[15vw] lg:text-8xl font-black uppercase tracking-tighter leading-none mb-6 italic">
                                 {product.title}
                             </h1>
                             <div className="flex flex-wrap items-center gap-6">

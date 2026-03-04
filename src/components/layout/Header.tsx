@@ -57,13 +57,13 @@ export default function Header() {
                 }}
                 animate={hidden ? "hidden" : "visible"}
                 transition={{ duration: 0.35, ease: "easeInOut" }}
-                className="fixed top-0 left-0 w-full h-16 bg-primary z-50 flex items-center justify-between px-4 md:px-6 shadow-md"
+                className="fixed top-0 left-0 w-full h-16 bg-background/80 backdrop-blur-md z-50 flex items-center justify-between px-4 md:px-6 border-b border-foreground/5"
             >
                 {/* Left Side: Navigation Menu Toggle */}
                 <div className="flex items-center w-[100px]">
                     <button
                         onClick={() => setIsOpen(true)}
-                        className="text-white hover:opacity-80 transition-opacity flex items-center gap-2"
+                        className="text-foreground hover:text-primary transition-colors flex items-center gap-2"
                         aria-label="Open Navigation Menu"
                         suppressHydrationWarning
                     >
@@ -73,25 +73,25 @@ export default function Header() {
 
                 {/* Center: Logo & Brand Name */}
                 <div className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center gap-2">
-                    <Link href="/" className="flex items-center gap-3 hover:scale-105 transition-transform">
-                        <div className="relative w-8 h-8 rounded-full overflow-hidden border-2 border-white shadow-sm glow-primary bg-white">
+                    <Link href="/" className="flex items-center gap-3 hover:scale-105 transition-transform group">
+                        <div className="relative w-8 h-8 rounded-full overflow-hidden border border-foreground/10 shadow-sm glow-primary bg-white dark:bg-black transition-colors group-hover:border-primary">
                             <Image src="/assets/swagod-logo.png" alt="Swagod Logo" fill className="object-cover" suppressHydrationWarning />
                         </div>
-                        <span className="text-white font-black text-xl tracking-widest uppercase">SWAGOD</span>
+                        <span className="text-foreground font-black text-xl tracking-widest uppercase group-hover:text-primary transition-colors">SWAGOD</span>
                     </Link>
                 </div>
 
                 {/* Right Side: Currency & Cart */}
                 <div className="flex items-center justify-end w-[150px] md:w-[250px] gap-3 md:gap-5">
-                    <div className="hidden lg:flex items-center gap-2 font-mono text-[10px] text-white/60 border-r border-white/20 pr-4 mr-2">
-                        <button onClick={() => setCurrency("ZAR")} className={`${currency === "ZAR" ? 'text-white font-bold' : 'opacity-40 hover:opacity-100'} transition-all`}>ZAR</button>
+                    <div className="hidden lg:flex items-center gap-2 font-mono text-[10px] text-foreground/40 border-r border-foreground/10 pr-4 mr-2">
+                        <button onClick={() => setCurrency("ZAR")} className={`${currency === "ZAR" ? 'text-primary font-bold' : 'opacity-40 hover:opacity-100'} transition-all`}>ZAR</button>
                         <span className="opacity-20">/</span>
-                        <button onClick={() => setCurrency("USD")} className={`${currency === "USD" ? 'text-white font-bold' : 'opacity-40 hover:opacity-100'} transition-all`}>USD</button>
+                        <button onClick={() => setCurrency("USD")} className={`${currency === "USD" ? 'text-primary font-bold' : 'opacity-40 hover:opacity-100'} transition-all`}>USD</button>
                     </div>
 
                     <button
                         onClick={() => setIsSearchOpen(true)}
-                        className="text-white hover:opacity-80 transition-opacity"
+                        className="text-foreground hover:text-primary transition-colors"
                         aria-label="Search Collection"
                         suppressHydrationWarning
                     >
@@ -100,7 +100,7 @@ export default function Header() {
 
                     <button
                         onClick={openCart}
-                        className="group relative flex items-center gap-2 text-white hover:opacity-80 transition-opacity"
+                        className="group relative flex items-center gap-2 text-foreground hover:text-primary transition-colors"
                         aria-label="View Cart"
                         suppressHydrationWarning
                     >
@@ -128,7 +128,7 @@ export default function Header() {
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
-                        className="fixed top-16 left-0 w-full z-[40] bg-black text-white text-[10px] font-bold py-1 overflow-hidden whitespace-nowrap border-b border-gray-800"
+                        className="fixed top-16 left-0 w-full z-[40] bg-primary text-white text-[10px] font-bold py-1 overflow-hidden whitespace-nowrap border-b border-white/10"
                     >
                         <div className="animate-marquee inline-block">
                             <span className="mx-4 uppercase">{marqueeText}</span>

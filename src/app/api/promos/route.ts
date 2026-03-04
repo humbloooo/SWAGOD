@@ -13,10 +13,8 @@ export async function POST(request: Request) {
     // Generate ID purely for client-side optimisms if needed, but Firestore can auto-gen.
     // However, keeping consistent ID is good.
     const newPromo = { ...body };
-    if (!newPromo.id) {
-        // If we want to let Firestore gen ID, we'd use .add(). 
-        // But let's stick to explicit update logic requiring IDs for now if poss.
-        // Actually, db.ts addPromo uses .add() which makes a new ID if not provided.
+    if (!newPromo.id || newPromo.id === "") {
+        delete newPromo.id;
     }
     await addPromo(newPromo);
     return NextResponse.json({ success: true });

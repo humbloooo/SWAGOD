@@ -9,8 +9,8 @@ export async function GET() {
 export async function POST(request: Request) {
     try {
         const newItem = await request.json();
-        if (!newItem.id) {
-            newItem.id = Math.random().toString(36).substr(2, 9);
+        if (!newItem.id || newItem.id === "") {
+            delete newItem.id;
         }
         await addArchive(newItem);
         return NextResponse.json({ success: true, item: newItem });

@@ -48,7 +48,7 @@ export default function AddToCartButton({ product, selectedSize, className }: Ad
             whileTap={{ scale: 0.98 }}
             onClick={handleAddToCart}
             disabled={isAdding}
-            className={`w-full py-6 bg-foreground text-background font-bold uppercase tracking-widest text-xl hover:bg-primary transition-all flex items-center justify-center gap-3 disabled:opacity-70 disabled:cursor-not-allowed ${className}`}
+            className={`w-full py-6 bg-foreground text-background font-bold uppercase tracking-widest text-lg md:text-xl hover:bg-primary transition-all flex items-center justify-center gap-3 disabled:opacity-70 disabled:cursor-not-allowed ${className}`}
         >
             {isAdding ? (
                 <Loader2 size={24} className="animate-spin" />

@@ -7,7 +7,6 @@ export async function POST(request: Request) {
         const data = await request.json();
 
         const newFeedback: Feedback = {
-            id: Date.now().toString(),
             name: data.name,
             email: data.email,
             message: data.message,

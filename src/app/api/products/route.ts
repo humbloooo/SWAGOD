@@ -24,9 +24,9 @@ export async function POST(request: Request) {
     try {
         const product: Product = await request.json();
 
-        // Simple ID generation if not provided (though Firestore can auto-gen)
-        if (!product.id) {
-            product.id = Math.random().toString(36).substr(2, 9);
+        // If a product comes in with an empty string ID, delete it so Mongoose natively generates an ObjectId
+        if (!product.id || product.id === "") {
+            delete product.id;
         }
 
         const session = await getServerSession(authOptions);
@@ -40,6 +40,7 @@ export async function POST(request: Request) {
         await addProduct(product);
         return NextResponse.json({ success: true, product });
     } catch (e) {
+        console.error("POST /api/products error:", e);
         return apiError(e instanceof Error ? e.message : "Failed to add product");
     }
 }

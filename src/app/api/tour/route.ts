@@ -10,6 +10,9 @@ export async function GET() {
 export async function POST(request: Request) {
     try {
         const body = await request.json();
+        if (!body.id || body.id === "") {
+            delete body.id;
+        }
         await addTour(body as TourEvent);
         return NextResponse.json({ success: true });
     } catch {

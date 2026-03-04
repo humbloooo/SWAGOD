@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { AboutData } from "@/lib/types";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Loader2, ArrowLeft } from "lucide-react";
+import { Loader2, ArrowLeft, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 import Header from "@/components/layout/Header";
 import Navigation from "@/components/layout/Navigation";
@@ -15,6 +15,7 @@ export default function LoginPage() {
     const [isLoading, setIsLoading] = useState<string | null>(null);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const [aboutData, setAboutData] = useState<AboutData | null>(null);
 
     useEffect(() => {
@@ -91,14 +92,23 @@ export default function LoginPage() {
                             </div>
                             <div>
                                 <label className="block font-mono text-xs uppercase mb-1 font-bold text-foreground/50">Password</label>
-                                <input
-                                    type="password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full h-12 bg-background border border-foreground/30 px-4 font-mono text-sm text-foreground focus:border-foreground focus:outline-none focus:ring-1 focus:ring-foreground transition-all placeholder:text-foreground/20"
-                                    placeholder="••••••••"
-                                    suppressHydrationWarning
-                                />
+                                <div className="relative">
+                                    <input
+                                        type={showPassword ? "text" : "password"}
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        className="w-full h-12 bg-background border border-foreground/30 px-4 pr-12 font-mono text-sm text-foreground focus:border-foreground focus:outline-none focus:ring-1 focus:ring-foreground transition-all placeholder:text-foreground/20"
+                                        placeholder="••••••••"
+                                        suppressHydrationWarning
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/50 hover:text-foreground transition-colors"
+                                    >
+                                        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                    </button>
+                                </div>
                             </div>
                             <button
                                 type="submit"

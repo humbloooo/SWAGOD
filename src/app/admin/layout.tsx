@@ -24,7 +24,7 @@ export default async function AdminLayout({
             <main className="min-h-screen bg-background flex flex-col items-center justify-center p-6 text-center">
                 <Header />
                 <h1 className="text-4xl font-black text-red-600 uppercase mb-4">Access Denied</h1>
-                <p className="font-mono text-gray-600 mb-8 max-w-md">
+                <p className="font-mono text-foreground/60 mb-8 max-w-md">
                     You are currently logged in as <strong>{session.user.email}</strong>.<br />
                     This account does not have admin permissions.
                 </p>
@@ -36,7 +36,7 @@ export default async function AdminLayout({
                     >
                         Switch Account / Sign Out
                     </Link>
-                    <Link href="/" className="px-6 py-4 border border-black uppercase font-bold hover:bg-gray-100 transition-colors w-full">
+                    <Link href="/" className="px-6 py-4 border border-foreground/20 uppercase font-bold hover:bg-foreground/5 transition-colors w-full">
                         Return to Store
                     </Link>
                 </div>

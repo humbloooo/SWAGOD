@@ -25,7 +25,7 @@ export default function About({ data }: { data: AboutData }) {
                     </h2>
                     <div className="w-24 h-1 bg-primary mb-8" />
                 </div>
-                <div className="space-y-6 font-mono text-sm md:text-base text-gray-700">
+                <div className="space-y-6 font-mono text-sm md:text-base text-foreground/70">
                     {data.paragraphs?.map((p: string, i: number) => (
                         <p key={i}>{p}</p>
                     ))}

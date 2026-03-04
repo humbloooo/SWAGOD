@@ -46,7 +46,7 @@ export default function Shop() {
         <main className="min-h-screen bg-background pb-[60px] pt-24">
             <Header />
             <div className="container mx-auto px-6">
-                <h1 className="text-5xl md:text-8xl font-black uppercase tracking-tighter mb-8">
+                <h1 className="text-[12vw] md:text-8xl font-black uppercase tracking-tighter mb-8 italic">
                     Shop // <span className="text-primary">All</span>
                 </h1>
 

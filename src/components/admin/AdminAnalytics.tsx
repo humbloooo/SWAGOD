@@ -23,17 +23,17 @@ export default function AdminAnalytics() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: idx * 0.1 }}
-                        className="bg-white/5 border border-white/10 p-4 md:p-6 backdrop-blur-md"
+                        className="bg-foreground/5 border border-foreground/10 p-4 md:p-6 backdrop-blur-md"
                     >
                         <div className="flex justify-between items-start mb-2 md:mb-4">
                             <div suppressHydrationWarning>
-                                <stat.icon size={16} className="text-white/40 md:w-5 md:h-5" suppressHydrationWarning />
+                                <stat.icon size={16} className="text-foreground/40 md:w-5 md:h-5" suppressHydrationWarning />
                             </div>
                             <span className={`text-[8px] md:text-[10px] font-mono font-bold ${stat.trend.startsWith('+') ? 'text-green-500' : 'text-red-500'}`}>
                                 {stat.trend}
                             </span>
                         </div>
-                        <h3 className="text-white/40 font-mono text-[8px] md:text-[10px] uppercase tracking-widest mb-1">{stat.label}</h3>
+                        <h3 className="text-foreground/40 font-mono text-[8px] md:text-[10px] uppercase tracking-widest mb-1">{stat.label}</h3>
                         <p className="text-xl md:text-2xl font-black">{stat.value}</p>
                     </motion.div>
                 ))}
@@ -43,14 +43,14 @@ export default function AdminAnalytics() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 }}
-                className="bg-white/5 border border-white/10 p-10 backdrop-blur-md relative overflow-hidden"
+                className="bg-foreground/5 border border-foreground/10 p-10 backdrop-blur-md relative overflow-hidden"
             >
                 <div className="flex justify-between items-end mb-12">
                     <div>
-                        <h3 className="text-white/40 font-mono text-[10px] uppercase tracking-widest mb-1">LIVE FEEDBACK</h3>
+                        <h3 className="text-foreground/40 font-mono text-[10px] uppercase tracking-widest mb-1">LIVE FEEDBACK</h3>
                         <p className="text-3xl font-black uppercase">PERFORMANCE</p>
                     </div>
-                    <div className="text-right font-mono text-[10px] text-white/40 uppercase tracking-widest">
+                    <div className="text-right font-mono text-[10px] text-foreground/40 uppercase tracking-widest">
                         LAST 7 DAYS
                     </div>
                 </div>
@@ -68,7 +68,7 @@ export default function AdminAnalytics() {
                                     {height}%
                                 </div>
                             </motion.div>
-                            <span className="font-mono text-[10px] text-white/20">D0{i + 1}</span>
+                            <span className="font-mono text-[10px] text-foreground/20">D0{i + 1}</span>
                         </div>
                     ))}
                 </div>
