@@ -65,7 +65,7 @@ export default function LoginPage() {
                 </button>
             </div>
 
-            <div className="flex-1 flex flex-col md:flex-row items-center justify-center p-6 z-10 pt-32 pb-32 gap-12 max-w-6xl mx-auto w-full">
+            <div className="flex-1 flex flex-col items-center justify-center p-6 z-10 pt-32 pb-32 gap-8 max-w-lg mx-auto w-full">
                 {/* Form Section */}
                 <div className="w-full max-w-md bg-background border border-foreground p-8 shadow-[8px_8px_0px_0px_var(--foreground)] transition-colors">
                     <h1 className="text-4xl font-black uppercase tracking-tighter mb-2 text-center">

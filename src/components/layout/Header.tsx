@@ -148,13 +148,13 @@ export default function Header() {
                         animate={{ clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)" }}
                         exit={{ clipPath: "polygon(0 0, 0 0, 0 100%, 0 100%)" }}
                         transition={{ duration: 0.4, ease: "easeInOut" }}
-                        className="fixed inset-y-0 left-0 w-[85vw] md:w-[40vw] bg-black/95 backdrop-blur-md z-[60] border-r border-white/10 flex flex-col px-8 md:px-12 shadow-[0_0_40px_rgba(255,100,0,0.15)]"
+                        className="fixed inset-y-0 left-0 w-[85vw] md:w-[40vw] bg-background/95 backdrop-blur-md z-[60] border-r border-foreground/10 flex flex-col px-8 md:px-12 shadow-[0_0_40px_rgba(255,100,0,0.15)] text-foreground"
                     >
                         <div className="absolute top-6 left-8 right-8 flex items-center justify-between z-[70]">
                             <ThemeToggle />
                             <button
                                 onClick={() => setIsOpen(false)}
-                                className="text-white hover:text-primary transition-colors"
+                                className="text-foreground hover:text-primary transition-colors"
                             >
                                 <X size={32} />
                             </button>
@@ -188,9 +188,9 @@ export default function Header() {
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 0.6 }}
-                                className="pt-8 border-t border-white/10 flex items-center justify-start mt-8"
+                                className="pt-8 border-t border-foreground/10 flex items-center justify-start mt-8"
                             >
-                                <span className="text-white/40 font-mono text-[10px] uppercase tracking-widest text-left w-full">EST. 2026</span>
+                                <span className="text-foreground/40 font-mono text-[10px] uppercase tracking-widest text-left w-full">EST. 2026</span>
                             </motion.div>
                         </div>
                         <motion.div
@@ -199,7 +199,7 @@ export default function Header() {
                             transition={{ delay: 0.7 }}
                             className="mt-auto pb-12"
                         >
-                            <p className="text-gray-500 font-mono text-xs">
+                            <p className="text-foreground/50 font-mono text-xs uppercase tracking-widest">
                                 SWAGOD {"//"} EST. 2026 {"//"} WORLDWIDE
                             </p>
                         </motion.div>
