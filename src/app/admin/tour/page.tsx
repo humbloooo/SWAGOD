@@ -142,7 +142,7 @@ export default function AdminTour() {
                                 {tour.soldOut && <span className="inline-block mt-2 px-3 py-1 bg-red-500/10 text-red-500 border border-red-500/20 font-black text-[10px] tracking-widest">SOLD_OUT</span>}
                             </div>
                             <button
-                                onClick={() => handleDelete(tour.id)}
+                                onClick={() => handleDelete(tour.id!)}
                                 className="px-6 py-2 border border-red-500/30 text-red-500 font-black uppercase text-[10px] tracking-widest hover:bg-red-500 hover:text-foreground transition-all"
                             >
                                 PURGE

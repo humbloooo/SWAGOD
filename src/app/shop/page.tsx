@@ -96,7 +96,7 @@ export default function Shop() {
                     ) : (
                         <>
                             {filteredProducts.map((product) => (
-                                <ShopProductCard key={product.id} product={product} currency={currency} />
+                                <ShopProductCard key={product.id!} product={product} currency={currency} />
                             ))}
                             {filteredProducts.length === 0 && (
                                 <div className="col-span-full py-24 text-center border border-foreground/10 dark:border-white/10 bg-foreground/5 dark:bg-white/5 backdrop-blur-sm">
@@ -116,7 +116,7 @@ export default function Shop() {
                         </h2>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
                             {recentlyViewed.map(product => (
-                                <ShopProductCard key={`recent-${product.id}`} product={product} currency={currency} />
+                                <ShopProductCard key={`recent-${product.id!}`} product={product} currency={currency} />
                             ))}
                         </div>
                     </div>
@@ -129,7 +129,7 @@ export default function Shop() {
 
 const ShopProductCard = memo(function ShopProductCard({ product, currency }: { product: Product, currency: "ZAR" | "USD" }) {
     return (
-        <Link href={`/product/${product.id}`} prefetch={true} className="group block">
+        <Link href={`/product/${product.id!}`} prefetch={true} className="group block">
             <div className="relative aspect-[3/4] border border-foreground/5 dark:border-white/5 mb-4 overflow-hidden bg-surface group-hover:border-primary transition-colors">
                 <Image
                     src={product.image || "/assets/placeholder.png"}

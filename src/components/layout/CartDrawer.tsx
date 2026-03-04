@@ -19,10 +19,10 @@ export default function CartDrawer() {
             fetch("/api/products")
                 .then(res => res.json())
                 .then((data: Product[]) => {
-                    const cartIds = items.map(i => i.id);
+                    const cartIds = items.map(i => i.id!);
                     // Filter out items already in cart, sort by likes (proxy for popularity)
                     const available = data
-                        .filter(p => !cartIds.includes(p.id))
+                        .filter(p => p.id && !cartIds.includes(p.id))
                         .sort((a, b) => (b.likes?.length || 0) - (a.likes?.length || 0))
                         .slice(0, 2);
                     setRecommendations(available);
@@ -77,7 +77,7 @@ export default function CartDrawer() {
                                 </div>
                             ) : (
                                 items.map((item) => (
-                                    <div key={item.id} className="flex gap-4">
+                                    <div key={`${item.id}-${item.selectedSize}`} className="flex gap-4">
                                         <div className="relative w-20 h-24 bg-surface flex-shrink-0">
                                             <Image src={item.image} alt={item.title} fill className="object-cover" />
                                         </div>
@@ -93,13 +93,13 @@ export default function CartDrawer() {
                                                             // Decrease quantity (needs store update if updateItem exists, else remove and re-add or handle in store)
                                                             addItem(item, item.selectedSize, -1);
                                                         } else {
-                                                            removeItem(item.id);
+                                                            removeItem(item.id!);
                                                         }
                                                     }} className="px-3 py-1 hover:bg-gray-100 transition-colors">-</button>
                                                     <span className="text-xs font-mono px-2 w-8 text-center">{item.quantity}</span>
                                                     <button onClick={() => addItem(item, item.selectedSize, 1)} className="px-3 py-1 hover:bg-gray-100 transition-colors">+</button>
                                                     <button aria-label={`Remove ${item.title} from cart`} onClick={() => {
-                                                        removeItem(item.id);
+                                                        removeItem(item.id!);
                                                     }} className="p-2 ml-2 text-red-500 hover:bg-red-50 transition-colors"><Trash2 size={14} /></button>
                                                 </div>
                                             </div>
@@ -115,12 +115,12 @@ export default function CartDrawer() {
                                     <div className="flex flex-col gap-4">
                                         {recommendations.map(product => (
                                             <div key={product.id} className="flex gap-4 border border-gray-100 p-2 hover:border-black transition-colors">
-                                                <Link href={`/product/${product.id}`} onClick={closeCart} className="relative w-16 h-20 bg-surface flex-shrink-0">
+                                                <Link href={`/product/${product.id!}`} onClick={closeCart} className="relative w-16 h-20 bg-surface flex-shrink-0">
                                                     <Image src={product.image || "/assets/placeholder.png"} alt={product.title} fill className="object-cover" />
                                                 </Link>
                                                 <div className="flex-1 flex flex-col justify-between">
                                                     <div>
-                                                        <Link href={`/product/${product.id}`} onClick={closeCart} className="text-xs font-bold uppercase leading-tight line-clamp-1 hover:text-primary transition-colors">
+                                                        <Link href={`/product/${product.id!}`} onClick={closeCart} className="text-xs font-bold uppercase leading-tight line-clamp-1 hover:text-primary transition-colors">
                                                             {product.title}
                                                         </Link>
                                                         <p className="text-xs font-mono text-primary mt-1">{formatPrice(product.price, currency)}</p>

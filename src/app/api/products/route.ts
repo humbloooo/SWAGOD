@@ -49,13 +49,17 @@ export async function PUT(request: Request) {
     try {
         const updatedProduct: Product = await request.json();
 
+        if (!updatedProduct.id) {
+            return NextResponse.json({ success: false, message: "Product ID required" }, { status: 400 });
+        }
+
         // Check existence first
         const existing = await getProductById(updatedProduct.id);
         if (!existing) {
             return NextResponse.json({ success: false, message: "Product not found" }, { status: 404 });
         }
 
-        await updateProduct(updatedProduct);
+        await updateProduct(updatedProduct as Product & { id: string });
         return NextResponse.json({ success: true, product: updatedProduct });
     } catch (e) {
         return apiError(e instanceof Error ? e.message : "Failed to update product");

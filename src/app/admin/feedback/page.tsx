@@ -65,7 +65,7 @@ export default function AdminFeedback() {
                             >
                                 <div className="absolute top-0 right-0 p-2 md:p-4 opacity-0 group-hover:opacity-100 transition-opacity">
                                     <button
-                                        onClick={() => deleteMessage(item.id)}
+                                        onClick={() => deleteMessage(item.id!)}
                                         className="p-1 md:p-2 text-red-500 hover:bg-red-500/10 transition-colors"
                                     >
                                         <Trash2 className="w-4 h-4 md:w-5 md:h-5" />

@@ -60,7 +60,7 @@ export default function AdminPromos() {
         setPromos(updated);
 
         // API Call
-        await fetch(`/api/promos?id=${item.id}`, {
+        await fetch(`/api/promos?id=${item.id!}`, {
             method: "DELETE",
         });
     }

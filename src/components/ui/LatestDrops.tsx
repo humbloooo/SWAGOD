@@ -112,7 +112,7 @@ const ProductCard = memo(function ProductCard({ product, index, addItem, openCar
             transition={{ duration: 0.6, delay: (index % 4) * 0.1 }}
             className="group relative aspect-[3/4] brutalist-card overflow-hidden hover:border-primary transition-all duration-500 border border-foreground/5"
         >
-            <Link href={`/product/${product.id}`} prefetch={true} className="block relative w-full h-full">
+            <Link href={`/product/${product.id!}`} prefetch={true} className="block relative w-full h-full">
                 <Image
                     src={product.image || "/assets/placeholder.png"}
                     alt={product.title}
@@ -136,7 +136,7 @@ const ProductCard = memo(function ProductCard({ product, index, addItem, openCar
 
                 {/* Corner Accent */}
                 <div className="absolute top-4 right-4 z-30">
-                    <LikeButton productId={product.id} initialLikes={product.likes} />
+                    <LikeButton productId={product.id!} initialLikes={product.likes} />
                 </div>
             </Link>
 
@@ -145,7 +145,7 @@ const ProductCard = memo(function ProductCard({ product, index, addItem, openCar
                 <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                     <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse glow-primary"></div>
                 </div>
-                {product.id.charCodeAt(0) % 2 === 0 && ( /* Pseudo-random low stock for demonstration */
+                {product.id && product.id.charCodeAt(0) % 2 === 0 && ( /* Pseudo-random low stock for demonstration */
                     <div className="bg-primary/90 text-white font-mono text-[8px] px-2 py-1 uppercase tracking-widest animate-pulse border border-foreground/20 whitespace-nowrap glow-primary shadow-[0_0_15px_rgba(255,0,0,0.8)] backdrop-blur-md">
                         ONLY 2 LEFT
                     </div>
@@ -189,7 +189,7 @@ const ProductCard = memo(function ProductCard({ product, index, addItem, openCar
 
             {/* Product ID Indicator */}
             <div className="absolute top-4 left-4 font-mono text-[8px] text-foreground/20 uppercase tracking-widest vertical-text group-hover:text-primary transition-colors">
-                ITEM_{product.id.substring(0, 8)}
+                ITEM_{product.id ? product.id.substring(0, 8) : 'TEMP'}
             </div>
         </motion.div>
     );

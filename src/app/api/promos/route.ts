@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getPromos, addPromo, updatePromo, deletePromo } from "@/lib/db";
+import { Product } from "@/lib/types";
 
 export async function GET() {
     const promos = await getPromos();
@@ -21,8 +22,11 @@ export async function POST(request: Request) {
 }
 
 export async function PUT(request: Request) {
-    const body = await request.json();
-    await updatePromo(body);
+    const body: Product = await request.json();
+    if (!body.id) {
+        return NextResponse.json({ error: "Promo ID required" }, { status: 400 });
+    }
+    await updatePromo(body as Product & { id: string });
     return NextResponse.json({ success: true });
 }
 

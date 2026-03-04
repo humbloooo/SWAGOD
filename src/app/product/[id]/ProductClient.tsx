@@ -101,7 +101,7 @@ export default function ProductClient({ id }: ProductClientProps) {
             try {
                 const stored = localStorage.getItem('recentlyViewed');
                 let viewedList: Product[] = stored ? JSON.parse(stored) : [];
-                viewedList = viewedList.filter(p => p.id !== product.id);
+                viewedList = viewedList.filter(p => p.id && product.id && p.id !== product.id);
                 viewedList.unshift(product);
                 if (viewedList.length > 4) viewedList = viewedList.slice(0, 4);
                 localStorage.setItem('recentlyViewed', JSON.stringify(viewedList));
@@ -321,14 +321,14 @@ export default function ProductClient({ id }: ProductClientProps) {
                                     <p className="text-[10px] font-mono text-foreground/40 uppercase tracking-widest mb-4">TRANSMIT TO NETWORK:</p>
                                     <div className="flex gap-4">
                                         <button
-                                            onClick={() => window.open(`https://twitter.com/intent/tweet?text=Check out ${product.title} at SWAGOD&url=https://swagod.co.za/product/${product.id}`, '_blank')}
+                                            onClick={() => window.open(`https://twitter.com/intent/tweet?text=Check out ${product.title} at SWAGOD&url=https://swagod.co.za/product/${product.id!}`, '_blank')}
                                             className="text-[10px] font-bold uppercase tracking-widest px-4 py-2 border border-foreground/10 hover:border-primary transition-colors"
                                         >
                                             X / TWITTER
                                         </button>
                                         <button
                                             onClick={() => {
-                                                navigator.clipboard.writeText(`https://swagod.co.za/product/${product.id}`);
+                                                navigator.clipboard.writeText(`https://swagod.co.za/product/${product.id!}`);
                                                 toast.success("LINK COPIED TO CLIPBOARD");
                                             }}
                                             className="text-[10px] font-bold uppercase tracking-widest px-4 py-2 border border-foreground/10 hover:border-primary transition-colors"
@@ -347,7 +347,7 @@ export default function ProductClient({ id }: ProductClientProps) {
                             <h2 className="text-4xl font-black uppercase tracking-tighter mb-16 italic">RECOMMENDED {"//"} <span className="text-primary">PIECES</span></h2>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 {relatedProducts.map((rp) => (
-                                    <Link href={`/product/${rp.id}`} key={rp.id} className="group block relative overflow-hidden bg-foreground/5 border border-foreground/10 p-6">
+                                    <Link href={`/product/${rp.id!}`} key={rp.id} className="group block relative overflow-hidden bg-foreground/5 border border-foreground/10 p-6">
                                         <div className="relative aspect-[3/4] mb-6 overflow-hidden">
                                             <Image
                                                 src={rp.image || "/assets/placeholder.png"}

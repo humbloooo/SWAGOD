@@ -103,7 +103,7 @@ export default function AdminProducts() {
             {
                 loading: 'BULK PURGING...',
                 success: () => {
-                    setProducts(products.filter(p => !selectedIds.includes(p.id)));
+                    setProducts(products.filter(p => !selectedIds.includes(p.id!)));
                     setSelectedIds([]);
                     return 'ARCHIVE CLEANED';
                 },
@@ -161,18 +161,18 @@ export default function AdminProducts() {
                                 initial={{ opacity: 0, x: -20 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: idx * 0.05 }}
-                                className={`group relative flex items-center justify-between p-6 border transition-all duration-300 ${selectedIds.includes(product.id)
+                                className={`group relative flex items-center justify-between p-6 border transition-all duration-300 ${selectedIds.includes(product.id!)
                                     ? 'border-primary bg-primary/5'
                                     : 'border-foreground/10 bg-foreground/5 backdrop-blur-md hover:border-foreground/20'
                                     }`}
                             >
                                 <div className="flex items-center gap-8">
                                     <button
-                                        onClick={() => toggleSelection(product.id)}
-                                        className={`w-6 h-6 border flex items-center justify-center transition-colors ${selectedIds.includes(product.id) ? 'bg-primary border-primary' : 'border-foreground/20 hover:border-primary'
+                                        onClick={() => toggleSelection(product.id!)}
+                                        className={`w-6 h-6 border flex items-center justify-center transition-colors ${selectedIds.includes(product.id!) ? 'bg-primary border-primary' : 'border-foreground/20 hover:border-primary'
                                             }`}
                                     >
-                                        {selectedIds.includes(product.id) && <Check size={14} className="text-background font-black" />}
+                                        {selectedIds.includes(product.id!) && <Check size={14} className="text-background font-black" />}
                                     </button>
 
                                     <div className="w-20 h-20 bg-foreground/10 border border-foreground/10 relative overflow-hidden">
@@ -206,7 +206,7 @@ export default function AdminProducts() {
                                         <Edit size={20} />
                                     </button>
                                     <button
-                                        onClick={() => handleDelete(product.id)}
+                                        onClick={() => handleDelete(product.id!)}
                                         className="p-3 border border-foreground/10 hover:border-red-500 hover:text-red-500 transition-all"
                                     >
                                         <Trash2 size={20} />

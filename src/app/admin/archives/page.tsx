@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 
 interface ArchiveItem {
-    id: string;
+    id?: string;
     title: string;
     image: string;
     description: string;
@@ -143,7 +143,7 @@ export default function AdminArchives() {
                                                 {
                                                     loading: 'DELETING...',
                                                     success: () => {
-                                                        setArchives(archives.filter(a => a.id !== item.id));
+                                                        setArchives(archives.filter(a => a.id !== item.id!));
                                                         return 'DELETED';
                                                     },
                                                     error: 'FAILED TO DELETE'
