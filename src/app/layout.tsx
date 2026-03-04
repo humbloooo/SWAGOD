@@ -41,8 +41,6 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="preconnect" href="https://firestore.googleapis.com" />
-        <link rel="preconnect" href="https://firebasestorage.googleapis.com" />
       </head>
       <body
         className={`${interTight.variable} antialiased bg-background text-foreground selection:bg-primary selection:text-white overflow-x-hidden`}

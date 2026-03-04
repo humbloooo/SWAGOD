@@ -1,16 +1,19 @@
-import { storage } from "./firebase";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+export async function uploadImage(file: File): Promise<string> {
+    try {
+        const formData = new FormData();
+        formData.append('file', file);
 
-export async function uploadImage(file: File, path: string): Promise<string> {
-    if (!file) throw new Error("No file provided");
+        const res = await fetch('/api/upload', {
+            method: 'POST',
+            body: formData
+        });
 
-    // Create a storage reference
-    const storageRef = ref(storage, path);
+        const data = await res.json();
+        if (data.error) throw new Error(data.error);
 
-    // Upload the file
-    await uploadBytes(storageRef, file);
-
-    // Get the download URL
-    const url = await getDownloadURL(storageRef);
-    return url;
+        return data.url;
+    } catch (error) {
+        console.error("Error uploading image:", error);
+        throw error;
+    }
 }

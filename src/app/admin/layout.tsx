@@ -18,7 +18,8 @@ export default async function AdminLayout({
     }
 
     // @ts-expect-error session.user is extended by NextAuth
-    if (session.user.role !== "admin") {
+    const userRole = session.user.role;
+    if (userRole !== "admin" && userRole !== "ADMIN" && userRole !== "SUPER_ADMIN") {
         return (
             <main className="min-h-screen bg-background flex flex-col items-center justify-center p-6 text-center">
                 <Header />

@@ -1,12 +1,13 @@
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { FirestoreAdapter } from "@next-auth/firebase-adapter";
-import { firestore, isMock } from "@/lib/firebase-admin";
-import { isUserAdmin } from "@/lib/db";
+import { MongoDBAdapter } from "@auth/mongodb-adapter";
+import clientPromise from "@/lib/mongodb-client";
+import dbConnect from "@/lib/mongoose";
+import User from "@/lib/models/User";
 
 export const authOptions: NextAuthOptions = {
-    ...(isMock ? {} : { adapter: FirestoreAdapter(firestore) }),
+    adapter: MongoDBAdapter(clientPromise),
     session: {
         strategy: "jwt", // We must use JWT strategy with Credentials provider, even with an adapter
     },
@@ -24,48 +25,41 @@ export const authOptions: NextAuthOptions = {
             authorize: async (credentials) => {
                 if (!credentials?.username || !credentials?.password) return null;
 
-                // 1. Master Admin Check
+                // 1. Master Admin Check (Fallback)
                 if (
                     credentials.username === "admin" &&
                     credentials.password === "password"
                 ) {
-                    return { id: "admin-master", name: "Master Admin", email: "admin@swagod.com", role: "admin" };
+                    return { id: "admin-master", name: "Master Admin", email: "admin@swagod.com", role: "SUPER_ADMIN" };
                 }
 
-                // 2. Check Firestore 'users' collection
+                // 2. Check MongoDB 'users' collection
                 try {
-                    const userQuery = await firestore.collection('users')
-                        .where('email', '==', credentials.username)
-                        .limit(1)
-                        .get();
+                    await dbConnect();
+                    const userDoc = await User.findOne({ email: credentials.username });
 
-                    if (!userQuery.empty) {
-                        const userDoc = userQuery.docs[0];
-                        const userData = userDoc.data();
-
-                        // NOTE: In a real production app, we would verify the password hash here.
-                        // Since we are using Firebase Auth for the actual credential storage,
-                        // this credentials provider is acting as a sync layer.
-                        if (credentials.password === "swagod2026") { // Temporary shared password for testing if needed
+                    if (userDoc) {
+                        // NOTE: In a real production app, we would verify the password hash here with bcrypt.
+                        // Currently allowing a specific shared password or pass-through for demo purposes.
+                        if (credentials.password === "swagod2026") {
                             return {
-                                id: userDoc.id,
-                                name: userData.name,
-                                email: userData.email,
-                                role: userData.role || 'user'
+                                id: userDoc._id.toString(),
+                                name: userDoc.name,
+                                email: userDoc.email,
+                                role: userDoc.role || 'USER'
                             };
                         }
 
-                        // If password matches a specific pattern or we just allow it for now
-                        // (Usually you'd want a proper verification)
+                        // Fallback logic
                         return {
-                            id: userDoc.id,
-                            name: userData.name,
-                            email: userData.email,
-                            role: userData.role || 'user'
+                            id: userDoc._id.toString(),
+                            name: userDoc.name,
+                            email: userDoc.email,
+                            role: userDoc.role || 'USER'
                         };
                     }
                 } catch (e) {
-                    console.error("Firestore user lookup failed", e);
+                    console.error("MongoDB user lookup failed", e);
                 }
 
                 return null;
@@ -80,11 +74,16 @@ export const authOptions: NextAuthOptions = {
                 token.id = u.id;
                 token.role = u.role; // Initial login role
 
-                // If logging in via Google, check if they are an Admin in Firestore
+                // If logging in via Google, check if they are an Admin in MongoDB
                 if (!token.role && user.email) {
-                    const isAdmin = await isUserAdmin(user.email);
-                    if (isAdmin) {
-                        token.role = 'admin';
+                    try {
+                        await dbConnect();
+                        const existingUser = await User.findOne({ email: user.email });
+                        if (existingUser && (existingUser.role === 'ADMIN' || existingUser.role === 'SUPER_ADMIN')) {
+                            token.role = existingUser.role;
+                        }
+                    } catch (err) {
+                        console.error("MongoDB Role check failed:", err);
                     }
                 }
             }

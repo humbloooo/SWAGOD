@@ -11,12 +11,11 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@next-auth/firebase-adapter": "^2.0.1",
+    "@auth/mongodb-adapter": "^3.11.1",
     "clsx": "^2.1.1",
-    "firebase": "^12.9.0",
-    "firebase-admin": "^11.11.1",
     "framer-motion": "^12.34.0",
     "lucide-react": "^0.563.0",
+    "mongodb": "^6.21.0",
     "mongoose": "^9.2.4",
     "next": "16.1.6",
     "next-auth": "^4.24.13",

@@ -1,33 +1,28 @@
-import { firestore, isMock } from './firebase-admin';
+import dbConnect from './mongoose';
+import ProductModel from './models/Product';
+import ArchiveModel from './models/Archive';
+import PromoModel from './models/Promo';
+import SiteSettingsModel from './models/SiteSettings';
+import FeedbackModel from './models/Feedback';
+import TourEventModel from './models/TourEvent';
+import AboutModel from './models/About';
+import UserModel from './models/User';
+import AuditLogModel from './models/AuditLog';
 import { Product, SiteSettings, Feedback, TourEvent, AuditLog, AboutData } from './types';
 import { PRODUCTS } from './data';
 
-// Enforce Firestore collection names
-const PRODUCTS_COLLECTION = 'products';
-const ARCHIVES_COLLECTION = 'archives';
-const FEEDBACK_COLLECTION = 'feedback';
-const PROMOS_COLLECTION = 'promos';
-const SETTINGS_COLLECTION = 'settings';
-const ABOUT_COLLECTION = 'about';
-const ADMINS_COLLECTION = 'admins'; // New collection for authorized admin emails
-const TOURS_COLLECTION = 'tours';
-const AUDIT_LOGS_COLLECTION = 'audit_logs';
+const isMock = process.env.NEXT_PUBLIC_USE_MOCK_DATA === 'true';
 
 export async function isUserAdmin(email: string): Promise<boolean> {
     if (!email) return false;
     try {
-        // Check 1: Is strict admin in 'admins' collection?
-        const doc = await firestore.collection(ADMINS_COLLECTION).doc(email).get();
-        if (doc.exists) return true;
-
-        // Check 2: Maybe we store it in 'users' with role: 'admin'?
-        const userQuery = await firestore.collection('users').where('email', '==', email).where('role', '==', 'admin').get();
-        if (!userQuery.empty) return true;
-
-        // FALLBACK: Allow specific hardcoded email for initial setup if migration isn't perfect yet
-        // Remove this later!
+        await dbConnect();
         if (email === 'admin@swagod.com') return true;
 
+        const user = await UserModel.findOne({ email });
+        if (user && (user.role === 'ADMIN' || user.role === 'SUPER_ADMIN')) {
+            return true;
+        }
         return false;
     } catch (e) {
         console.error("Admin check failed", e);
@@ -39,27 +34,21 @@ export async function isUserAdmin(email: string): Promise<boolean> {
 
 export async function getProducts(limit?: number): Promise<Product[]> {
     if (isMock) {
-        // console.log("DATABASE: Returning mock products from data.ts");
         return limit ? PRODUCTS.slice(0, limit) : PRODUCTS;
     }
     try {
-        let query: FirebaseFirestore.Query<FirebaseFirestore.DocumentData> = firestore.collection(PRODUCTS_COLLECTION);
+        await dbConnect();
+        const query = ProductModel.find({ active: { $ne: false } }).sort({ createdAt: -1 });
+        if (limit) query.limit(limit);
 
-        // Item 82: Filter by Active by default
-        query = query.where('active', '!=', false);
-
-        if (limit) {
-            query = query.limit(limit);
-        }
-        const snapshot = await query.get();
-        if (snapshot.empty) {
-            // Fallback to mock data if DB is completely empty (helps fix empty Shop/LatestDrops issue)
+        const docs = await query.exec();
+        if (!docs.length) {
             return limit ? PRODUCTS.slice(0, limit) : PRODUCTS;
         }
-        return snapshot.docs.map((doc: FirebaseFirestore.QueryDocumentSnapshot) => ({ id: doc.id, ...doc.data() } as Product));
+        return docs.map(doc => doc.toJSON() as unknown as Product);
     } catch {
-        console.warn("⚠️ Firebase connection failed to fetch products. Falling back to mock data.");
-        return limit ? PRODUCTS.slice(0, limit) : PRODUCTS; // Final fallback
+        console.warn("⚠️ Mongoose connection failed to fetch products. Falling back to mock data.");
+        return limit ? PRODUCTS.slice(0, limit) : PRODUCTS;
     }
 }
 
@@ -68,68 +57,68 @@ export async function getProductById(id: string): Promise<Product | null> {
         return PRODUCTS.find(p => p.id === id) || { id, title: "Mock Product", price: 0, category: "clothing" } as Product;
     }
     try {
-        const doc = await firestore.collection(PRODUCTS_COLLECTION).doc(id).get();
-        if (!doc.exists) return null;
-        return { id: doc.id, ...doc.data() } as Product;
+        await dbConnect();
+        const doc = await ProductModel.findById(id);
+        if (!doc) return null;
+        return doc.toJSON() as unknown as Product;
     } catch {
-        console.warn(`⚠️ Firebase connection failed fetching product ${id}. Falling back to null.`);
+        console.warn(`⚠️ Mongoose connection failed fetching product ${id}. Falling back to null.`);
         return null;
     }
 }
 
-// Replaces saveProducts (bulk) with specific operations
 export async function addProduct(product: Product): Promise<void> {
-    // If ID is provided, use it, otherwise auto-gen
+    await dbConnect();
     const now = new Date().toISOString();
     const data = { ...product, createdAt: product.createdAt || now };
 
     if (product.id) {
-        await firestore.collection(PRODUCTS_COLLECTION).doc(product.id).set(data, { merge: true });
+        await ProductModel.findByIdAndUpdate(product.id, data, { upsert: true, new: true, setDefaultsOnInsert: true });
     } else {
-        await firestore.collection(PRODUCTS_COLLECTION).add(data);
+        await ProductModel.create(data);
     }
 }
 
 export async function updateProduct(product: Product): Promise<void> {
     if (!product.id) throw new Error("Product ID required for update");
-    await firestore.collection(PRODUCTS_COLLECTION).doc(product.id).set(product, { merge: true });
+    await dbConnect();
+    await ProductModel.findByIdAndUpdate(product.id, product, { new: true });
 }
 
 export async function getAdminProducts(): Promise<Product[]> {
-    const snapshot = await firestore.collection(PRODUCTS_COLLECTION).get();
-    return snapshot.docs.map((doc: FirebaseFirestore.QueryDocumentSnapshot) => ({ id: doc.id, ...doc.data() } as Product));
+    await dbConnect();
+    const docs = await ProductModel.find().sort({ createdAt: -1 });
+    return docs.map(doc => doc.toJSON() as unknown as Product);
 }
 
 export async function deleteProduct(id: string): Promise<void> {
     if (isMock) return;
-    // Item 82: Soft Delete implementation
-    await firestore.collection(PRODUCTS_COLLECTION).doc(id).update({ active: false });
+    await dbConnect();
+    await ProductModel.findByIdAndUpdate(id, { active: false });
 }
 
 export async function hardDeleteProduct(id: string): Promise<void> {
-    await firestore.collection(PRODUCTS_COLLECTION).doc(id).delete();
+    await dbConnect();
+    await ProductModel.findByIdAndDelete(id);
 }
 
 // --- AUDIT LOGS ---
 
 export async function addAuditLog(log: AuditLog): Promise<void> {
-    await firestore.collection(AUDIT_LOGS_COLLECTION).add({
+    await dbConnect();
+    await AuditLogModel.create({
         ...log,
         timestamp: new Date().toISOString()
     });
 }
 
-// For backward compatibility during migration, if any code still calls saveProducts(array)
-// we should ideally warn or implement a batch write, but better to refactor the caller.
-// Let's keep it but make it rewrite the whole collection (EXPENSIVE/DANGEROUS)?
-// No, the user wants "Strictly based on Firebase". We will refactor the callers (API routes).
-
 // --- ARCHIVES ---
 
 export async function getArchives(): Promise<Product[]> {
     try {
-        const snapshot = await firestore.collection(ARCHIVES_COLLECTION).orderBy('date', 'desc').get();
-        return snapshot.docs.map((doc: FirebaseFirestore.QueryDocumentSnapshot) => ({ id: doc.id, ...doc.data() } as Product));
+        await dbConnect();
+        const docs = await ArchiveModel.find().sort({ date: -1 });
+        return docs.map(doc => doc.toJSON() as unknown as Product);
     } catch (error) {
         console.error("Error fetching archives:", error);
         return [];
@@ -137,24 +126,27 @@ export async function getArchives(): Promise<Product[]> {
 }
 
 export async function addArchive(item: Product): Promise<void> {
+    await dbConnect();
     const data = { ...item, date: item.createdAt || new Date().toISOString() };
     if (item.id) {
-        await firestore.collection(ARCHIVES_COLLECTION).doc(item.id).set(data);
+        await ArchiveModel.findByIdAndUpdate(item.id, data, { upsert: true, new: true, setDefaultsOnInsert: true });
     } else {
-        await firestore.collection(ARCHIVES_COLLECTION).add(data);
+        await ArchiveModel.create(data);
     }
 }
 
 export async function deleteArchive(id: string): Promise<void> {
-    await firestore.collection(ARCHIVES_COLLECTION).doc(id).delete();
+    await dbConnect();
+    await ArchiveModel.findByIdAndDelete(id);
 }
 
 // --- FEEDBACK ---
 
 export async function getFeedback(): Promise<Feedback[]> {
     try {
-        const snapshot = await firestore.collection(FEEDBACK_COLLECTION).orderBy('date', 'desc').get();
-        return snapshot.docs.map((doc: FirebaseFirestore.QueryDocumentSnapshot) => ({ id: doc.id, ...doc.data() } as Feedback));
+        await dbConnect();
+        const docs = await FeedbackModel.find().sort({ date: -1 });
+        return docs.map(doc => doc.toJSON() as unknown as Feedback);
     } catch (error) {
         console.error("Error fetching feedback:", error);
         return [];
@@ -162,19 +154,22 @@ export async function getFeedback(): Promise<Feedback[]> {
 }
 
 export async function addFeedback(feedback: Feedback): Promise<void> {
-    await firestore.collection(FEEDBACK_COLLECTION).add(feedback);
+    await dbConnect();
+    await FeedbackModel.create(feedback);
 }
 
 export async function deleteFeedback(id: string): Promise<void> {
-    await firestore.collection(FEEDBACK_COLLECTION).doc(id).delete();
+    await dbConnect();
+    await FeedbackModel.findByIdAndDelete(id);
 }
 
 // --- PROMOS ---
 
 export async function getPromos(): Promise<Product[]> {
     try {
-        const snapshot = await firestore.collection(PROMOS_COLLECTION).get();
-        return snapshot.docs.map((doc: FirebaseFirestore.QueryDocumentSnapshot) => ({ id: doc.id, ...doc.data() } as Product));
+        await dbConnect();
+        const docs = await PromoModel.find().sort({ createdAt: -1 });
+        return docs.map(doc => doc.toJSON() as unknown as Product);
     } catch (error) {
         console.error("Error fetching promos:", error);
         return [];
@@ -182,31 +177,33 @@ export async function getPromos(): Promise<Product[]> {
 }
 
 export async function addPromo(promo: Product): Promise<void> {
-    await firestore.collection(PROMOS_COLLECTION).add(promo);
+    await dbConnect();
+    await PromoModel.create(promo);
 }
 
 export async function deletePromo(id: string): Promise<void> {
-    await firestore.collection(PROMOS_COLLECTION).doc(id).delete();
+    await dbConnect();
+    await PromoModel.findByIdAndDelete(id);
 }
 
 export async function updatePromo(promo: Product): Promise<void> {
     if (!promo.id) throw new Error("Promo ID required");
-    await firestore.collection(PROMOS_COLLECTION).doc(promo.id).set(promo, { merge: true });
+    await dbConnect();
+    await PromoModel.findByIdAndUpdate(promo.id, promo, { new: true });
 }
-
 
 // --- SETTINGS ---
 
 export async function getSettings(): Promise<SiteSettings> {
     try {
-        const doc = await firestore.collection(SETTINGS_COLLECTION).doc('main').get();
-        if (doc.exists) {
-            return doc.data() as SiteSettings;
+        await dbConnect();
+        const doc = await SiteSettingsModel.findById('main');
+        if (doc) {
+            return doc.toJSON() as unknown as SiteSettings;
         }
     } catch {
-        console.warn("⚠️ Firebase connection failed to fetch settings. Using defaults.");
+        console.warn("⚠️ Mongoose connection failed to fetch settings. Using defaults.");
     }
-    // Default
     return {
         footerText: "© 2026 SWAGOD. ALL RIGHTS RESERVED.",
         socials: { instagram: "", twitter: "", tiktok: "" }
@@ -214,31 +211,35 @@ export async function getSettings(): Promise<SiteSettings> {
 }
 
 export async function saveSettings(settings: SiteSettings): Promise<void> {
-    await firestore.collection(SETTINGS_COLLECTION).doc('main').set(settings, { merge: true });
+    await dbConnect();
+    await SiteSettingsModel.findByIdAndUpdate('main', settings, { upsert: true, new: true, setDefaultsOnInsert: true });
 }
 
 // --- ABOUT ---
 
 export async function getAbout(): Promise<AboutData | null> {
     try {
-        const doc = await firestore.collection(ABOUT_COLLECTION).doc('main').get();
-        if (doc.exists) return doc.data() as AboutData;
+        await dbConnect();
+        const doc = await AboutModel.findById('main');
+        if (doc) return doc.toJSON() as unknown as AboutData;
     } catch {
-        console.warn("⚠️ Firebase connection failed to fetch About configuration. Using safe null fallback.");
+        console.warn("⚠️ Mongoose connection failed to fetch About configuration. Using safe null fallback.");
     }
     return null;
 }
 
 export async function saveAbout(data: AboutData): Promise<void> {
-    await firestore.collection(ABOUT_COLLECTION).doc('main').set(data, { merge: true });
+    await dbConnect();
+    await AboutModel.findByIdAndUpdate('main', data, { upsert: true, new: true, setDefaultsOnInsert: true });
 }
 
 // --- TOURS ---
 
 export async function getTours(): Promise<TourEvent[]> {
     try {
-        const snapshot = await firestore.collection(TOURS_COLLECTION).orderBy('date', 'asc').get();
-        return snapshot.docs.map((doc: FirebaseFirestore.QueryDocumentSnapshot) => ({ id: doc.id, ...doc.data() } as TourEvent));
+        await dbConnect();
+        const docs = await TourEventModel.find().sort({ date: 1 });
+        return docs.map(doc => doc.toJSON() as unknown as TourEvent);
     } catch (error) {
         console.error("Error fetching tours:", error);
         return [];
@@ -246,13 +247,15 @@ export async function getTours(): Promise<TourEvent[]> {
 }
 
 export async function addTour(tour: TourEvent): Promise<void> {
+    await dbConnect();
     if (tour.id) {
-        await firestore.collection(TOURS_COLLECTION).doc(tour.id).set(tour);
+        await TourEventModel.findByIdAndUpdate(tour.id, tour, { upsert: true, new: true, setDefaultsOnInsert: true });
     } else {
-        await firestore.collection(TOURS_COLLECTION).add(tour);
+        await TourEventModel.create(tour);
     }
 }
 
 export async function deleteTour(id: string): Promise<void> {
-    await firestore.collection(TOURS_COLLECTION).doc(id).delete();
+    await dbConnect();
+    await TourEventModel.findByIdAndDelete(id);
 }

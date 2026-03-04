@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { firestore } from "@/lib/firebase-admin";
+import dbConnect from "@/lib/mongoose";
+import User from "@/lib/models/User";
 
 export async function POST(req: Request) {
     try {
@@ -9,16 +10,13 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
         }
 
-        // Sync with Firestore 'users' collection (used by NextAuth FirestoreAdapter)
-        await firestore.collection("users").doc(uid).set({
-            id: uid,
-            email,
-            name,
-            emailVerified: null,
-            image: null,
-            role: "user", // Default role
-            createdAt: new Date().toISOString()
-        }, { merge: true });
+        await dbConnect();
+
+        await User.findOneAndUpdate(
+            { email },
+            { email, name, role: "USER" },
+            { upsert: true, new: true, setDefaultsOnInsert: true }
+        );
 
         return NextResponse.json({ success: true });
     } catch (error) {

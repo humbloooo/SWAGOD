@@ -6,9 +6,6 @@ import Header from "@/components/layout/Header";
 import Navigation from "@/components/layout/Navigation";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-// We need to implement the actual registration logic using Firebase Client SDK
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth } from "@/lib/firebase";
 import { toast } from "sonner";
 
 export default function SignUpPage() {
@@ -39,34 +36,33 @@ export default function SignUpPage() {
         }
 
         try {
-            // 1. Create User in Firebase Auth
-            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-            const user = userCredential.user;
-
-            // 2. Update Profile Display Name
-            await updateProfile(user, {
-                displayName: name
-            });
-
-            // 3. Create document in Firestore 'users' collection for NextAuth compatibility
-            // This ensures the FirestoreAdapter can find this user.
-            const res = await fetch('/api/users/sync', {
+            // 1. Create User in MongoDB
+            const res = await fetch('/api/auth/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    uid: user.uid,
-                    email: user.email,
-                    name: name
-                })
+                body: JSON.stringify({ name, email, password })
             });
 
             if (!res.ok) {
-                console.error("Failed to sync user to Firestore");
+                const data = await res.json();
+                throw new Error(data.error || "Failed to create account");
             }
 
-            toast.success("Account created successfully!");
-            router.push('/login');
+            // 2. Automatically log them in via credentials
+            const signInResult = await signIn("credentials", {
+                redirect: false,
+                username: email,
+                password: password,
+            });
 
+            if (signInResult?.error) {
+                // If the generic swagod2026 password handler stops them, they might need to go to login
+                toast.success("Account created! Please log in.");
+                router.push('/login');
+            } else {
+                toast.success("Account created and verified!");
+                router.push('/');
+            }
         } catch (err) {
             console.error(err);
             setError(err instanceof Error ? err.message : "Failed to create account");

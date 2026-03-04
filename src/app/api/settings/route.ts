@@ -16,8 +16,9 @@ export async function GET() {
 
 export async function POST(request: Request) {
     const session = await getServerSession(authOptions);
-    // @ts-expect-error - session.user might have role property
-    if (!session || session.user?.role !== "admin") {
+    // @ts-expect-error - session.user is extended with role via NextAuth callbacks
+    const userRole = session?.user?.role;
+    if (!session || (userRole !== "admin" && userRole !== "ADMIN" && userRole !== "SUPER_ADMIN")) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
