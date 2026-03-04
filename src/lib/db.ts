@@ -9,6 +9,7 @@ import AboutModel from './models/About';
 import UserModel from './models/User';
 import AuditLogModel from './models/AuditLog';
 import VisitModel from './models/Visit';
+import NewsletterModel from './models/Newsletter';
 import { Product, SiteSettings, Feedback, TourEvent, AuditLog, AboutData } from './types';
 import { PRODUCTS } from './data';
 
@@ -207,7 +208,9 @@ export async function getSettings(): Promise<SiteSettings> {
     }
     return {
         footerText: "© 2026 SWAGOD. ALL RIGHTS RESERVED.",
-        socials: { instagram: "", twitter: "", tiktok: "" }
+        socials: { instagram: "", twitter: "", tiktok: "" },
+        showMarquee: false,
+        maintenanceMode: false
     };
 }
 
@@ -224,9 +227,13 @@ export async function getAbout(): Promise<AboutData | null> {
         const doc = await AboutModel.findById('main');
         if (doc) return doc.toJSON() as unknown as AboutData;
     } catch {
-        console.warn("⚠️ Mongoose connection failed to fetch About configuration. Using safe null fallback.");
+        console.warn("⚠️ Mongoose connection failed to fetch About configuration. Using safe fallback.");
     }
-    return null;
+    return {
+        heading: "ABOUT SWAGOD",
+        paragraphs: ["WEAR THE FUTURE. FEAR THE PAST.", "EST. 2026 // WORLDWIDE"],
+        footer: "EST. 2026 // WORLDWIDE"
+    };
 }
 
 export async function saveAbout(data: AboutData): Promise<void> {
@@ -328,5 +335,22 @@ export async function getAnalytics(): Promise<AnalyticsData> {
             chartData: [0, 0, 0, 0, 0, 0, 0],
             totalProducts: 0
         };
+    }
+}
+
+// --- NEWSLETTER ---
+
+export async function addNewsletterEmail(email: string): Promise<{ success: boolean; message: string }> {
+    try {
+        await dbConnect();
+        const existing = await NewsletterModel.findOne({ email: email.toLowerCase() });
+        if (existing) {
+            return { success: false, message: "ALREDY SUBSCRIBED" };
+        }
+        await NewsletterModel.create({ email });
+        return { success: true, message: "JOINED THE CULT" };
+    } catch (error) {
+        console.error("Newsletter error:", error);
+        return { success: false, message: "SYSTEM ERROR" };
     }
 }

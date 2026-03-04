@@ -6,6 +6,7 @@ import { AboutData } from "@/lib/types";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Loader2, ArrowLeft, Eye, EyeOff } from "lucide-react";
+import { motion } from "framer-motion";
 import { toast } from "sonner";
 import Header from "@/components/layout/Header";
 import Navigation from "@/components/layout/Navigation";
@@ -181,11 +182,39 @@ export default function LoginPage() {
                 </div>
             </div>
 
-            {/* Background Elements */}
-            <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-5 flex items-center justify-center z-0 overflow-hidden">
-                <div className="text-[20vw] font-black uppercase leading-none whitespace-nowrap text-foreground">
-                    SWAGOD
-                </div>
+            {/* Background Elements - Responsive Animated Watermarks */}
+            <div className="absolute inset-0 pointer-events-none opacity-[0.03] z-0 overflow-hidden">
+                {[...Array(6)].map((_, i) => (
+                    <motion.div
+                        key={i}
+                        initial={{
+                            x: (i * 15) + "%",
+                            y: (i * 15) + "%",
+                            rotate: i * 45
+                        }}
+                        animate={{
+                            x: [
+                                ((i * 15) % 100) + "%",
+                                ((i * 35) % 100) + "%",
+                                ((i * 15) % 100) + "%"
+                            ],
+                            y: [
+                                ((i * 25) % 100) + "%",
+                                ((i * 55) % 100) + "%",
+                                ((i * 25) % 100) + "%"
+                            ],
+                            rotate: [0, 180, 360]
+                        }}
+                        transition={{
+                            duration: 25 + (i * 5),
+                            repeat: Infinity,
+                            ease: "linear"
+                        }}
+                        className="absolute text-[8vw] font-black uppercase whitespace-nowrap text-foreground select-none"
+                    >
+                        SWAGOD
+                    </motion.div>
+                ))}
             </div>
         </main >
     );

@@ -60,13 +60,32 @@ export default function AdminAbout() {
                         <label className="block mb-2 font-bold uppercase">Paragraphs</label>
                         <div className="space-y-4">
                             {data.paragraphs?.map((p: string, i: number) => (
-                                <textarea
-                                    key={i}
-                                    className="w-full border p-4 bg-surface h-32"
-                                    value={p}
-                                    onChange={e => updateParagraph(i, e.target.value)}
-                                />
+                                <div key={i} className="relative group">
+                                    <textarea
+                                        className="w-full border p-4 bg-surface h-32 pr-12"
+                                        value={p}
+                                        onChange={e => updateParagraph(i, e.target.value)}
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            const newP = [...data.paragraphs];
+                                            newP.splice(i, 1);
+                                            setData({ ...data, paragraphs: newP });
+                                        }}
+                                        className="absolute top-2 right-2 p-2 text-red-500 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500/10"
+                                    >
+                                        REMOVE
+                                    </button>
+                                </div>
                             ))}
+                            <button
+                                type="button"
+                                onClick={() => setData({ ...data, paragraphs: [...(data.paragraphs || []), ""] })}
+                                className="w-full py-4 border border-dashed border-gray-300 text-gray-400 hover:text-black hover:border-black transition-all font-mono uppercase text-xs"
+                            >
+                                + Add Paragraph
+                            </button>
                         </div>
                     </div>
 

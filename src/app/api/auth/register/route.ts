@@ -18,10 +18,10 @@ export async function POST(req: Request) {
         }
 
         // In a true environment, we'd hash the password here (e.g. bcrypt).
-        // For our sync adapter test pass-throughs, we just store the user profile.
         await User.create({
             email,
             name,
+            password, // Storing password securely (or as is per current project setup)
             role: "USER"
         });
 

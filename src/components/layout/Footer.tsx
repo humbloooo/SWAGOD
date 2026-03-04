@@ -4,9 +4,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { SiteSettings } from "@/lib/types";
+import { toast } from "sonner";
 
 export default function Footer() {
     const [settings, setSettings] = useState<SiteSettings | null>(null);
+    const [newsletterEmail, setNewsletterEmail] = useState("");
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const [mounted, setMounted] = useState(false);
 
@@ -79,15 +82,49 @@ export default function Footer() {
                     <div>
                         <h4 className="font-bold uppercase mb-6 text-gray-400 text-xs tracking-widest">Newsletter</h4>
                         <p className="font-mono text-[10px] text-gray-500 uppercase tracking-widest mb-4">STAY UPDATED:</p>
-                        <div className="flex bg-gray-900/50 border border-gray-800 focus-within:border-primary transition-colors">
+                        <form
+                            onSubmit={async (e) => {
+                                e.preventDefault();
+                                if (!newsletterEmail) return;
+                                setIsSubmitting(true);
+                                try {
+                                    const res = await fetch("/api/newsletter", {
+                                        method: "POST",
+                                        headers: { "Content-Type": "application/json" },
+                                        body: JSON.stringify({ email: newsletterEmail })
+                                    });
+                                    const data = await res.json();
+                                    if (data.success) {
+                                        toast.success(data.message);
+                                        setNewsletterEmail("");
+                                    } else {
+                                        toast.error(data.message);
+                                    }
+                                } catch {
+                                    toast.error("SYSTEM ERROR");
+                                } finally {
+                                    setIsSubmitting(false);
+                                }
+                            }}
+                            className="flex bg-gray-900/50 border border-gray-800 focus-within:border-primary transition-colors"
+                        >
                             <input
                                 type="email"
+                                value={newsletterEmail}
+                                onChange={(e) => setNewsletterEmail(e.target.value)}
                                 placeholder="ACCESS@PROTO.COL"
                                 className="bg-transparent border-none px-3 py-2 font-mono text-[10px] w-full focus:outline-none uppercase"
                                 suppressHydrationWarning
+                                required
                             />
-                            <button className="px-3 py-2 bg-primary text-black font-black text-[10px] uppercase hover:bg-white transition-colors">JOIN</button>
-                        </div>
+                            <button
+                                type="submit"
+                                disabled={isSubmitting}
+                                className="px-3 py-2 bg-primary text-black font-black text-[10px] uppercase hover:bg-white transition-colors disabled:opacity-50"
+                            >
+                                {isSubmitting ? "..." : "JOIN"}
+                            </button>
+                        </form>
                     </div>
                 </div>
 
