@@ -8,6 +8,7 @@ import TourEventModel from './models/TourEvent';
 import AboutModel from './models/About';
 import UserModel from './models/User';
 import AuditLogModel from './models/AuditLog';
+import VisitModel from './models/Visit';
 import { Product, SiteSettings, Feedback, TourEvent, AuditLog, AboutData } from './types';
 import { PRODUCTS } from './data';
 
@@ -54,7 +55,7 @@ export async function getProducts(limit?: number): Promise<Product[]> {
 
 export async function getProductById(id: string): Promise<Product | null> {
     if (isMock) {
-        return PRODUCTS.find(p => p.id === id) || { id, title: "Mock Product", price: 0, category: "clothing" } as Product;
+        return PRODUCTS.find(p => p.id === id) || { id, title: "Mock Product", price: 0, category: "male" } as Product;
     }
     try {
         await dbConnect();
@@ -258,4 +259,74 @@ export async function addTour(tour: TourEvent): Promise<void> {
 export async function deleteTour(id: string): Promise<void> {
     await dbConnect();
     await TourEventModel.findByIdAndDelete(id);
+}
+
+// --- ANALYTICS ---
+
+export async function trackVisit(): Promise<void> {
+    try {
+        await dbConnect();
+        const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+        await VisitModel.findOneAndUpdate(
+            { date: today },
+            { $inc: { count: 1 } },
+            { upsert: true, new: true, setDefaultsOnInsert: true }
+        );
+    } catch (e) {
+        console.error("Failed to track visit", e);
+    }
+}
+
+interface AnalyticsData {
+    todayVisits: number;
+    monthlyVisits: number;
+    chartData: number[];
+    totalProducts: number;
+}
+
+export async function getAnalytics(): Promise<AnalyticsData> {
+    try {
+        await dbConnect();
+        // Today
+        const todayStr = new Date().toISOString().split('T')[0];
+        const todayVisit = await VisitModel.findOne({ date: todayStr });
+
+        // This Month
+        const currentMonth = todayStr.substring(0, 7); // YYYY-MM
+        const monthlyVisits = await VisitModel.find({ date: { $regex: `^${currentMonth}` } });
+        const monthlyTotal = monthlyVisits.reduce((acc, curr) => acc + curr.count, 0);
+
+        // Chart Data (Last 7 Days)
+        const last7DaysData = [];
+        for (let i = 6; i >= 0; i--) {
+            const d = new Date();
+            d.setDate(d.getDate() - i);
+            const dStr = d.toISOString().split('T')[0];
+            const v = await VisitModel.findOne({ date: dStr });
+            last7DaysData.push(v ? v.count : 0);
+        }
+
+        // We can just calculate percentage relative to the max of the last 7 days for the chart
+        const maxVisits = Math.max(...last7DaysData, 1); // prevent division by zero
+        const chartData = last7DaysData.map(val => Math.round((val / maxVisits) * 100));
+
+        // Get total products and total sales (mock for sales for now as orders aren't fully implemented in DB yet)
+        const totalProducts = await ProductModel.countDocuments({ active: true });
+
+        return {
+            todayVisits: todayVisit ? todayVisit.count : 0,
+            monthlyVisits: monthlyTotal,
+            chartData,
+            totalProducts
+        };
+
+    } catch (e) {
+        console.error("Failed to get analytics", e);
+        return {
+            todayVisits: 0,
+            monthlyVisits: 0,
+            chartData: [0, 0, 0, 0, 0, 0, 0],
+            totalProducts: 0
+        };
+    }
 }

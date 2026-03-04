@@ -141,7 +141,7 @@ export default function AdminProducts() {
                             <option value="likes">SORT: LIKES (HIGH)</option>
                         </select>
                         <button
-                            onClick={() => { setIsEditing(true); setCurrentProduct({ category: 'clothing' }); }}
+                            onClick={() => { setIsEditing(true); setCurrentProduct({ category: 'male' }); }}
                             className="px-8 py-4 bg-primary text-background font-black uppercase tracking-widest hover:bg-foreground transition-all flex items-center gap-2"
                         >
                             <Plus size={20} suppressHydrationWarning /> ADD ENTRY
@@ -190,6 +190,7 @@ export default function AdminProducts() {
                                         <div className="flex gap-4 mt-1 font-mono text-[10px] uppercase tracking-widest text-foreground/40">
                                             <span>PRICE: <span className="text-foreground">{product.price ? formatPrice(product.price, currency) : 'N/A'}</span></span>
                                             <span>CAT: <span className="text-foreground">{product.category}</span></span>
+                                            {product.subCategory && <span>SUB: <span className="text-foreground">{product.subCategory}</span></span>}
                                             {product.sizes && product.sizes.length > 0 && (
                                                 <span>SIZES: <span className="text-foreground">{product.sizes.join(', ')}</span></span>
                                             )}
@@ -223,7 +224,7 @@ export default function AdminProducts() {
                         <h2 className="text-2xl font-black uppercase tracking-widest text-foreground/50 mb-2">ARCHIVE EMPTY</h2>
                         <p className="font-mono text-xs uppercase tracking-[0.2em] text-foreground/30 text-center max-w-sm">No products found in the database. Add a new entry to initialize the catalog.</p>
                         <button
-                            onClick={() => { setIsEditing(true); setCurrentProduct({ category: 'clothing' }); }}
+                            onClick={() => { setIsEditing(true); setCurrentProduct({ category: 'male' }); }}
                             className="mt-8 px-6 py-3 border border-primary text-primary font-black uppercase tracking-widest hover:bg-primary hover:text-background transition-all"
                         >
                             INITIALIZE ENTRY
@@ -271,7 +272,7 @@ export default function AdminProducts() {
                                     />
                                 </div>
 
-                                <div className="grid grid-cols-2 gap-8">
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                                     <div className="space-y-2">
                                         <label className="text-foreground/40">VALUE_ZAR</label>
                                         <input
@@ -285,16 +286,30 @@ export default function AdminProducts() {
                                     <div className="space-y-2">
                                         <label className="text-foreground/40">CATEGORY_TYPE</label>
                                         <select
-                                            className="w-full bg-foreground/5 border border-foreground/10 p-4 focus:border-primary outline-none transition-all appearance-none"
-                                            value={currentProduct.category || "clothing"}
-                                            onChange={e => setCurrentProduct({ ...currentProduct, category: e.target.value as "clothing" | "merch" | "accessories" | "male" | "female" | "unisex" })}
+                                            className="w-full bg-foreground/5 border border-foreground/10 p-4 focus:border-primary outline-none transition-all appearance-none uppercase"
+                                            value={currentProduct.category || "male"}
+                                            onChange={e => setCurrentProduct({ ...currentProduct, category: e.target.value as "male" | "female" | "unisex" | "merch" })}
                                         >
-                                            <option value="clothing">CLOTHING</option>
                                             <option value="male">MALE</option>
                                             <option value="female">FEMALE</option>
                                             <option value="unisex">UNISEX</option>
                                             <option value="merch">MERCH</option>
+                                        </select>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-foreground/40">SUB_CATEGORY</label>
+                                        <select
+                                            className="w-full bg-foreground/5 border border-foreground/10 p-4 focus:border-primary outline-none transition-all appearance-none uppercase"
+                                            value={currentProduct.subCategory || ""}
+                                            onChange={e => setCurrentProduct({ ...currentProduct, subCategory: e.target.value })}
+                                        >
+                                            <option value="">NONE / ROOT</option>
                                             <option value="accessories">ACCESSORIES</option>
+                                            <option value="shirts">SHIRTS</option>
+                                            <option value="jerseys">JERSEYS</option>
+                                            <option value="hoodies">HOODIES</option>
+                                            <option value="hats">HATS</option>
+                                            <option value="other">OTHER</option>
                                         </select>
                                     </div>
                                 </div>

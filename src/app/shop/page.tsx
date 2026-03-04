@@ -12,12 +12,14 @@ import { formatPrice } from "@/lib/utils";
 import { useEffect } from "react";
 
 const AVAILABLE_SIZES = ["S", "M", "L", "XL", "XXL"];
-const AVAILABLE_CATEGORIES = ["clothing", "male", "female", "unisex", "merch", "accessories"];
+const AVAILABLE_CATEGORIES = ["male", "female", "unisex", "merch"];
+const AVAILABLE_SUBCATEGORIES = ["accessories", "shirts", "jerseys", "hoodies", "hats", "other"];
 
 export default function Shop() {
     const products = useCachedProducts();
     const [selectedSize, setSelectedSize] = useState<string | null>(null);
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+    const [selectedSubCategory, setSelectedSubCategory] = useState<string | null>(null);
     const { currency, lastFetch } = useAppStore();
     const [recentlyViewed, setRecentlyViewed] = useState<Product[]>([]);
     const isLoading = products.length === 0 && !lastFetch;
@@ -39,6 +41,7 @@ export default function Shop() {
     const filteredProducts = products.filter(product => {
         if (selectedSize && (!product.sizes || !product.sizes.includes(selectedSize))) return false;
         if (selectedCategory && product.category !== selectedCategory) return false;
+        if (selectedSubCategory && product.subCategory !== selectedSubCategory) return false;
         return true;
     });
 
@@ -51,41 +54,69 @@ export default function Shop() {
                 </h1>
 
                 {/* Category Filters */}
-                <div className="flex flex-wrap gap-4 mb-6">
-                    <button
-                        onClick={() => setSelectedCategory(null)}
-                        className={`px-6 py-2 border font-mono text-sm uppercase transition-colors ${!selectedCategory ? 'bg-primary border-primary text-black font-bold glow-primary' : 'border-foreground/20 text-foreground dark:border-white/20 dark:text-white hover:border-primary hover:text-primary'}`}
-                    >
-                        ALL
-                    </button>
-                    {AVAILABLE_CATEGORIES.map(cat => (
+                <div className="mb-8">
+                    <h3 className="font-mono text-[10px] uppercase tracking-widest text-foreground/40 mb-3">COLLECTION / CATEGORY</h3>
+                    <div className="flex flex-wrap gap-3">
                         <button
-                            key={cat}
-                            onClick={() => setSelectedCategory(cat)}
-                            className={`px-6 py-2 border font-mono text-sm uppercase transition-colors ${selectedCategory === cat ? 'bg-primary border-primary text-black font-bold glow-primary' : 'border-foreground/20 text-foreground dark:border-white/20 dark:text-white hover:border-primary hover:text-primary'}`}
+                            onClick={() => setSelectedCategory(null)}
+                            className={`px-6 py-2 border font-mono text-sm uppercase transition-colors ${!selectedCategory ? 'bg-primary border-primary text-black font-bold glow-primary' : 'border-foreground/20 text-foreground dark:border-white/20 dark:text-white hover:border-primary hover:text-primary'}`}
                         >
-                            {cat}
+                            ALL
                         </button>
-                    ))}
+                        {AVAILABLE_CATEGORIES.map(cat => (
+                            <button
+                                key={cat}
+                                onClick={() => setSelectedCategory(cat)}
+                                className={`px-6 py-2 border font-mono text-sm uppercase transition-colors ${selectedCategory === cat ? 'bg-primary border-primary text-black font-bold glow-primary' : 'border-foreground/20 text-foreground dark:border-white/20 dark:text-white hover:border-primary hover:text-primary'}`}
+                            >
+                                {cat}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                {/* SubCategory Filters (Only show if not merch, or show always) */}
+                <div className="mb-8">
+                    <h3 className="font-mono text-[10px] uppercase tracking-widest text-foreground/40 mb-3">TYPE / SUBCATEGORY</h3>
+                    <div className="flex flex-wrap gap-3">
+                        <button
+                            onClick={() => setSelectedSubCategory(null)}
+                            className={`px-6 py-2 border font-mono text-xs uppercase transition-colors ${!selectedSubCategory ? 'bg-primary border-primary text-black font-bold glow-primary' : 'border-foreground/20 text-foreground hover:border-primary hover:text-primary bg-foreground/5'}`}
+                        >
+                            ALL TYPES
+                        </button>
+                        {AVAILABLE_SUBCATEGORIES.map(sub => (
+                            <button
+                                key={sub}
+                                onClick={() => setSelectedSubCategory(sub)}
+                                className={`px-6 py-2 border font-mono text-xs uppercase transition-colors ${selectedSubCategory === sub ? 'bg-primary border-primary text-black font-bold glow-primary' : 'border-foreground/20 text-foreground hover:border-primary hover:text-primary bg-foreground/5'}`}
+                            >
+                                {sub}
+                            </button>
+                        ))}
+                    </div>
                 </div>
 
                 {/* Size Filters */}
-                <div className="flex flex-wrap gap-4 mb-12">
-                    <button
-                        onClick={() => setSelectedSize(null)}
-                        className={`px-6 py-2 border font-mono text-sm uppercase transition-colors ${!selectedSize ? 'bg-white border-white text-black font-bold' : 'border-foreground/20 text-foreground dark:border-white/20 dark:text-white hover:border-white hover:text-white'}`}
-                    >
-                        ANY SIZE
-                    </button>
-                    {AVAILABLE_SIZES.map(size => (
+                <div className="mb-12">
+                    <h3 className="font-mono text-[10px] uppercase tracking-widest text-foreground/40 mb-3">AVAILABLE SIZES</h3>
+                    <div className="flex flex-wrap gap-3">
                         <button
-                            key={size}
-                            onClick={() => setSelectedSize(size)}
-                            className={`px-6 py-2 border font-mono text-sm uppercase transition-colors ${selectedSize === size ? 'bg-white border-white text-black font-bold' : 'border-foreground/20 text-foreground dark:border-white/20 dark:text-white hover:border-white hover:text-white'}`}
+                            onClick={() => setSelectedSize(null)}
+                            className={`px-6 py-2 border font-mono text-sm uppercase transition-colors ${!selectedSize ? 'bg-white border-white text-black font-bold' : 'border-foreground/20 text-foreground dark:border-white/20 dark:text-white hover:border-white hover:text-white'}`}
                         >
-                            {size}
+                            ANY SIZE
                         </button>
-                    ))}
+                        {AVAILABLE_SIZES.map(size => (
+                            <button
+                                key={size}
+                                onClick={() => setSelectedSize(size)}
+                                className={`px-6 py-2 border font-mono text-sm uppercase transition-colors ${selectedSize === size ? 'bg-white border-white text-black font-bold' : 'border-foreground/20 text-foreground dark:border-white/20 dark:text-white hover:border-white hover:text-white'}`}
+                            >
+                                {size}
+                            </button>
+                        ))}
+                    </div>
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8 mb-24">
@@ -130,7 +161,7 @@ export default function Shop() {
 const ShopProductCard = memo(function ShopProductCard({ product, currency }: { product: Product, currency: "ZAR" | "USD" }) {
     return (
         <Link href={`/product/${product.id!}`} prefetch={true} className="group block">
-            <div className="relative aspect-[3/4] border border-foreground/5 dark:border-white/5 mb-4 overflow-hidden bg-surface group-hover:border-primary transition-colors">
+            <div className="relative aspect-[3/4] border border-foreground/10 bg-foreground/5 mb-4 overflow-hidden group-hover:border-primary transition-colors">
                 <Image
                     src={product.image || "/assets/placeholder.png"}
                     alt={product.title}
@@ -155,8 +186,8 @@ const ShopProductCard = memo(function ShopProductCard({ product, currency }: { p
                     {product.likes?.length || 0} SAVED
                 </div>
             </div>
-            <h3 className="font-bold uppercase text-lg group-hover:text-primary transition-colors">{product.title}</h3>
-            <p className="font-mono text-sm text-gray-500">{formatPrice(product.price, currency)}</p>
+            <h3 className="font-bold uppercase text-lg text-foreground group-hover:text-primary transition-colors">{product.title}</h3>
+            <p className="font-mono text-sm text-foreground/60">{formatPrice(product.price, currency)}</p>
         </Link>
     );
 });

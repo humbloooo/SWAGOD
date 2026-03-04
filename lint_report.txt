@@ -1,0 +1,40 @@
+
+C:\Users\kunta\Desktop\Projects\BIZ\AWA\Swagod\base_web\SWAGOD\src\components\admin\AdminAnalytics.tsx
+   4:43  warning  'DollarSign' is defined but never used         @typescript-eslint/no-unused-vars
+   9:38  error    Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  20:11  warning  'maxChart' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\kunta\Desktop\Projects\BIZ\AWA\Swagod\base_web\SWAGOD\src\lib\models\About.ts
+  18:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  18:39  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\kunta\Desktop\Projects\BIZ\AWA\Swagod\base_web\SWAGOD\src\lib\models\Archive.ts
+  33:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  33:39  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\kunta\Desktop\Projects\BIZ\AWA\Swagod\base_web\SWAGOD\src\lib\models\AuditLog.ts
+  23:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  23:39  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\kunta\Desktop\Projects\BIZ\AWA\Swagod\base_web\SWAGOD\src\lib\models\Feedback.ts
+  19:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  19:39  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\kunta\Desktop\Projects\BIZ\AWA\Swagod\base_web\SWAGOD\src\lib\models\Promo.ts
+  19:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  19:39  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\kunta\Desktop\Projects\BIZ\AWA\Swagod\base_web\SWAGOD\src\lib\models\SiteSettings.ts
+  52:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  52:39  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\kunta\Desktop\Projects\BIZ\AWA\Swagod\base_web\SWAGOD\src\lib\models\TourEvent.ts
+  21:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  21:39  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\kunta\Desktop\Projects\BIZ\AWA\Swagod\base_web\SWAGOD\src\lib\models\User.ts
+  21:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  21:39  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+✖ 19 problems (17 errors, 2 warnings)
+

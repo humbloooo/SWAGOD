@@ -3,7 +3,8 @@ export interface Product {
     title: string;
     price: number;
     image: string;
-    category: "merch" | "accessories" | "clothing" | "male" | "female" | "unisex";
+    category: "merch" | "male" | "female" | "unisex";
+    subCategory?: "accessories" | "shirts" | "jerseys" | "hoodies" | "hats" | "other" | string;
     description: string;
     sizes?: string[];
     images?: string[];

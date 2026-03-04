@@ -39,11 +39,11 @@ export default function LatestDrops({ products }: LatestDropsProps) {
             {/* CLOTHING SECTION */}
             <div className="container mx-auto px-6 mb-20 relative z-10">
                 <h3 className="text-xs font-mono font-bold uppercase tracking-[0.3em] mb-12 flex items-center gap-4">
-                    <span className="w-8 h-[1px] bg-primary glow-primary"></span> CLOTHING
+                    <span className="w-8 h-[1px] bg-primary glow-primary"></span> APPAREL
                 </h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {sortedProducts.filter(p => (p.category || "").toLowerCase() === 'clothing').length > 0 ? (
-                        sortedProducts.filter(p => (p.category || "").toLowerCase() === 'clothing').slice(0, 4).map((product, index) => (
+                    {sortedProducts.filter(p => ['male', 'female', 'unisex'].includes((p.category || "").toLowerCase())).length > 0 ? (
+                        sortedProducts.filter(p => ['male', 'female', 'unisex'].includes((p.category || "").toLowerCase())).slice(0, 4).map((product, index) => (
                             <ProductCard key={product.id} product={product} index={index} addItem={addItem} openCart={openCart} currency={currency} />
                         ))
                     ) : products.length === 0 ? (
@@ -62,19 +62,19 @@ export default function LatestDrops({ products }: LatestDropsProps) {
                 </div>
             </div>
 
-            {/* MERCH/ACCESSORIES SECTION */}
+            {/* MERCH SECTION */}
             <div className="container mx-auto px-6 relative z-10">
                 <h3 className="text-xs font-mono font-bold uppercase tracking-[0.3em] mb-12 flex items-center gap-4">
-                    <span className="w-8 h-[1px] bg-primary"></span> ACCESSORIES
+                    <span className="w-8 h-[1px] bg-primary"></span> MERCH EXCLUSIVES
                 </h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {sortedProducts.filter(p => {
                         const cat = (p.category || "").toLowerCase();
-                        return cat === 'accessories' || cat === 'merch';
+                        return cat === 'merch';
                     }).length > 0 ? (
                         sortedProducts.filter(p => {
                             const cat = (p.category || "").toLowerCase();
-                            return cat === 'accessories' || cat === 'merch';
+                            return cat === 'merch';
                         }).slice(0, 4).map((product, index) => (
                             <ProductCard key={product.id} product={product} index={index} addItem={addItem} openCart={openCart} currency={currency} />
                         ))

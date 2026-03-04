@@ -8,7 +8,8 @@ export const PRODUCTS: Product[] = [
         title: "GIRL / SHIRT / 01",
         price: 45.00,
         image: "/assets/Clothes/girl wearing swagod shirt.jpg",
-        category: "merch",
+        category: "female",
+        subCategory: "shirts",
         description: "Heavyweight cotton tee with brutalist print. Oversized fit.",
     },
     {
@@ -16,7 +17,8 @@ export const PRODUCTS: Product[] = [
         title: "GIRL / CUP / 01",
         price: 25.00,
         image: "/assets/People/girl holding swagod cup.jpg",
-        category: "accessories",
+        category: "merch",
+        subCategory: "accessories",
         description: "Ceramic mug with SWAGOD logo. Matte finish.",
     },
     {
@@ -24,7 +26,8 @@ export const PRODUCTS: Product[] = [
         title: "GUY / SHIRT / 01",
         price: 45.00,
         image: "/assets/Clothes/guy wearing swagod shirt.jpg",
-        category: "merch",
+        category: "male",
+        subCategory: "shirts",
         description: "Men's heavyweight tee. Boxy fit. 100% cotton.",
     },
     {
@@ -32,7 +35,8 @@ export const PRODUCTS: Product[] = [
         title: "GIRL / SHIRT / 02",
         price: 45.00,
         image: "/assets/Clothes/girl wearing swagod shirt11.jpg",
-        category: "merch",
+        category: "female",
+        subCategory: "shirts",
         description: "Variant 02 of our signature tee collection.",
     },
     {
@@ -40,7 +44,8 @@ export const PRODUCTS: Product[] = [
         title: "GIRL / CUP / 02",
         price: 25.00,
         image: "/assets/People/girl holding swagod cup11.jpg",
-        category: "accessories",
+        category: "merch",
+        subCategory: "accessories",
         description: "Limited edition cup design.",
     },
     {
@@ -48,7 +53,8 @@ export const PRODUCTS: Product[] = [
         title: "GIRL / SHIRT / 03",
         price: 45.00,
         image: "/assets/Clothes/girl wearing swagod shirt111.jpg",
-        category: "merch",
+        category: "female",
+        subCategory: "shirts",
         description: "The classic logo tee in a new cut.",
     },
     {
@@ -56,7 +62,8 @@ export const PRODUCTS: Product[] = [
         title: "GIRL / SHIRT / 04",
         price: 45.00,
         image: "/assets/Clothes/girl wearing swagod shirt1111.jpg",
-        category: "merch",
+        category: "female",
+        subCategory: "shirts",
         description: "Extended graphics on back.",
     },
 ];

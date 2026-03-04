@@ -11,6 +11,7 @@ export interface IProduct extends Document {
     createdAt?: string;
     likes?: string[];
     active?: boolean;
+    subCategory?: string;
 }
 
 const ProductSchema: Schema = new Schema({
@@ -18,6 +19,7 @@ const ProductSchema: Schema = new Schema({
     price: { type: Number, required: true },
     image: { type: String, required: true },
     category: { type: String, required: true },
+    subCategory: { type: String },
     description: { type: String, required: true },
     sizes: [{ type: String }],
     images: [{ type: String }],
@@ -28,9 +30,10 @@ const ProductSchema: Schema = new Schema({
     timestamps: true,
     toJSON: {
         transform: function (doc, ret) {
-            (ret as any).id = (ret as any)._id.toString();
-            Reflect.deleteProperty(ret, '_id');
-            Reflect.deleteProperty(ret, '__v');
+            const returned = ret as Record<string, unknown>;
+            returned.id = (returned._id as mongoose.Types.ObjectId).toString();
+            Reflect.deleteProperty(returned, '_id');
+            Reflect.deleteProperty(returned, '__v');
         }
     }
 });

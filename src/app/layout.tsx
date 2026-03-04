@@ -29,6 +29,7 @@ import Footer from "@/components/layout/Footer";
 import { Toaster } from "sonner";
 import ScrollProgress from "@/components/ui/ScrollProgress";
 import ScrollToTop from "@/components/ui/ScrollToTop";
+import SiteTracker from "@/components/SiteTracker";
 
 export default async function RootLayout({
   children,
@@ -55,6 +56,7 @@ export default async function RootLayout({
             <div className="scanline-overlay" />
             <ScrollProgress />
             <ScrollToTop />
+            <SiteTracker />
             {isMaintenance ? (
               <main className="min-h-screen flex flex-col items-center justify-center p-6 text-center">
                 <h1 className="text-6xl md:text-9xl font-black uppercase tracking-tighter mb-6">SYSTEM_PAUSED</h1>

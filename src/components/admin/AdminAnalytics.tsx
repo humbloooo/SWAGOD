@@ -3,16 +3,30 @@
 import { motion } from "framer-motion";
 import { TrendingUp, Users, ShoppingCart, DollarSign } from "lucide-react";
 
+import { useEffect, useState } from "react";
+
 export default function AdminAnalytics() {
-    // Mock data for visualization
+    const [data, setData] = useState<any>(null);
+
+    useEffect(() => {
+        fetch('/api/analytics')
+            .then(res => res.json())
+            .then(setData)
+            .catch(err => console.error(err));
+    }, []);
+
+    // Provide default fallback while loading or on error
+    const d = data || { todayVisits: 0, monthlyVisits: 0, totalProducts: 0, chartData: [0, 0, 0, 0, 0, 0, 0] };
+    const maxChart = Math.max(...d.chartData, 1);
+
     const stats = [
-        { label: "SALES", value: "R 124,500", icon: DollarSign, trend: "+12.5%", color: "text-green-500" },
-        { label: "VISITS", value: "1,240", icon: Users, trend: "+5.2%", color: "text-blue-500" },
-        { label: "ORDERS", value: "842", icon: ShoppingCart, trend: "+18.3%", color: "text-primary" },
-        { label: "CONVERSION", value: "3.2%", icon: TrendingUp, trend: "+0.8%", color: "text-orange-500" },
+        { label: "PRODUCTS", value: d.totalProducts.toString(), icon: ShoppingCart, trend: "LIVE", color: "text-green-500" },
+        { label: "TODAY VISITS", value: d.todayVisits.toString(), icon: Users, trend: "LIVE", color: "text-blue-500" },
+        { label: "MONTH VISITS", value: d.monthlyVisits.toString(), icon: Users, trend: "LIVE", color: "text-primary" },
+        { label: "CONVERSION", value: "TBA", icon: TrendingUp, trend: "N/A", color: "text-orange-500" },
     ];
 
-    const chartData = [40, 70, 45, 90, 65, 80, 95];
+    const chartData = d.chartData;
 
     return (
         <section className="mb-20">
@@ -56,7 +70,7 @@ export default function AdminAnalytics() {
                 </div>
 
                 <div className="flex items-end justify-between h-48 gap-4">
-                    {chartData.map((height, i) => (
+                    {chartData.map((height: number, i: number) => (
                         <div key={i} className="flex-1 flex flex-col items-center gap-4">
                             <motion.div
                                 initial={{ height: 0 }}
