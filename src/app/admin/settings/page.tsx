@@ -49,7 +49,7 @@ export default function AdminSettings() {
     if (!settings) return <div className="p-24 text-center">ERROR LOADING SETTINGS</div>;
 
     return (
-        <main className="pb-[100px] pt-32 px-6 text-white bg-black">
+        <main className="pb-[100px] pt-32 px-6 text-foreground bg-background">
             <div className="container mx-auto max-w-4xl">
                 <header className="mb-16">
                     <h1 className="text-6xl md:text-8xl font-black uppercase tracking-tighter mb-4 leading-none">
@@ -59,37 +59,37 @@ export default function AdminSettings() {
                 </header>
 
                 <form onSubmit={handleSubmit} className="space-y-12">
-                    <div className="bg-white/5 border border-white/10 p-10 backdrop-blur-md">
-                        <h3 className="text-xl font-black uppercase mb-8 border-b border-white/10 pb-4 text-primary font-mono">FOOTER_DATA</h3>
+                    <div className="bg-foreground/5 border border-foreground/10 p-10 backdrop-blur-md">
+                        <h3 className="text-xl font-black uppercase mb-8 border-b border-foreground/10 pb-4 text-primary font-mono">FOOTER_DATA</h3>
                         <div className="space-y-6">
                             <div className="space-y-2">
-                                <label className="text-white/40 font-mono text-xs uppercase tracking-widest">COPYRIGHT_STRING</label>
+                                <label className="text-foreground/40 font-mono text-xs uppercase tracking-widest">COPYRIGHT_STRING</label>
                                 <input
                                     type="text"
                                     value={settings.footerText}
                                     onChange={(e) => setSettings({ ...settings, footerText: e.target.value })}
-                                    className="w-full bg-white/5 border border-white/10 p-4 focus:border-primary outline-none transition-all font-mono text-sm"
+                                    className="w-full bg-foreground/5 border border-foreground/10 p-4 focus:border-primary outline-none transition-all font-mono text-sm"
                                 />
                             </div>
                         </div>
                     </div>
 
-                    <div className="bg-white/5 border border-white/10 p-10 backdrop-blur-md">
-                        <h3 className="text-xl font-black uppercase mb-8 border-b border-white/10 pb-4 text-primary font-mono">VISUAL_OVERRIDE</h3>
+                    <div className="bg-foreground/5 border border-foreground/10 p-10 backdrop-blur-md">
+                        <h3 className="text-xl font-black uppercase mb-8 border-b border-foreground/10 pb-4 text-primary font-mono">VISUAL_OVERRIDE</h3>
                         <div className="space-y-6">
                             <div className="space-y-2">
-                                <label className="text-white/40 font-mono text-xs uppercase tracking-widest">HERO_SLOGAN</label>
+                                <label className="text-foreground/40 font-mono text-xs uppercase tracking-widest">HERO_SLOGAN</label>
                                 <input
                                     type="text"
                                     value={settings.heroSlogan || ""}
                                     onChange={(e) => setSettings({ ...settings, heroSlogan: e.target.value })}
-                                    className="w-full bg-white/5 border border-white/10 p-4 focus:border-primary outline-none transition-all font-mono text-sm"
+                                    className="w-full bg-foreground/5 border border-foreground/10 p-4 focus:border-primary outline-none transition-all font-mono text-sm"
                                     placeholder="TIMELESS COLLECTIONS // MODERN STYLES"
                                 />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-white/40 font-mono text-xs uppercase tracking-widest">HERO_WALLPAPER_SOURCE (DARK MODE)</label>
-                                <div className="p-4 border border-white/5 bg-black/20">
+                                <label className="text-foreground/40 font-mono text-xs uppercase tracking-widest">HERO_WALLPAPER_SOURCE (DARK MODE)</label>
+                                <div className="p-4 border border-foreground/5 bg-background/20">
                                     <ImageUpload
                                         value={settings.heroImage}
                                         onChange={(url) => setSettings({ ...settings, heroImage: url })}
@@ -98,8 +98,8 @@ export default function AdminSettings() {
                                 </div>
                             </div>
                             <div className="space-y-2">
-                                <label className="text-white/40 font-mono text-xs uppercase tracking-widest">HERO_WALLPAPER_SOURCE (LIGHT MODE)</label>
-                                <div className="p-4 border border-white/5 bg-black/20">
+                                <label className="text-foreground/40 font-mono text-xs uppercase tracking-widest">HERO_WALLPAPER_SOURCE (LIGHT MODE)</label>
+                                <div className="p-4 border border-foreground/5 bg-background/20">
                                     <ImageUpload
                                         value={settings.lightModeWallpaper}
                                         onChange={(url) => setSettings({ ...settings, lightModeWallpaper: url })}
@@ -110,55 +110,145 @@ export default function AdminSettings() {
                         </div>
                     </div>
 
-                    <div className="bg-white/5 border border-white/10 p-10 backdrop-blur-md">
-                        <h3 className="text-xl font-black uppercase mb-8 border-b border-white/10 pb-4 text-primary font-mono">SOCIAL_NODES</h3>
+                    <div className="bg-foreground/5 border border-foreground/10 p-10 backdrop-blur-md">
+                        <h3 className="text-xl font-black uppercase mb-8 border-b border-foreground/10 pb-4 text-primary font-mono">SOCIAL_NODES</h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div className="space-y-2">
-                                <label className="text-white/40 font-mono text-xs uppercase tracking-widest">INSTAGRAM_URI</label>
-                                <input
-                                    type="text"
-                                    value={settings.socials.instagram}
-                                    onChange={(e) => setSettings({
-                                        ...settings,
-                                        socials: { ...settings.socials, instagram: e.target.value }
-                                    })}
-                                    className="w-full bg-white/5 border border-white/10 p-4 focus:border-primary outline-none transition-all font-mono text-sm"
-                                />
+                            <div className="p-4 border border-foreground/5 bg-foreground/5 space-y-4">
+                                <div className="flex justify-between items-center w-full">
+                                    <label className="text-foreground/40 font-mono text-xs uppercase tracking-widest font-bold">SHOW INSTAGRAM</label>
+                                    <input
+                                        type="checkbox"
+                                        checked={settings.showInstagram !== false}
+                                        onChange={e => setSettings({ ...settings, showInstagram: e.target.checked })}
+                                        className="w-5 h-5 bg-foreground/5 border border-foreground/10 checked:bg-primary accent-primary"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-foreground/40 font-mono text-xs uppercase tracking-widest">INSTAGRAM_URI</label>
+                                    <input
+                                        type="text"
+                                        value={settings.socials.instagram}
+                                        onChange={(e) => setSettings({
+                                            ...settings,
+                                            socials: { ...settings.socials, instagram: e.target.value }
+                                        })}
+                                        className="w-full bg-background border border-foreground/10 p-4 focus:border-primary outline-none transition-all font-mono text-sm"
+                                    />
+                                </div>
                             </div>
-                            <div className="space-y-2">
-                                <label className="text-white/40 font-mono text-xs uppercase tracking-widest">TWITTER_URI</label>
-                                <input
-                                    type="text"
-                                    value={settings.socials.twitter}
-                                    onChange={(e) => setSettings({
-                                        ...settings,
-                                        socials: { ...settings.socials, twitter: e.target.value }
-                                    })}
-                                    className="w-full bg-white/5 border border-white/10 p-4 focus:border-primary outline-none transition-all font-mono text-sm"
-                                />
+                            <div className="p-4 border border-foreground/5 bg-foreground/5 space-y-4">
+                                <div className="flex justify-between items-center w-full">
+                                    <label className="text-foreground/40 font-mono text-xs uppercase tracking-widest font-bold">SHOW TWITTER (X)</label>
+                                    <input
+                                        type="checkbox"
+                                        checked={settings.showTwitter !== false}
+                                        onChange={e => setSettings({ ...settings, showTwitter: e.target.checked })}
+                                        className="w-5 h-5 bg-foreground/5 border border-foreground/10 checked:bg-primary accent-primary"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-foreground/40 font-mono text-xs uppercase tracking-widest">TWITTER_URI</label>
+                                    <input
+                                        type="text"
+                                        value={settings.socials.twitter}
+                                        onChange={(e) => setSettings({
+                                            ...settings,
+                                            socials: { ...settings.socials, twitter: e.target.value }
+                                        })}
+                                        className="w-full bg-background border border-foreground/10 p-4 focus:border-primary outline-none transition-all font-mono text-sm"
+                                    />
+                                </div>
                             </div>
-                            <div className="space-y-2">
-                                <label className="text-white/40 font-mono text-xs uppercase tracking-widest">TIKTOK_URI</label>
-                                <input
-                                    type="text"
-                                    value={settings.socials.tiktok}
-                                    onChange={(e) => setSettings({
-                                        ...settings,
-                                        socials: { ...settings.socials, tiktok: e.target.value }
-                                    })}
-                                    className="w-full bg-white/5 border border-white/10 p-4 focus:border-primary outline-none transition-all font-mono text-sm"
-                                />
+                            <div className="p-4 border border-foreground/5 bg-foreground/5 space-y-4">
+                                <div className="flex justify-between items-center w-full">
+                                    <label className="text-foreground/40 font-mono text-xs uppercase tracking-widest font-bold">SHOW TIKTOK</label>
+                                    <input
+                                        type="checkbox"
+                                        checked={settings.showTiktok !== false}
+                                        onChange={e => setSettings({ ...settings, showTiktok: e.target.checked })}
+                                        className="w-5 h-5 bg-foreground/5 border border-foreground/10 checked:bg-primary accent-primary"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-foreground/40 font-mono text-xs uppercase tracking-widest">TIKTOK_URI</label>
+                                    <input
+                                        type="text"
+                                        value={settings.socials.tiktok}
+                                        onChange={(e) => setSettings({
+                                            ...settings,
+                                            socials: { ...settings.socials, tiktok: e.target.value }
+                                        })}
+                                        className="w-full bg-foreground/5 border border-foreground/10 p-4 focus:border-primary outline-none transition-all font-mono text-sm"
+                                    />
+                                </div>
+                            </div>
+                            {/* Custom Social Nodes */}
+                            <div className="col-span-1 md:col-span-2 mt-4 pt-4 border-t border-foreground/10">
+                                <h4 className="text-foreground/60 font-mono text-sm uppercase tracking-widest mb-4">CUSTOM SOCIAL NODES</h4>
+                                <div className="space-y-4">
+                                    {(settings.customSocials || []).map((social, idx) => (
+                                        <div key={idx} className="flex flex-col md:flex-row gap-4 items-start md:items-center bg-foreground/5 p-4 border border-foreground/10">
+                                            <input
+                                                type="text"
+                                                placeholder="PLATFORM (E.G. YOUTUBE)"
+                                                value={social.name}
+                                                onChange={(e) => {
+                                                    const newArr = [...(settings.customSocials || [])];
+                                                    newArr[idx].name = e.target.value;
+                                                    setSettings({ ...settings, customSocials: newArr });
+                                                }}
+                                                className="w-full md:w-1/3 bg-background border border-foreground/10 p-3 outline-none focus:border-primary font-mono text-xs uppercase"
+                                            />
+                                            <input
+                                                type="text"
+                                                placeholder="URL"
+                                                value={social.url}
+                                                onChange={(e) => {
+                                                    const newArr = [...(settings.customSocials || [])];
+                                                    newArr[idx].url = e.target.value;
+                                                    setSettings({ ...settings, customSocials: newArr });
+                                                }}
+                                                className="w-full md:w-1/2 bg-background border border-foreground/10 p-3 outline-none focus:border-primary font-mono text-xs"
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    const newArr = [...(settings.customSocials || [])];
+                                                    newArr.splice(idx, 1);
+                                                    setSettings({ ...settings, customSocials: newArr });
+                                                }}
+                                                className="px-4 py-3 bg-red-900 border border-red-500 text-white font-black uppercase text-[10px] tracking-widest hover:bg-red-500 transition-colors w-full md:w-auto"
+                                            >
+                                                REMOVE
+                                            </button>
+                                        </div>
+                                    ))}
+                                    <button
+                                        type="button"
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            setSettings({
+                                                ...settings,
+                                                customSocials: [...(settings.customSocials || []), { name: "", url: "" }]
+                                            });
+                                        }}
+                                        className="w-full py-4 border border-foreground/20 text-foreground/60 font-mono uppercase tracking-widest text-[10px] hover:bg-foreground/10 hover:text-foreground transition-all border-dashed"
+                                    >
+                                        + ADD CUSTOM NODE
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div className="bg-white/5 border border-white/10 p-10 backdrop-blur-md">
-                        <h3 className="text-xl font-black uppercase mb-8 border-b border-white/10 pb-4 text-primary font-mono">COMMUNICATION_ARRAY</h3>
+                    <div className="bg-foreground/5 border border-foreground/10 p-10 backdrop-blur-md">
+                        <h3 className="text-xl font-black uppercase mb-8 border-b border-foreground/10 pb-4 text-primary font-mono">COMMUNICATION_ARRAY</h3>
                         <div className="space-y-6">
                             <label className="flex items-center gap-4 group cursor-pointer">
                                 <input
                                     type="checkbox"
-                                    className="w-6 h-6 bg-white/5 border border-white/10 checked:bg-primary accent-primary"
+                                    className="w-6 h-6 bg-foreground/5 border border-foreground/10 checked:bg-primary accent-primary"
                                     checked={settings.showSocials ?? true}
                                     onChange={(e) => setSettings({ ...settings, showSocials: e.target.checked })}
                                 />
@@ -168,7 +258,7 @@ export default function AdminSettings() {
                             <label className="flex items-center gap-4 group cursor-pointer">
                                 <input
                                     type="checkbox"
-                                    className="w-6 h-6 bg-white/5 border border-white/10 checked:bg-primary accent-primary"
+                                    className="w-6 h-6 bg-foreground/5 border border-foreground/10 checked:bg-primary accent-primary"
                                     checked={settings.showMarquee || false}
                                     onChange={(e) => setSettings({ ...settings, showMarquee: e.target.checked })}
                                 />
@@ -177,28 +267,28 @@ export default function AdminSettings() {
 
                             {settings.showMarquee && (
                                 <div className="space-y-2 pt-4">
-                                    <label className="text-white/40 font-mono text-xs uppercase tracking-widest">MARQUEE_TEXT_CONTENT (// DELIMITED)</label>
+                                    <label className="text-foreground/40 font-mono text-xs uppercase tracking-widest">MARQUEE_TEXT_CONTENT (// DELIMITED)</label>
                                     <input
                                         type="text"
                                         value={settings.marqueeText || ""}
                                         onChange={(e) => setSettings({ ...settings, marqueeText: e.target.value })}
                                         placeholder="WORLDWIDE SHIPPING // NEW DROP AVAILABLE"
-                                        className="w-full bg-white/5 border border-white/10 p-4 focus:border-primary outline-none transition-all font-mono text-sm"
+                                        className="w-full bg-foreground/5 border border-foreground/10 p-4 focus:border-primary outline-none transition-all font-mono text-sm"
                                     />
                                 </div>
                             )}
                         </div>
                     </div>
 
-                    <div className="bg-white/5 border border-white/10 p-10 backdrop-blur-md">
-                        <h3 className="text-xl font-black uppercase mb-8 border-b border-white/10 pb-4 text-primary font-mono">LIMIT_PARAMETERS</h3>
+                    <div className="bg-foreground/5 border border-foreground/10 p-10 backdrop-blur-md">
+                        <h3 className="text-xl font-black uppercase mb-8 border-b border-foreground/10 pb-4 text-primary font-mono">LIMIT_PARAMETERS</h3>
                         <div className="space-y-6">
                             <div className="space-y-2">
-                                <label className="text-white/40 font-mono text-xs uppercase tracking-widest">LATEST_DROPS_QUERY_LIMIT (MIN_3)</label>
+                                <label className="text-foreground/40 font-mono text-xs uppercase tracking-widest">LATEST_DROPS_QUERY_LIMIT (MIN_3)</label>
                                 <input
                                     type="number"
                                     min="3"
-                                    className="w-full bg-white/5 border border-white/10 p-4 focus:border-primary outline-none transition-all font-mono text-sm"
+                                    className="w-full bg-foreground/5 border border-foreground/10 p-4 focus:border-primary outline-none transition-all font-mono text-sm"
                                     value={settings.latestDropsLimit || 7}
                                     onChange={e => setSettings({ ...settings, latestDropsLimit: Math.max(3, parseInt(e.target.value) || 3) })}
                                 />
@@ -208,7 +298,7 @@ export default function AdminSettings() {
 
                     <button
                         type="submit"
-                        className="w-full py-6 bg-primary text-black font-black uppercase tracking-[0.3em] hover:bg-white transition-all shadow-xl glitch-hover"
+                        className="w-full py-6 bg-primary text-background font-black uppercase tracking-[0.3em] hover:bg-foreground transition-all shadow-xl glitch-hover"
                     >
                         SYNC_SYSTEM_CHANGES
                     </button>

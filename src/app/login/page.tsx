@@ -1,10 +1,11 @@
 "use client";
 
 import { signIn } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { AboutData } from "@/lib/types";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Loader2 } from "lucide-react";
+import { Loader2, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import Header from "@/components/layout/Header";
 import Navigation from "@/components/layout/Navigation";
@@ -14,6 +15,14 @@ export default function LoginPage() {
     const [isLoading, setIsLoading] = useState<string | null>(null);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [aboutData, setAboutData] = useState<AboutData | null>(null);
+
+    useEffect(() => {
+        fetch("/api/about")
+            .then(res => res.json())
+            .then(data => setAboutData(data))
+            .catch(err => console.error("Failed to load about data", err));
+    }, []);
 
     const handleGoogleSignIn = async () => {
         setIsLoading("google");
@@ -49,12 +58,20 @@ export default function LoginPage() {
             <Header />
             <Navigation />
 
-            <div className="flex-1 flex items-center justify-center p-6 z-10 pt-24">
-                <div className="w-full max-w-md bg-white border border-black p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+            <div className="absolute top-24 left-4 md:left-8 z-[60]">
+                <button onClick={() => router.back()} className="flex items-center gap-2 text-foreground/60 hover:text-foreground hover:-translate-x-1 transition-all uppercase font-mono text-xs tracking-widest font-bold">
+                    <ArrowLeft size={16} />
+                    <span>Back</span>
+                </button>
+            </div>
+
+            <div className="flex-1 flex flex-col md:flex-row items-center justify-center p-6 z-10 pt-32 pb-32 gap-12 max-w-6xl mx-auto w-full">
+                {/* Form Section */}
+                <div className="w-full max-w-md bg-background border border-foreground p-8 shadow-[8px_8px_0px_0px_var(--foreground)] transition-colors">
                     <h1 className="text-4xl font-black uppercase tracking-tighter mb-2 text-center">
                         Welcome // <span className="text-primary">Back</span>
                     </h1>
-                    <p className="text-gray-500 font-mono text-xs text-center mb-8 uppercase">
+                    <p className="text-foreground/50 font-mono text-xs text-center mb-8 uppercase">
                         Secure Access Portal
                     </p>
 
@@ -62,23 +79,23 @@ export default function LoginPage() {
                         {/* Primary Login Form */}
                         <form onSubmit={handleCredentialsSignIn} className="space-y-4">
                             <div>
-                                <label className="block font-mono text-xs uppercase mb-1 font-bold text-gray-500">Email</label>
+                                <label className="block font-mono text-xs uppercase mb-1 font-bold text-foreground/50">Email</label>
                                 <input
                                     type="text"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full h-12 border border-gray-300 px-4 font-mono text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
+                                    className="w-full h-12 bg-background border border-foreground/30 px-4 font-mono text-sm text-foreground focus:border-foreground focus:outline-none focus:ring-1 focus:ring-foreground transition-all placeholder:text-foreground/20"
                                     placeholder="Enter your email"
                                     suppressHydrationWarning
                                 />
                             </div>
                             <div>
-                                <label className="block font-mono text-xs uppercase mb-1 font-bold text-gray-500">Password</label>
+                                <label className="block font-mono text-xs uppercase mb-1 font-bold text-foreground/50">Password</label>
                                 <input
                                     type="password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full h-12 border border-gray-300 px-4 font-mono text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
+                                    className="w-full h-12 bg-background border border-foreground/30 px-4 font-mono text-sm text-foreground focus:border-foreground focus:outline-none focus:ring-1 focus:ring-foreground transition-all placeholder:text-foreground/20"
                                     placeholder="••••••••"
                                     suppressHydrationWarning
                                 />
@@ -86,23 +103,23 @@ export default function LoginPage() {
                             <button
                                 type="submit"
                                 disabled={!!isLoading}
-                                className="w-full h-12 bg-black text-white font-bold uppercase tracking-wider hover:bg-gray-800 transition-colors"
+                                className="w-full h-12 bg-foreground text-background font-bold uppercase tracking-wider hover:bg-primary hover:text-white transition-colors border border-foreground"
                             >
                                 {isLoading === "credentials" ? <Loader2 className="animate-spin mx-auto" /> : "Login"}
                             </button>
                         </form>
 
                         <div className="relative flex py-2 items-center">
-                            <div className="flex-grow border-t border-gray-200"></div>
-                            <span className="flex-shrink-0 mx-4 text-gray-400 text-xs font-mono uppercase">OR</span>
-                            <div className="flex-grow border-t border-gray-200"></div>
+                            <div className="flex-grow border-t border-foreground/20"></div>
+                            <span className="flex-shrink-0 mx-4 text-foreground/40 text-xs font-mono uppercase">OR</span>
+                            <div className="flex-grow border-t border-foreground/20"></div>
                         </div>
 
                         {/* Google Login */}
                         <button
                             onClick={handleGoogleSignIn}
                             disabled={!!isLoading}
-                            className="w-full h-12 border border-black bg-white text-black font-bold uppercase tracking-wider hover:bg-gray-50 transition-colors flex items-center justify-center gap-2 group"
+                            className="w-full h-12 border border-foreground bg-background text-foreground font-bold uppercase tracking-wider hover:bg-foreground hover:text-background transition-colors flex items-center justify-center gap-2 group"
                         >
                             {isLoading === "google" ? (
                                 <Loader2 className="animate-spin" />
@@ -116,22 +133,50 @@ export default function LoginPage() {
                     </div>
 
                     <div className="mt-8 text-center">
-                        <p className="font-mono text-xs text-gray-500">
+                        <p className="font-mono text-xs text-foreground/50">
                             Don&apos;t have an account?{" "}
-                            <Link href="/signup" className="text-black font-bold hover:text-primary underline decoration-2">
+                            <Link href="/signup" className="text-foreground font-bold hover:text-primary underline decoration-2">
                                 JOIN THE CULT
                             </Link>
                         </p>
                     </div>
                 </div>
+
+                {/* About Us Section */}
+                <div className="w-full max-w-md mx-auto md:mx-0 bg-background/50 border border-foreground/10 p-8 md:p-12 text-center md:text-left backdrop-blur-md relative overflow-hidden flex flex-col justify-between">
+                    <div className="absolute -top-6 -right-6 text-foreground/5 pointer-events-none">
+                        <span className="text-9xl font-black">S</span>
+                    </div>
+                    {aboutData ? (
+                        <>
+                            <h2 className="text-2xl font-black uppercase tracking-tighter mb-4 text-foreground">{aboutData.heading || "ABOUT SWAGOD"}</h2>
+                            <div className="space-y-4 mb-6">
+                                {aboutData.paragraphs?.map((p, i) => (
+                                    <p key={i} className="font-mono text-[10px] md:text-xs text-foreground/60 leading-relaxed uppercase tracking-widest text-justify">
+                                        {p}
+                                    </p>
+                                ))}
+                            </div>
+                            <div className="mt-8 pt-6 border-t border-foreground/10 flex justify-between items-center text-foreground/40 font-mono text-[10px]">
+                                <span>{aboutData.footer?.split(' // ')[0] || "EST. 2026"}</span>
+                                <span>{aboutData.footer?.split(' // ')[1] || "WORLDWIDE"}</span>
+                            </div>
+                        </>
+                    ) : (
+                        <div className="flex flex-col items-center justify-center h-full text-foreground/50 gap-4 py-12">
+                            <Loader2 className="animate-spin w-8 h-8" />
+                            <span className="font-mono text-[10px] uppercase tracking-widest">DECRYPTING ARCHIVES...</span>
+                        </div>
+                    )}
+                </div>
             </div>
 
             {/* Background Elements */}
-            <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-5">
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[20vw] font-black uppercase leading-none whitespace-nowrap">
+            <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-5 flex items-center justify-center z-0 overflow-hidden">
+                <div className="text-[20vw] font-black uppercase leading-none whitespace-nowrap text-foreground">
                     SWAGOD
                 </div>
             </div>
-        </main>
+        </main >
     );
 }

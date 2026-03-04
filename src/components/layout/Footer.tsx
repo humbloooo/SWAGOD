@@ -53,9 +53,21 @@ export default function Footer() {
                             <ul className="space-y-4 font-mono text-xs text-foreground/70">
                                 {mounted && settings?.socials ? (
                                     <>
-                                        <li><a href={settings.socials.instagram} target="_blank" className="hover:text-primary transition-colors">INSTAGRAM</a></li>
-                                        <li><a href={settings.socials.twitter} target="_blank" className="hover:text-primary transition-colors">TWITTER</a></li>
-                                        <li><a href={settings.socials.tiktok} target="_blank" className="hover:text-primary transition-colors">TIKTOK</a></li>
+                                        {settings.showInstagram !== false && (
+                                            <li><a href={settings.socials.instagram || "#"} target="_blank" className="hover:text-primary transition-colors">INSTAGRAM</a></li>
+                                        )}
+                                        {settings.showTwitter !== false && (
+                                            <li><a href={settings.socials.twitter || "#"} target="_blank" className="hover:text-primary transition-colors">TWITTER</a></li>
+                                        )}
+                                        {settings.showTiktok !== false && (
+                                            <li><a href={settings.socials.tiktok || "#"} target="_blank" className="hover:text-primary transition-colors">TIKTOK</a></li>
+                                        )}
+                                        {settings.customSocials?.map((social, idx) => (
+                                            <li key={idx}><a href={social.url || "#"} target="_blank" className="hover:text-primary transition-colors">{social.name.toUpperCase() || "LINK"}</a></li>
+                                        ))}
+                                        {settings.showInstagram === false && settings.showTwitter === false && settings.showTiktok === false && (!settings.customSocials || settings.customSocials.length === 0) && (
+                                            <li className="text-foreground/40">NO PLATFORMS ACTIVE</li>
+                                        )}
                                     </>
                                 ) : (
                                     <li className="text-foreground/40">UNLINKED</li>

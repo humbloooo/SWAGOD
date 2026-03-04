@@ -1,0 +1,17 @@
+
+> web@0.1.0 lint
+> eslint
+
+
+C:\Users\kunta\Desktop\Projects\BIZ\AWA\Swagod\base_web\SWAGOD\src\lib\db.ts
+   60:14  warning  '_error' is defined but never used  @typescript-eslint/no-unused-vars
+   74:14  warning  '_error' is defined but never used  @typescript-eslint/no-unused-vars
+  206:14  warning  '_error' is defined but never used  @typescript-eslint/no-unused-vars
+  226:14  warning  '_error' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\kunta\Desktop\Projects\BIZ\AWA\Swagod\base_web\SWAGOD\src\lib\mongoose.ts
+  14:1  error  Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  18:3  error  Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+
+✖ 6 problems (2 errors, 4 warnings)
+

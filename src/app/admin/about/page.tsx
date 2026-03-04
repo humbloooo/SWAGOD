@@ -79,7 +79,7 @@ export default function AdminAbout() {
                         />
                     </div>
 
-                    <button type="submit" className="w-full py-4 bg-black text-white font-bold uppercase tracking-widest hover:bg-primary transition-colors">
+                    <button type="submit" className="w-full py-4 bg-background text-foreground font-bold uppercase tracking-widest hover:bg-primary transition-colors">
                         Save Changes
                     </button>
                 </form>

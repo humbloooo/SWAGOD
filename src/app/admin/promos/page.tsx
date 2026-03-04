@@ -66,7 +66,7 @@ export default function AdminPromos() {
     }
 
     return (
-        <main className="pb-[100px] pt-32 px-6 text-white bg-black">
+        <main className="pb-[100px] pt-32 px-6 text-foreground bg-background">
             <div className="container mx-auto">
                 <header className="mb-16">
                     <h1 className="text-6xl md:text-8xl font-black uppercase tracking-tighter mb-4 leading-none">
@@ -79,18 +79,18 @@ export default function AdminPromos() {
                     {/* List */}
                     <div className="space-y-6">
                         <h2 className="text-xl font-bold uppercase border-b border-primary/30 pb-4 text-primary font-mono">ACTIVE_ARCHIVE</h2>
-                        {promos.length === 0 && <p className="text-white/40 font-mono italic">NO PROMOS DETECTED.</p>}
+                        {promos.length === 0 && <p className="text-foreground/40 font-mono italic">NO PROMOS DETECTED.</p>}
                         {promos.map((p, i) => (
-                            <div key={i} className={`flex justify-between items-center p-8 border transition-all duration-300 ${p.active ? 'border-primary bg-primary/5' : 'border-white/10 bg-white/5 opacity-40'}`}>
+                            <div key={i} className={`flex justify-between items-center p-8 border transition-all duration-300 ${p.active ? 'border-primary bg-primary/5' : 'border-foreground/10 bg-foreground/5 opacity-40'}`}>
                                 <div>
                                     <div className="text-3xl font-black uppercase tracking-tighter">{p.code}</div>
                                     <div className="font-mono text-xs text-primary mt-2">{p.discount}% OFF VOUCHER</div>
                                 </div>
                                 <div className="flex gap-4">
-                                    <button onClick={() => toggleActive(i)} className="text-[10px] font-black uppercase tracking-widest px-4 py-2 border border-white/20 hover:border-primary hover:text-primary transition-all">
+                                    <button onClick={() => toggleActive(i)} className="text-[10px] font-black uppercase tracking-widest px-4 py-2 border border-foreground/20 hover:border-primary hover:text-primary transition-all">
                                         {p.active ? "DISABLE" : "ENABLE"}
                                     </button>
-                                    <button onClick={() => handleDelete(i)} className="text-[10px] font-black uppercase tracking-widest px-4 py-2 border border-red-500/30 text-red-500 hover:bg-red-500 hover:text-white transition-all">
+                                    <button onClick={() => handleDelete(i)} className="text-[10px] font-black uppercase tracking-widest px-4 py-2 border border-red-500/30 text-red-500 hover:bg-red-500 hover:text-foreground transition-all">
                                         PURGE
                                     </button>
                                 </div>
@@ -99,13 +99,13 @@ export default function AdminPromos() {
                     </div>
 
                     {/* Create */}
-                    <div className="bg-white/5 border border-white/10 p-10 backdrop-blur-md h-fit">
-                        <h2 className="text-xl font-black uppercase mb-8 border-b border-white/10 pb-4">INITIALIZE // CODE</h2>
+                    <div className="bg-foreground/5 border border-foreground/10 p-10 backdrop-blur-md h-fit">
+                        <h2 className="text-xl font-black uppercase mb-8 border-b border-foreground/10 pb-4">INITIALIZE // CODE</h2>
                         <form onSubmit={handleSubmit} className="space-y-6 font-mono text-xs uppercase tracking-widest">
                             <div className="space-y-2">
-                                <label className="text-white/40">CODE_STRING</label>
+                                <label className="text-foreground/40">CODE_STRING</label>
                                 <input
-                                    className="w-full bg-white/5 border border-white/10 p-4 focus:border-primary outline-none transition-all uppercase"
+                                    className="w-full bg-foreground/5 border border-foreground/10 p-4 focus:border-primary outline-none transition-all uppercase"
                                     value={newItem.code}
                                     onChange={e => setNewItem({ ...newItem, code: e.target.value.toUpperCase() })}
                                     placeholder="SUMMER2026"
@@ -113,17 +113,17 @@ export default function AdminPromos() {
                                 />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-white/40">DISCOUNT_PERCENTAGE</label>
+                                <label className="text-foreground/40">DISCOUNT_PERCENTAGE</label>
                                 <input
                                     type="number"
-                                    className="w-full bg-white/5 border border-white/10 p-4 focus:border-primary outline-none transition-all"
+                                    className="w-full bg-foreground/5 border border-foreground/10 p-4 focus:border-primary outline-none transition-all"
                                     value={newItem.discount}
                                     onChange={e => setNewItem({ ...newItem, discount: parseInt(e.target.value) })}
                                     min="1" max="100"
                                     required
                                 />
                             </div>
-                            <button type="submit" className="w-full py-5 bg-primary text-black font-black uppercase tracking-widest hover:bg-white transition-all mt-4">
+                            <button type="submit" className="w-full py-5 bg-primary text-background font-black uppercase tracking-widest hover:bg-foreground transition-all mt-4">
                                 DEPLOY PROMO
                             </button>
                         </form>

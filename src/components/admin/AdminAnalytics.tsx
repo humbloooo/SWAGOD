@@ -26,7 +26,9 @@ export default function AdminAnalytics() {
                         className="bg-white/5 border border-white/10 p-4 md:p-6 backdrop-blur-md"
                     >
                         <div className="flex justify-between items-start mb-2 md:mb-4">
-                            <stat.icon size={16} className="text-white/40 md:w-5 md:h-5" />
+                            <div suppressHydrationWarning>
+                                <stat.icon size={16} className="text-white/40 md:w-5 md:h-5" suppressHydrationWarning />
+                            </div>
                             <span className={`text-[8px] md:text-[10px] font-mono font-bold ${stat.trend.startsWith('+') ? 'text-green-500' : 'text-red-500'}`}>
                                 {stat.trend}
                             </span>

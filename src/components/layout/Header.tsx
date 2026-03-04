@@ -176,8 +176,7 @@ export default function Header() {
                                 >
                                     <Link
                                         href={item.h}
-                                        className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-black uppercase text-transparent stroke-foreground hover:text-primary transition-colors tracking-widest drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] hover:drop-shadow-[0_0_15px_rgba(255,100,0,0.8)] leading-tight"
-                                        style={{ WebkitTextStroke: "1px var(--foreground)" }}
+                                        className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-black uppercase text-foreground hover:text-primary transition-colors tracking-widest drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] hover:drop-shadow-[0_0_15px_rgba(255,100,0,0.8)] leading-tight"
                                         onClick={() => setIsOpen(false)}
                                     >
                                         {item.l}

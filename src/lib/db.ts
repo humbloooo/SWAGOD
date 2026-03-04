@@ -57,9 +57,9 @@ export async function getProducts(limit?: number): Promise<Product[]> {
             return limit ? PRODUCTS.slice(0, limit) : PRODUCTS;
         }
         return snapshot.docs.map((doc: FirebaseFirestore.QueryDocumentSnapshot) => ({ id: doc.id, ...doc.data() } as Product));
-    } catch (error) {
-        console.error("Error fetching products:", error);
-        return PRODUCTS; // Final fallback
+    } catch {
+        console.warn("⚠️ Firebase connection failed to fetch products. Falling back to mock data.");
+        return limit ? PRODUCTS.slice(0, limit) : PRODUCTS; // Final fallback
     }
 }
 
@@ -71,8 +71,8 @@ export async function getProductById(id: string): Promise<Product | null> {
         const doc = await firestore.collection(PRODUCTS_COLLECTION).doc(id).get();
         if (!doc.exists) return null;
         return { id: doc.id, ...doc.data() } as Product;
-    } catch (error) {
-        console.error(`Error fetching product ${id}:`, error);
+    } catch {
+        console.warn(`⚠️ Firebase connection failed fetching product ${id}. Falling back to null.`);
         return null;
     }
 }
@@ -203,8 +203,8 @@ export async function getSettings(): Promise<SiteSettings> {
         if (doc.exists) {
             return doc.data() as SiteSettings;
         }
-    } catch (error) {
-        console.error("Error fetching settings:", error);
+    } catch {
+        console.warn("⚠️ Firebase connection failed to fetch settings. Using defaults.");
     }
     // Default
     return {
@@ -223,8 +223,8 @@ export async function getAbout(): Promise<AboutData | null> {
     try {
         const doc = await firestore.collection(ABOUT_COLLECTION).doc('main').get();
         if (doc.exists) return doc.data() as AboutData;
-    } catch (error) {
-        console.error("Error fetching about:", error);
+    } catch {
+        console.warn("⚠️ Firebase connection failed to fetch About configuration. Using safe null fallback.");
     }
     return null;
 }

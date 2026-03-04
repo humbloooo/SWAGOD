@@ -12,10 +12,12 @@ import { formatPrice } from "@/lib/utils";
 import { useEffect } from "react";
 
 const AVAILABLE_SIZES = ["S", "M", "L", "XL", "XXL"];
+const AVAILABLE_CATEGORIES = ["clothing", "male", "female", "unisex", "merch", "accessories"];
 
 export default function Shop() {
     const products = useCachedProducts();
     const [selectedSize, setSelectedSize] = useState<string | null>(null);
+    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const { currency, lastFetch } = useAppStore();
     const [recentlyViewed, setRecentlyViewed] = useState<Product[]>([]);
     const isLoading = products.length === 0 && !lastFetch;
@@ -35,9 +37,9 @@ export default function Shop() {
     }, []);
 
     const filteredProducts = products.filter(product => {
-        if (!selectedSize) return true;
-        if (!product.sizes || product.sizes.length === 0) return false;
-        return product.sizes.includes(selectedSize);
+        if (selectedSize && (!product.sizes || !product.sizes.includes(selectedSize))) return false;
+        if (selectedCategory && product.category !== selectedCategory) return false;
+        return true;
     });
 
     return (
@@ -48,18 +50,38 @@ export default function Shop() {
                     Shop // <span className="text-primary">All</span>
                 </h1>
 
+                {/* Category Filters */}
+                <div className="flex flex-wrap gap-4 mb-6">
+                    <button
+                        onClick={() => setSelectedCategory(null)}
+                        className={`px-6 py-2 border font-mono text-sm uppercase transition-colors ${!selectedCategory ? 'bg-primary border-primary text-black font-bold glow-primary' : 'border-foreground/20 text-foreground dark:border-white/20 dark:text-white hover:border-primary hover:text-primary'}`}
+                    >
+                        ALL
+                    </button>
+                    {AVAILABLE_CATEGORIES.map(cat => (
+                        <button
+                            key={cat}
+                            onClick={() => setSelectedCategory(cat)}
+                            className={`px-6 py-2 border font-mono text-sm uppercase transition-colors ${selectedCategory === cat ? 'bg-primary border-primary text-black font-bold glow-primary' : 'border-foreground/20 text-foreground dark:border-white/20 dark:text-white hover:border-primary hover:text-primary'}`}
+                        >
+                            {cat}
+                        </button>
+                    ))}
+                </div>
+
+                {/* Size Filters */}
                 <div className="flex flex-wrap gap-4 mb-12">
                     <button
                         onClick={() => setSelectedSize(null)}
-                        className={`px-6 py-2 border font-mono text-sm uppercase transition-colors ${!selectedSize ? 'bg-primary border-primary text-white glow-primary' : 'border-foreground/20 text-foreground dark:border-white/20 dark:text-white hover:border-primary'}`}
+                        className={`px-6 py-2 border font-mono text-sm uppercase transition-colors ${!selectedSize ? 'bg-white border-white text-black font-bold' : 'border-foreground/20 text-foreground dark:border-white/20 dark:text-white hover:border-white hover:text-white'}`}
                     >
-                        ALL
+                        ANY SIZE
                     </button>
                     {AVAILABLE_SIZES.map(size => (
                         <button
                             key={size}
                             onClick={() => setSelectedSize(size)}
-                            className={`px-6 py-2 border font-mono text-sm uppercase transition-colors ${selectedSize === size ? 'bg-primary border-primary text-white glow-primary' : 'border-foreground/20 text-foreground dark:border-white/20 dark:text-white hover:border-primary'}`}
+                            className={`px-6 py-2 border font-mono text-sm uppercase transition-colors ${selectedSize === size ? 'bg-white border-white text-black font-bold' : 'border-foreground/20 text-foreground dark:border-white/20 dark:text-white hover:border-white hover:text-white'}`}
                         >
                             {size}
                         </button>

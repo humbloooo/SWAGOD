@@ -344,7 +344,7 @@ export default function ProductClient({ id }: ProductClientProps) {
                     {/* Related */}
                     {relatedProducts.length > 0 && (
                         <div className="border-t border-foreground/5 pt-32 mb-32">
-                            <h2 className="text-4xl font-black uppercase tracking-tighter mb-16 italic">RECOMMENDED {"//"} <span className="text-primary">MODULES</span></h2>
+                            <h2 className="text-4xl font-black uppercase tracking-tighter mb-16 italic">RECOMMENDED {"//"} <span className="text-primary">PIECES</span></h2>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 {relatedProducts.map((rp) => (
                                     <Link href={`/product/${rp.id}`} key={rp.id} className="group block relative overflow-hidden bg-foreground/5 border border-foreground/10 p-6">

@@ -3,7 +3,7 @@ export interface Product {
     title: string;
     price: number;
     image: string;
-    category: "merch" | "accessories" | "clothing";
+    category: "merch" | "accessories" | "clothing" | "male" | "female" | "unisex";
     description: string;
     sizes?: string[];
     images?: string[];
@@ -37,12 +37,16 @@ export interface SiteSettings {
     // Marquee Settings
     marqueeText?: string;
     showMarquee?: boolean;
-    showSocials?: boolean; // Control visibility of social media links
+    showSocials?: boolean; // Control visibility of entire block
+    showInstagram?: boolean;
+    showTwitter?: boolean;
+    showTiktok?: boolean;
     socials: {
         instagram: string;
         twitter: string;
         tiktok: string;
     };
+    customSocials?: { name: string; url: string }[];
     maintenanceMode?: boolean; // Item 98: Maintenance Mode Toggle
 }
 

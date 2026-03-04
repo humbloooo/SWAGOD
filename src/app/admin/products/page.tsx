@@ -126,7 +126,7 @@ export default function AdminProducts() {
                         {selectedIds.length > 0 && (
                             <button
                                 onClick={bulkDelete}
-                                className="px-6 py-4 border border-red-500/50 text-red-500 font-black uppercase tracking-widest hover:bg-red-500 hover:text-white transition-all flex items-center gap-2"
+                                className="px-6 py-4 border border-red-500/50 text-red-500 font-black uppercase tracking-widest hover:bg-red-500 hover:text-foreground transition-all flex items-center gap-2"
                             >
                                 <Trash2 size={18} /> PURGE SELECTED ({selectedIds.length})
                             </button>
@@ -134,7 +134,7 @@ export default function AdminProducts() {
                         <select
                             value={sortBy}
                             onChange={(e) => setSortBy(e.target.value as "newest" | "price" | "likes")}
-                            className="px-4 py-4 bg-black border border-white/20 text-white font-black uppercase tracking-widest outline-none hover:border-white/40 transition-colors"
+                            className="px-4 py-4 bg-background border border-foreground/20 text-foreground font-black uppercase tracking-widest outline-none hover:border-foreground/40 transition-colors"
                         >
                             <option value="newest">SORT: NEWEST</option>
                             <option value="price">SORT: PRICE (HIGH)</option>
@@ -142,7 +142,7 @@ export default function AdminProducts() {
                         </select>
                         <button
                             onClick={() => { setIsEditing(true); setCurrentProduct({ category: 'clothing' }); }}
-                            className="px-8 py-4 bg-primary text-black font-black uppercase tracking-widest hover:bg-white transition-all flex items-center gap-2"
+                            className="px-8 py-4 bg-primary text-background font-black uppercase tracking-widest hover:bg-foreground transition-all flex items-center gap-2"
                         >
                             <Plus size={20} suppressHydrationWarning /> ADD ENTRY
                         </button>
@@ -163,19 +163,19 @@ export default function AdminProducts() {
                                 transition={{ delay: idx * 0.05 }}
                                 className={`group relative flex items-center justify-between p-6 border transition-all duration-300 ${selectedIds.includes(product.id)
                                     ? 'border-primary bg-primary/5'
-                                    : 'border-white/10 bg-white/5 backdrop-blur-md hover:border-white/20'
+                                    : 'border-foreground/10 bg-foreground/5 backdrop-blur-md hover:border-foreground/20'
                                     }`}
                             >
                                 <div className="flex items-center gap-8">
                                     <button
                                         onClick={() => toggleSelection(product.id)}
-                                        className={`w-6 h-6 border flex items-center justify-center transition-colors ${selectedIds.includes(product.id) ? 'bg-primary border-primary' : 'border-white/20 hover:border-primary'
+                                        className={`w-6 h-6 border flex items-center justify-center transition-colors ${selectedIds.includes(product.id) ? 'bg-primary border-primary' : 'border-foreground/20 hover:border-primary'
                                             }`}
                                     >
-                                        {selectedIds.includes(product.id) && <Check size={14} className="text-black font-black" />}
+                                        {selectedIds.includes(product.id) && <Check size={14} className="text-background font-black" />}
                                     </button>
 
-                                    <div className="w-20 h-20 bg-white/10 border border-white/10 relative overflow-hidden">
+                                    <div className="w-20 h-20 bg-foreground/10 border border-foreground/10 relative overflow-hidden">
                                         {product.image ? (
                                             <Image src={product.image} alt={product.title} fill className="object-cover group-hover:scale-110 transition-transform duration-500" />
                                         ) : (
@@ -187,11 +187,11 @@ export default function AdminProducts() {
 
                                     <div>
                                         <h3 className="text-xl font-black uppercase tracking-tight group-hover:text-primary transition-colors">{product.title}</h3>
-                                        <div className="flex gap-4 mt-1 font-mono text-[10px] uppercase tracking-widest text-white/40">
-                                            <span>PRICE: <span className="text-white">{product.price ? formatPrice(product.price, currency) : 'N/A'}</span></span>
-                                            <span>CAT: <span className="text-white">{product.category}</span></span>
+                                        <div className="flex gap-4 mt-1 font-mono text-[10px] uppercase tracking-widest text-foreground/40">
+                                            <span>PRICE: <span className="text-foreground">{product.price ? formatPrice(product.price, currency) : 'N/A'}</span></span>
+                                            <span>CAT: <span className="text-foreground">{product.category}</span></span>
                                             {product.sizes && product.sizes.length > 0 && (
-                                                <span>SIZES: <span className="text-white">{product.sizes.join(', ')}</span></span>
+                                                <span>SIZES: <span className="text-foreground">{product.sizes.join(', ')}</span></span>
                                             )}
                                             <span className="text-primary font-bold">LIKES: {product.likes?.length || 0}</span>
                                         </div>
@@ -201,13 +201,13 @@ export default function AdminProducts() {
                                 <div className="flex gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
                                     <button
                                         onClick={() => { setCurrentProduct(product); setIsEditing(true); }}
-                                        className="p-3 border border-white/10 hover:border-primary hover:text-primary transition-all"
+                                        className="p-3 border border-foreground/10 hover:border-primary hover:text-primary transition-all"
                                     >
                                         <Edit size={20} />
                                     </button>
                                     <button
                                         onClick={() => handleDelete(product.id)}
-                                        className="p-3 border border-white/10 hover:border-red-500 hover:text-red-500 transition-all"
+                                        className="p-3 border border-foreground/10 hover:border-red-500 hover:text-red-500 transition-all"
                                     >
                                         <Trash2 size={20} />
                                     </button>
@@ -218,13 +218,13 @@ export default function AdminProducts() {
                 </div>
 
                 {products.length === 0 && (
-                    <div className="flex flex-col items-center justify-center py-32 border border-white/10 bg-white/5 backdrop-blur-md">
-                        <Box size={48} className="text-white/20 mb-6" suppressHydrationWarning />
-                        <h2 className="text-2xl font-black uppercase tracking-widest text-white/50 mb-2">ARCHIVE EMPTY</h2>
-                        <p className="font-mono text-xs uppercase tracking-[0.2em] text-white/30 text-center max-w-sm">No products found in the database. Add a new entry to initialize the catalog.</p>
+                    <div className="flex flex-col items-center justify-center py-32 border border-foreground/10 bg-foreground/5 backdrop-blur-md">
+                        <Box size={48} className="text-foreground/20 mb-6" suppressHydrationWarning />
+                        <h2 className="text-2xl font-black uppercase tracking-widest text-foreground/50 mb-2">ARCHIVE EMPTY</h2>
+                        <p className="font-mono text-xs uppercase tracking-[0.2em] text-foreground/30 text-center max-w-sm">No products found in the database. Add a new entry to initialize the catalog.</p>
                         <button
                             onClick={() => { setIsEditing(true); setCurrentProduct({ category: 'clothing' }); }}
-                            className="mt-8 px-6 py-3 border border-primary text-primary font-black uppercase tracking-widest hover:bg-primary hover:text-black transition-all"
+                            className="mt-8 px-6 py-3 border border-primary text-primary font-black uppercase tracking-widest hover:bg-primary hover:text-background transition-all"
                         >
                             INITIALIZE ENTRY
                         </button>
@@ -235,7 +235,7 @@ export default function AdminProducts() {
                     <div className="flex justify-center mt-12">
                         <button
                             onClick={() => setVisibleCount(prev => prev + 50)}
-                            className="px-12 py-4 border border-white/20 text-white font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all"
+                            className="px-12 py-4 border border-foreground/20 text-foreground font-black uppercase tracking-widest hover:bg-foreground hover:text-background transition-all"
                         >
                             LOAD MORE ENTRIES ({products.length - visibleCount} REMAINING)
                         </button>
@@ -243,13 +243,13 @@ export default function AdminProducts() {
                 )}
 
                 {isEditing && (
-                    <div className="fixed inset-0 bg-black/90 backdrop-blur-xl z-[100] flex items-center justify-center p-6">
+                    <div className="fixed inset-0 bg-background/90 backdrop-blur-xl z-[100] flex items-center justify-center p-6">
                         <motion.div
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
-                            className="bg-black border border-white/20 p-10 max-w-3xl w-full max-h-[90vh] overflow-y-auto relative shadow-2xl"
+                            className="bg-background border border-foreground/20 p-10 max-w-3xl w-full max-h-[90vh] overflow-y-auto relative shadow-2xl"
                         >
-                            <button onClick={() => setIsEditing(false)} className="absolute top-6 right-6 text-white/40 hover:text-white transition-colors">
+                            <button onClick={() => setIsEditing(false)} className="absolute top-6 right-6 text-foreground/40 hover:text-foreground transition-colors">
                                 <X size={24} />
                             </button>
 
@@ -262,9 +262,9 @@ export default function AdminProducts() {
 
                             <form onSubmit={handleSubmit} className="space-y-8 font-mono text-xs uppercase tracking-[0.15em]">
                                 <div className="space-y-2">
-                                    <label className="text-white/40">TITLE_STRING</label>
+                                    <label className="text-foreground/40">TITLE_STRING</label>
                                     <input
-                                        className="w-full bg-white/5 border border-white/10 p-4 focus:border-primary outline-none transition-all"
+                                        className="w-full bg-foreground/5 border border-foreground/10 p-4 focus:border-primary outline-none transition-all"
                                         value={currentProduct.title || ""}
                                         onChange={e => setCurrentProduct({ ...currentProduct, title: e.target.value })}
                                         required
@@ -273,23 +273,26 @@ export default function AdminProducts() {
 
                                 <div className="grid grid-cols-2 gap-8">
                                     <div className="space-y-2">
-                                        <label className="text-white/40">VALUE_ZAR</label>
+                                        <label className="text-foreground/40">VALUE_ZAR</label>
                                         <input
                                             type="number"
-                                            className="w-full bg-white/5 border border-white/10 p-4 focus:border-primary outline-none transition-all"
+                                            className="w-full bg-foreground/5 border border-foreground/10 p-4 focus:border-primary outline-none transition-all"
                                             value={currentProduct.price || ""}
                                             onChange={e => setCurrentProduct({ ...currentProduct, price: parseFloat(e.target.value) })}
                                             required
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-white/40">CATEGORY_TYPE</label>
+                                        <label className="text-foreground/40">CATEGORY_TYPE</label>
                                         <select
-                                            className="w-full bg-white/5 border border-white/10 p-4 focus:border-primary outline-none transition-all appearance-none"
+                                            className="w-full bg-foreground/5 border border-foreground/10 p-4 focus:border-primary outline-none transition-all appearance-none"
                                             value={currentProduct.category || "clothing"}
-                                            onChange={e => setCurrentProduct({ ...currentProduct, category: e.target.value as "clothing" | "merch" | "accessories" })}
+                                            onChange={e => setCurrentProduct({ ...currentProduct, category: e.target.value as "clothing" | "merch" | "accessories" | "male" | "female" | "unisex" })}
                                         >
                                             <option value="clothing">CLOTHING</option>
+                                            <option value="male">MALE</option>
+                                            <option value="female">FEMALE</option>
+                                            <option value="unisex">UNISEX</option>
                                             <option value="merch">MERCH</option>
                                             <option value="accessories">ACCESSORIES</option>
                                         </select>
@@ -297,8 +300,8 @@ export default function AdminProducts() {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label className="text-white/40">VISUAL_ASSETS</label>
-                                    <div className="p-6 border border-white/10 bg-white/5">
+                                    <label className="text-foreground/40">VISUAL_ASSETS</label>
+                                    <div className="p-6 border border-foreground/10 bg-foreground/5">
                                         <MultiImageUpload
                                             values={currentProduct.images || (currentProduct.image ? [currentProduct.image] : [])}
                                             onChange={(urls) => {
@@ -314,10 +317,10 @@ export default function AdminProducts() {
                                 </div>
 
                                 <div className="space-y-4">
-                                    <label className="text-white/40">SIZE_MATRIX</label>
+                                    <label className="text-foreground/40">SIZE_MATRIX</label>
                                     <div className="flex gap-4 flex-wrap">
                                         {["S", "M", "L", "XL", "XXL"].map(size => (
-                                            <label key={size} className="group flex items-center gap-4 border border-white/10 p-4 cursor-pointer hover:border-primary transition-all flex-1 min-w-[80px] justify-center">
+                                            <label key={size} className="group flex items-center gap-4 border border-foreground/10 p-4 cursor-pointer hover:border-primary transition-all flex-1 min-w-[80px] justify-center">
                                                 <input
                                                     type="checkbox"
                                                     className="hidden"
@@ -331,16 +334,16 @@ export default function AdminProducts() {
                                                         }
                                                     }}
                                                 />
-                                                <span className={`text-lg font-black transition-colors ${currentProduct.sizes?.includes(size) ? 'text-primary' : 'text-white/40 group-hover:text-white'}`}>{size}</span>
+                                                <span className={`text-lg font-black transition-colors ${currentProduct.sizes?.includes(size) ? 'text-primary' : 'text-foreground/40 group-hover:text-foreground'}`}>{size}</span>
                                             </label>
                                         ))}
                                     </div>
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label className="text-white/40">INTEL_DESCRIPTION</label>
+                                    <label className="text-foreground/40">INTEL_DESCRIPTION</label>
                                     <textarea
-                                        className="w-full bg-white/5 border border-white/10 p-4 h-40 focus:border-primary outline-none transition-all resize-none"
+                                        className="w-full bg-foreground/5 border border-foreground/10 p-4 h-40 focus:border-primary outline-none transition-all resize-none"
                                         value={currentProduct.description || ""}
                                         onChange={e => setCurrentProduct({ ...currentProduct, description: e.target.value })}
                                         required
@@ -351,13 +354,13 @@ export default function AdminProducts() {
                                     <button
                                         type="button"
                                         onClick={() => setIsEditing(false)}
-                                        className="px-10 py-5 border border-white/20 font-black tracking-widest hover:bg-white/5 transition-all"
+                                        className="px-10 py-5 border border-foreground/20 font-black tracking-widest hover:bg-foreground/5 transition-all"
                                     >
                                         ABORT
                                     </button>
                                     <button
                                         type="submit"
-                                        className="px-10 py-5 bg-primary text-black font-black tracking-widest hover:bg-white transition-all"
+                                        className="px-10 py-5 bg-primary text-background font-black tracking-widest hover:bg-foreground transition-all"
                                     >
                                         EXECUTE_WRITE
                                     </button>

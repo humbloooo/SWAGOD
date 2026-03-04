@@ -31,7 +31,7 @@ export default async function AdminLayout({
                     <Link
                         href="/api/auth/signout?callbackUrl=/login"
                         prefetch={false}
-                        className="px-6 py-4 bg-black text-white uppercase font-bold hover:bg-primary transition-colors w-full"
+                        className="px-6 py-4 bg-background text-foreground uppercase font-bold hover:bg-primary transition-colors w-full"
                     >
                         Switch Account / Sign Out
                     </Link>
