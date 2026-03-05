@@ -23,6 +23,15 @@ export interface ISiteSettings extends Document {
     showUrgency?: boolean;
     showSocialProof?: boolean;
     showPersonalization?: boolean;
+    featuredCategory?: "male" | "female" | "merch" | "all";
+    freeShippingText?: string;
+    faqItems?: { question: string; answer: string }[];
+    contactInfo?: {
+        email: string;
+        phone: string;
+        address: string;
+        hours: string;
+    };
 }
 
 const SiteSettingsSchema: Schema = new Schema({
@@ -53,7 +62,19 @@ const SiteSettingsSchema: Schema = new Schema({
     showScarcity: { type: Boolean, default: true },
     showUrgency: { type: Boolean, default: true },
     showSocialProof: { type: Boolean, default: true },
-    showPersonalization: { type: Boolean, default: true }
+    showPersonalization: { type: Boolean, default: true },
+    featuredCategory: { type: String, enum: ["male", "female", "merch", "all"], default: "all" },
+    freeShippingText: { type: String },
+    faqItems: [{
+        question: { type: String },
+        answer: { type: String }
+    }],
+    contactInfo: {
+        email: { type: String },
+        phone: { type: String },
+        address: { type: String },
+        hours: { type: String }
+    }
 }, {
     timestamps: true,
     toJSON: {
