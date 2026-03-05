@@ -73,36 +73,48 @@ export default function Header() {
                     <div className="absolute inset-0 w-full h-full bg-background/80 backdrop-blur-md -z-10" />
                 )}
 
-                {/* Left Side: Navigation Menu Toggle */}
-                <div className="flex items-center w-[100px] z-10">
+                {/* Left Side: Navigation Menu Toggle (Desktop) / Logo (Mobile) */}
+                <div className="flex items-center w-auto md:w-[250px] z-10 gap-4">
+                    {/* Desktop Menu */}
                     <button
                         onClick={() => setIsOpen(true)}
-                        className="text-foreground hover:text-primary transition-colors flex items-center gap-2"
+                        className="hidden md:flex text-foreground hover:text-primary transition-colors items-center gap-2"
                         aria-label="Open Navigation Menu"
                         suppressHydrationWarning
                     >
                         <Menu size={28} className="icon-industrial" suppressHydrationWarning />
                     </button>
+
+                    {/* Mobile Logo */}
+                    <div className="flex md:hidden items-center group">
+                        <Link href="/" className="flex items-center gap-2 hover:scale-105 transition-transform">
+                            <div className="relative w-7 h-7 rounded-full overflow-hidden border border-foreground/10 shadow-sm glow-primary bg-white dark:bg-black transition-colors group-hover:border-primary">
+                                <Image src="/assets/swagod-logo.png" alt="Swagod Logo" fill className="object-cover" suppressHydrationWarning />
+                            </div>
+                        </Link>
+                    </div>
                 </div>
 
-                {/* Center: Logo & Brand Name */}
-                <div className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center gap-2">
+                {/* Center: Logo & Brand Name (Desktop Only) */}
+                <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center justify-center gap-2 z-10">
                     <Link href="/" className="flex items-center gap-3 hover:scale-105 transition-transform group">
                         <div className="relative w-8 h-8 rounded-full overflow-hidden border border-foreground/10 shadow-sm glow-primary bg-white dark:bg-black transition-colors group-hover:border-primary">
                             <Image src="/assets/swagod-logo.png" alt="Swagod Logo" fill className="object-cover" suppressHydrationWarning />
                         </div>
-                        <span className="text-foreground font-black text-lg sm:text-xl tracking-widest uppercase group-hover:text-primary transition-colors hidden sm:block">SWAGOD</span>
+                        <span className="text-foreground font-black text-xl tracking-widest uppercase group-hover:text-primary transition-colors">SWAGOD</span>
                     </Link>
                 </div>
 
-                {/* Right Side: Currency & Cart */}
-                <div className="flex items-center justify-end w-[100px] sm:w-[150px] md:w-[250px] gap-2 md:gap-5">
+                {/* Right Side: Icons */}
+                <div className="flex items-center justify-end w-auto md:w-[250px] gap-3 md:gap-5 z-10">
+                    {/* Currency Switcher (Desktop) */}
                     <div className="hidden lg:flex items-center gap-2 font-mono text-[10px] text-foreground/40 border-r border-foreground/10 pr-4 mr-2">
                         <button onClick={() => setCurrency("ZAR")} className={`${currency === "ZAR" ? 'text-primary font-bold' : 'opacity-40 hover:opacity-100'} transition-all`}>ZAR</button>
                         <span className="opacity-20">/</span>
                         <button onClick={() => setCurrency("USD")} className={`${currency === "USD" ? 'text-primary font-bold' : 'opacity-40 hover:opacity-100'} transition-all`}>USD</button>
                     </div>
 
+                    {/* 1. Search (Mobile & Desktop) */}
                     <button
                         onClick={() => {
                             if (window.navigator.vibrate) window.navigator.vibrate(10);
@@ -115,14 +127,36 @@ export default function Header() {
                         <SearchIcon size={20} className="icon-industrial" suppressHydrationWarning />
                     </button>
 
-                    <UserPortal />
-
+                    {/* 2. Cart (Mobile - placed btwn search and login) */}
                     <button
                         onClick={() => {
                             if (window.navigator.vibrate) window.navigator.vibrate(10);
                             openCart();
                         }}
-                        className="group relative flex items-center gap-2 text-foreground hover:text-primary transition-colors"
+                        className="flex md:hidden group relative items-center gap-2 text-foreground hover:text-primary transition-colors"
+                        aria-label="View Cart"
+                        suppressHydrationWarning
+                    >
+                        <div className="relative">
+                            <ShoppingBag size={20} className="icon-industrial" suppressHydrationWarning />
+                            {itemCount > 0 && (
+                                <span className="absolute -top-2 -right-2 bg-black text-white text-[8px] font-bold w-4 h-4 rounded-full flex items-center justify-center border border-primary glow-primary">
+                                    {itemCount}
+                                </span>
+                            )}
+                        </div>
+                    </button>
+
+                    {/* 3. Login/User Portal (Mobile & Desktop) */}
+                    <UserPortal />
+
+                    {/* 4. Cart (Desktop) */}
+                    <button
+                        onClick={() => {
+                            if (window.navigator.vibrate) window.navigator.vibrate(10);
+                            openCart();
+                        }}
+                        className="hidden md:flex group relative items-center gap-2 text-foreground hover:text-primary transition-colors"
                         aria-label="View Cart"
                         suppressHydrationWarning
                     >
@@ -139,6 +173,16 @@ export default function Header() {
                                 {formatPrice(cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0), currency)}
                             </span>
                         )}
+                    </button>
+
+                    {/* 5. Mobile Menu Trigger (Far Right) */}
+                    <button
+                        onClick={() => setIsOpen(true)}
+                        className="flex md:hidden text-foreground hover:text-primary transition-colors items-center"
+                        aria-label="Open Navigation Menu"
+                        suppressHydrationWarning
+                    >
+                        <Menu size={26} className="icon-industrial" suppressHydrationWarning />
                     </button>
                 </div>
             </motion.header>

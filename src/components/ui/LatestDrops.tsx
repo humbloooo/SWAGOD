@@ -153,7 +153,6 @@ const ProductCard = memo(function ProductCard({ product, index, addItem, openCar
             {/* Active Inventory / Scarcity Indicator */}
             <div className="absolute top-4 left-4 flex flex-col gap-2 pointer-events-none z-30 transition-opacity">
                 <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse glow-primary"></div>
                 </div>
                 {product.id && product.id.charCodeAt(0) % 2 === 0 && ( /* Pseudo-random low stock for demonstration */
                     <div className="bg-primary/90 text-white font-mono text-[8px] px-2 py-1 uppercase tracking-widest animate-pulse border border-foreground/20 whitespace-nowrap glow-primary shadow-[0_0_15px_rgba(255,0,0,0.8)] backdrop-blur-md">
@@ -197,10 +196,7 @@ const ProductCard = memo(function ProductCard({ product, index, addItem, openCar
                 </button>
             </div>
 
-            {/* Product ID Indicator */}
-            <div className="absolute top-4 left-4 font-mono text-[8px] text-foreground/20 uppercase tracking-widest vertical-text group-hover:text-primary transition-colors">
-                ITEM_{product.id ? product.id.substring(0, 8) : 'TEMP'}
-            </div>
+            {/* Product ID Indicator Removed */}
         </motion.div>
     );
 });

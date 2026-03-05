@@ -1,6 +1,5 @@
 import dbConnect from '../src/lib/mongoose';
 import Product from '../src/lib/models/Product';
-import Gallery from '../src/lib/models/Gallery';
 import mongoose from 'mongoose';
 
 async function sanitize() {
