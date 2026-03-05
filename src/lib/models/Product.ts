@@ -13,6 +13,7 @@ export interface IProduct extends Document {
     active?: boolean;
     subCategory?: string;
     stockCount?: number;
+    isPromo?: boolean;
 }
 
 const ProductSchema: Schema = new Schema({
@@ -27,15 +28,18 @@ const ProductSchema: Schema = new Schema({
     createdAt: { type: String, default: () => new Date().toISOString() },
     likes: [{ type: String }],
     active: { type: Boolean, default: true },
-    stockCount: { type: Number, default: 10 }
+    stockCount: { type: Number, default: 10 },
+    isPromo: { type: Boolean, default: false }
 }, {
     timestamps: true,
     toJSON: {
         transform: function (doc, ret) {
-            const returned = ret as Record<string, unknown>;
-            returned.id = (returned._id as mongoose.Types.ObjectId).toString();
-            Reflect.deleteProperty(returned, '_id');
-            Reflect.deleteProperty(returned, '__v');
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const returned = ret as any;
+            returned.id = String(returned._id);
+            delete returned._id;
+            delete returned.__v;
+            return returned;
         }
     }
 });

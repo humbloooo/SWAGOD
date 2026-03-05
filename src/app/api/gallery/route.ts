@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getGalleries, addGallery, deleteGallery } from '@/lib/db';
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/auth";
 
 export async function GET() {
     const data = await getGalleries();
@@ -7,19 +9,31 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+    const session = await getServerSession(authOptions);
+    // @ts-expect-error - session.user is extended with role via NextAuth callbacks
+    const userRole = session?.user?.role;
+    if (!session || (userRole !== "admin" && userRole !== "ADMIN" && userRole !== "SUPER_ADMIN")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     try {
         const newItem = await request.json();
-        if (!newItem.id || newItem.id === "") {
-            delete newItem.id;
-        }
         await addGallery(newItem);
         return NextResponse.json({ success: true, product: newItem });
-    } catch {
-        return NextResponse.json({ success: false, error: "Failed to add space" }, { status: 500 });
+    } catch (error) {
+        console.error("DEBUG: Failed to add gallery item:", error);
+        return NextResponse.json({ success: false, error: "Failed to add space", details: error instanceof Error ? error.message : String(error) }, { status: 500 });
     }
 }
 
 export async function DELETE(request: Request) {
+    const session = await getServerSession(authOptions);
+    // @ts-expect-error - session.user is extended with role via NextAuth callbacks
+    const userRole = session?.user?.role;
+    if (!session || (userRole !== "admin" && userRole !== "ADMIN" && userRole !== "SUPER_ADMIN")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
 
@@ -28,7 +42,8 @@ export async function DELETE(request: Request) {
     try {
         await deleteGallery(id);
         return NextResponse.json({ success: true });
-    } catch {
-        return NextResponse.json({ success: false, error: "Failed to delete" }, { status: 500 });
+    } catch (error) {
+        console.error("DEBUG: Failed to delete gallery item:", error);
+        return NextResponse.json({ success: false, error: "Failed to delete", details: error instanceof Error ? error.message : String(error) }, { status: 500 });
     }
 }

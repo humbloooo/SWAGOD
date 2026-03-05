@@ -1,7 +1,6 @@
 import dbConnect from './mongoose';
 import ProductModel from './models/Product';
 import GalleryModel from './models/Gallery';
-import PromoModel from './models/Promo';
 import SiteSettingsModel from './models/SiteSettings';
 import FeedbackModel from './models/Feedback';
 import TourEventModel from './models/TourEvent';
@@ -71,20 +70,25 @@ export async function getProductById(id: string): Promise<Product | null> {
 
 export async function addProduct(product: Product): Promise<void> {
     await dbConnect();
+    // Strip id from data to avoid Mongoose _id conflicts
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { id, ...data } = product;
     const now = new Date().toISOString();
-    const data = { ...product, createdAt: product.createdAt || now };
+    const finalData = { ...data, createdAt: data.createdAt || now };
 
     if (product.id) {
-        await ProductModel.findByIdAndUpdate(product.id, data, { upsert: true, new: true, setDefaultsOnInsert: true });
+        await ProductModel.findByIdAndUpdate(product.id, finalData, { upsert: true, new: true, setDefaultsOnInsert: true });
     } else {
-        await ProductModel.create(data);
+        await ProductModel.create(finalData);
     }
 }
 
 export async function updateProduct(product: Product): Promise<void> {
     if (!product.id) throw new Error("Product ID required for update");
     await dbConnect();
-    await ProductModel.findByIdAndUpdate(product.id, product, { new: true });
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { id, ...data } = product;
+    await ProductModel.findByIdAndUpdate(product.id, data, { new: true });
 }
 
 export async function getAdminProducts(): Promise<Product[]> {
@@ -121,20 +125,18 @@ export async function getGalleries(): Promise<Product[]> {
         await dbConnect();
         const docs = await GalleryModel.find().sort({ date: -1 });
         return docs.map(doc => doc.toJSON());
-    } catch (e) {
+    } catch (_e) {
         console.warn("⚠️ Mongoose connection failed to fetch galleries. Falling back to mock data.");
         return GALLERIES;
     }
 }
 
-export async function addGallery(item: Product): Promise<void> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function addGallery(item: any): Promise<void> {
     await dbConnect();
-    const data = { ...item, _id: item.id }; // Prepare data with _id for upsert/create
-    if (item.id) {
-        await GalleryModel.findByIdAndUpdate(item.id, data, { upsert: true, new: true, setDefaultsOnInsert: true });
-    } else {
-        await GalleryModel.create(data);
-    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { id, ...data } = item;
+    await GalleryModel.create(data);
 }
 
 export async function deleteGallery(id: string): Promise<void> {
@@ -170,7 +172,7 @@ export async function deleteFeedback(id: string): Promise<void> {
 export async function getPromos(): Promise<Product[]> {
     try {
         await dbConnect();
-        const docs = await PromoModel.find().sort({ createdAt: -1 });
+        const docs = await ProductModel.find({ isPromo: true }).sort({ createdAt: -1 });
         return docs.map(doc => doc.toJSON() as unknown as Product);
     } catch (error) {
         console.error("Error fetching promos:", error);
@@ -179,19 +181,16 @@ export async function getPromos(): Promise<Product[]> {
 }
 
 export async function addPromo(promo: Product): Promise<void> {
-    await dbConnect();
-    await PromoModel.create(promo);
+    await addProduct({ ...promo, isPromo: true });
 }
 
 export async function deletePromo(id: string): Promise<void> {
-    await dbConnect();
-    await PromoModel.findByIdAndDelete(id);
+    await deleteProduct(id);
 }
 
 export async function updatePromo(promo: Product): Promise<void> {
     if (!promo.id) throw new Error("Promo ID required");
-    await dbConnect();
-    await PromoModel.findByIdAndUpdate(promo.id, promo, { new: true });
+    await updateProduct({ ...promo, isPromo: true } as Product & { id: string });
 }
 
 // --- SETTINGS ---
@@ -227,7 +226,9 @@ export async function getSettings(): Promise<SiteSettings> {
 
 export async function saveSettings(settings: SiteSettings): Promise<void> {
     await dbConnect();
-    await SiteSettingsModel.findByIdAndUpdate('main', settings, { upsert: true, new: true, setDefaultsOnInsert: true });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
+    const { id, ...data } = settings as any;
+    await SiteSettingsModel.findByIdAndUpdate('main', data, { upsert: true, new: true, setDefaultsOnInsert: true });
 }
 
 // --- ABOUT ---
@@ -249,7 +250,9 @@ export async function getAbout(): Promise<AboutData | null> {
 
 export async function saveAbout(data: AboutData): Promise<void> {
     await dbConnect();
-    await AboutModel.findByIdAndUpdate('main', data, { upsert: true, new: true, setDefaultsOnInsert: true });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
+    const { id, ...cleanedData } = data as any;
+    await AboutModel.findByIdAndUpdate('main', cleanedData, { upsert: true, new: true, setDefaultsOnInsert: true });
 }
 
 // --- TOURS ---
@@ -259,7 +262,7 @@ export async function getTours(): Promise<TourEvent[]> {
         await dbConnect();
         const docs = await TourEventModel.find().sort({ date: 1 });
         return docs.map(doc => doc.toJSON() as unknown as TourEvent);
-    } catch (error) {
+    } catch (_error) {
         console.warn("⚠️ Mongoose connection failed to fetch tours. Falling back to mock data.");
         return TOURS as unknown as TourEvent[];
     }

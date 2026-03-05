@@ -12,6 +12,7 @@ export interface Product {
     likes?: string[]; // Array of user emails who liked the product
     active?: boolean; // Item 82: Soft Delete Flag
     stockCount?: number;
+    isPromo?: boolean;
 }
 
 export interface AuditLog {
@@ -32,6 +33,7 @@ export interface CartItem extends Product {
 }
 
 export interface SiteSettings {
+    id?: string;
     heroSlogan?: string; // New field for dynamic slogan
     heroImage?: string; // New field for Hero Wallpaper
     headerVideoBg?: string; // Video background for Header

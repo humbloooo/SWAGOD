@@ -20,9 +20,12 @@ const UserSchema: Schema = new Schema({
     timestamps: true,
     toJSON: {
         transform: function (doc, ret) {
-            (ret as any).id = (ret as any)._id.toString();
-            Reflect.deleteProperty(ret, '_id');
-            Reflect.deleteProperty(ret, '__v');
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const returned = ret as any;
+            returned.id = String(returned._id);
+            delete returned._id;
+            delete returned.__v;
+            return returned;
         }
     }
 });

@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
-export interface IProduct extends Document {
+export interface IGallery extends Document {
     title: string;
     price: number;
     image: string;
@@ -30,11 +30,14 @@ const GallerySchema: Schema = new Schema({
     timestamps: true,
     toJSON: {
         transform: function (doc, ret) {
-            (ret as Record<string, unknown>).id = String((ret as Record<string, unknown>)._id);
-            Reflect.deleteProperty(ret, '_id');
-            Reflect.deleteProperty(ret, '__v');
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const returned = ret as any;
+            returned.id = String(returned._id);
+            delete returned._id;
+            delete returned.__v;
+            return returned;
         }
     }
 });
 
-export default mongoose.models.Gallery || mongoose.model<IProduct>('Gallery', GallerySchema);
+export default mongoose.models.Gallery || mongoose.model<IGallery>('Gallery', GallerySchema);

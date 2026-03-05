@@ -25,11 +25,11 @@ export default async function AdminPage() {
                         </div>
                     </Link>
 
-                    <Link href="/admin/archives" className="group relative p-6 md:p-10 border border-foreground/10 bg-foreground/5 backdrop-blur-md hover:border-primary transition-all duration-500 overflow-hidden">
+                    <Link href="/admin/gallery" className="group relative p-6 md:p-10 border border-foreground/10 bg-foreground/5 backdrop-blur-md hover:border-primary transition-all duration-500 overflow-hidden">
                         <div className="absolute top-0 right-0 p-4 text-foreground/10 group-hover:text-primary transition-colors text-[10px] md:text-sm">02</div>
                         <h3 className="font-mono text-primary text-[10px] md:text-xs uppercase tracking-[0.3em] mb-2 md:mb-4">STORIES</h3>
-                        <p className="text-2xl md:text-3xl font-black uppercase tracking-tight mb-1 md:mb-2">TOUR LOGS</p>
-                        <p className="text-foreground/40 font-mono text-[8px] md:text-[10px] uppercase">MANAGE BLOG CONTENT</p>
+                        <p className="text-2xl md:text-3xl font-black uppercase tracking-tight mb-1 md:mb-2">GALLERY</p>
+                        <p className="text-foreground/40 font-mono text-[8px] md:text-[10px] uppercase">MANAGE BRAND VISUALS</p>
                         <div className="mt-6 md:mt-8 flex items-center gap-2 text-[8px] md:text-[10px] font-bold uppercase tracking-widest group-hover:gap-4 transition-all">
                             VIEW <span className="text-primary">→</span>
                         </div>
@@ -55,8 +55,18 @@ export default async function AdminPage() {
                         </div>
                     </Link>
 
-                    <Link href="/admin/settings" className="group relative p-6 md:p-10 border border-foreground/10 bg-foreground/5 backdrop-blur-md hover:border-primary transition-all duration-500 overflow-hidden">
+                    <Link href="/admin/about" className="group relative p-6 md:p-10 border border-foreground/10 bg-foreground/5 backdrop-blur-md hover:border-primary transition-all duration-500 overflow-hidden">
                         <div className="absolute top-0 right-0 p-4 text-foreground/10 group-hover:text-primary transition-colors text-[10px] md:text-sm">05</div>
+                        <h3 className="font-mono text-primary text-[10px] md:text-xs uppercase tracking-[0.3em] mb-2 md:mb-4">IDENTITY</h3>
+                        <p className="text-2xl md:text-3xl font-black uppercase tracking-tight mb-1 md:mb-2">ABOUT US</p>
+                        <p className="text-foreground/40 font-mono text-[8px] md:text-[10px] uppercase">MANAGE BRAND STORY</p>
+                        <div className="mt-6 md:mt-8 flex items-center gap-2 text-[8px] md:text-[10px] font-bold uppercase tracking-widest group-hover:gap-4 transition-all">
+                            EDIT STORY <span className="text-primary">→</span>
+                        </div>
+                    </Link>
+
+                    <Link href="/admin/settings" className="group relative p-6 md:p-10 border border-foreground/10 bg-foreground/5 backdrop-blur-md hover:border-primary transition-all duration-500 overflow-hidden">
+                        <div className="absolute top-0 right-0 p-4 text-foreground/10 group-hover:text-primary transition-colors text-[10px] md:text-sm">06</div>
                         <h3 className="font-mono text-primary text-[10px] md:text-xs uppercase tracking-[0.3em] mb-2 md:mb-4">INFRASTRUCTURE</h3>
                         <p className="text-2xl md:text-3xl font-black uppercase tracking-tight mb-1 md:mb-2">SETTINGS</p>
                         <p className="text-foreground/40 font-mono text-[8px] md:text-[10px] uppercase">CORE SYSTEM CONFIGURATION</p>
@@ -66,7 +76,7 @@ export default async function AdminPage() {
                     </Link>
 
                     <Link href="/admin/promos" className="group relative p-6 md:p-10 border border-foreground/10 bg-foreground/5 backdrop-blur-md hover:border-primary transition-all duration-500 overflow-hidden">
-                        <div className="absolute top-0 right-0 p-4 text-foreground/10 group-hover:text-primary transition-colors text-[10px] md:text-sm">06</div>
+                        <div className="absolute top-0 right-0 p-4 text-foreground/10 group-hover:text-primary transition-colors text-[10px] md:text-sm">07</div>
                         <h3 className="font-mono text-primary text-[10px] md:text-xs uppercase tracking-[0.3em] mb-2 md:mb-4">MARKETING</h3>
                         <p className="text-2xl md:text-3xl font-black uppercase tracking-tight mb-1 md:mb-2">PROMOS</p>
                         <p className="text-foreground/40 font-mono text-[8px] md:text-[10px] uppercase">CAMPAIGN AND OFFERS</p>

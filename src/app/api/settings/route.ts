@@ -26,7 +26,8 @@ export async function POST(request: Request) {
         const body = await request.json();
         await saveSettings(body);
         return NextResponse.json({ success: true });
-    } catch {
-        return NextResponse.json({ error: "Failed to save settings" }, { status: 500 });
+    } catch (error) {
+        console.error("DEBUG: Failed to save settings:", error);
+        return NextResponse.json({ error: "Failed to save settings", details: error instanceof Error ? error.message : String(error) }, { status: 500 });
     }
 }
