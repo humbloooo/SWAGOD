@@ -55,7 +55,6 @@ import ScrollProgress from "@/components/ui/ScrollProgress";
 import ScrollToTop from "@/components/ui/ScrollToTop";
 import SiteTracker from "@/components/SiteTracker";
 import { motion } from "framer-motion";
-import CustomCursor from "@/components/layout/CustomCursor";
 
 export default async function RootLayout({
   children,
@@ -80,7 +79,6 @@ export default async function RootLayout({
           <Providers>
             <div className="grain-overlay" />
             <div className="scanline-overlay" />
-            <CustomCursor />
             <ScrollProgress />
             <ScrollToTop />
             <SiteTracker />

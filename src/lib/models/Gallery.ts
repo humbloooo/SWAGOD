@@ -16,9 +16,9 @@ export interface IProduct extends Document {
 
 const GallerySchema: Schema = new Schema({
     title: { type: String, required: true },
-    price: { type: Number, required: true },
+    price: { type: Number, default: 0 },
     image: { type: String, required: true },
-    category: { type: String, required: true },
+    category: { type: String, default: "gallery" },
     description: { type: String, required: true },
     sizes: [{ type: String }],
     images: [{ type: String }],

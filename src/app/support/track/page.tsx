@@ -1,6 +1,5 @@
 import Header from "@/components/layout/Header";
 import Navigation from "@/components/layout/Navigation";
-import Footer from "@/components/layout/Footer";
 
 export default function TrackOrderPage() {
     return (
@@ -15,7 +14,7 @@ export default function TrackOrderPage() {
                     This sector is currently being decrypted. Check back later for updates to our policies and information.
                 </p>
             </div>
-            <Footer />
+            
         </main>
     );
 }

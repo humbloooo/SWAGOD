@@ -25,9 +25,9 @@ export default function Navigation() {
             initial={{ y: 60 }}
             animate={{ y: 0 }}
             transition={{ delay: 0.5, stiffness: 400, damping: 30 }}
-            className="fixed bottom-0 left-0 w-full h-[60px] bg-background/80 backdrop-blur-md z-50 flex items-center justify-center px-4 border-t border-foreground/10"
+            className="fixed bottom-0 left-0 w-full h-[60px] bg-background/80 backdrop-blur-md z-50 flex items-center justify-center border-t border-foreground/10"
         >
-            <ul className="flex items-center gap-8 md:gap-16">
+            <ul className="flex w-full items-center justify-between sm:justify-center sm:gap-8 md:gap-16 px-4 md:px-6 overflow-x-auto no-scrollbar mask-edges">
                 {LINKS.map((link) => (
                     <li key={link.name}>
                         {link.isCart ? (

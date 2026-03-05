@@ -15,8 +15,8 @@ export default function NotFound() {
     return (
         <main className="min-h-screen bg-background text-foreground flex flex-col justify-center items-center pb-[100px] pt-32 text-center">
             <Header />
-            <h1 className="text-8xl md:text-[12rem] font-black uppercase tracking-tighter text-transparent stroke-white glitch-hover leading-none">
-                404
+            <h1 className="text-8xl md:text-[12rem] font-black uppercase tracking-tighter text-transparent stroke-white leading-none">
+                4040
             </h1>
             <p className="font-mono text-foreground/40 max-w-sm mt-8 mb-12 uppercase tracking-widest text-xs leading-loose">
                 The requested coordinates lead to an empty zone. The future you are looking for has been overwritten.

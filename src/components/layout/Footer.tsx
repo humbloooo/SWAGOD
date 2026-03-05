@@ -48,7 +48,7 @@ export default function Footer() {
                         <MessageSquare size={28} className="mb-6 stroke-[1.5]" />
                         <h4 className="font-bold uppercase mb-4 text-xs tracking-[0.2em]">SUPPORT</h4>
                         <p className="text-sm text-foreground/70 mb-4 font-mono">We uphold the Consumer Goods and Services Code.</p>
-                        <Link href="/faq" className="text-sm text-foreground/70 mb-4 hover:underline hover:text-primary transition-colors font-mono">FAQ's</Link>
+                        <Link href="/faq" className="text-sm text-foreground/70 mb-4 hover:underline hover:text-primary transition-colors font-mono">FAQs</Link>
                         <p className="text-sm text-foreground/70 font-mono uppercase">CGSO PARTICIPANT</p>
                     </div>
                 </div>
@@ -62,14 +62,12 @@ export default function Footer() {
                         <div>
                             <h4 className="font-bold uppercase mb-8 text-[11px] tracking-[0.2em] text-white">QUICKLINKS</h4>
                             <ul className="space-y-4 font-mono text-[13px] text-white/60">
-                                <li><Link href="/faq" className="hover:text-white transition-colors">FAQ's</Link></li>
+                                <li><Link href="/faq" className="hover:text-white transition-colors">FAQs</Link></li>
                                 <li><Link href="/support/order" className="hover:text-white transition-colors">How to place an order</Link></li>
                                 <li><Link href="/support/track" className="hover:text-white transition-colors">Track my Order</Link></li>
                                 <li><Link href="/support/return" className="hover:text-white transition-colors">Log a Return</Link></li>
                                 <li><Link href="/support/policy" className="hover:text-white transition-colors">Returns Policy</Link></li>
                                 <li><Link href="/support/shipping" className="hover:text-white transition-colors">Shipping</Link></li>
-                                <li><Link href="/support/pickup" className="hover:text-white transition-colors">Pick up in-store</Link></li>
-                                <li><Link href="/stores" className="hover:text-white transition-colors">Find a Store</Link></li>
                                 <li><Link href="/contact" className="hover:text-white transition-colors">Contact us</Link></li>
                             </ul>
                         </div>
@@ -80,7 +78,6 @@ export default function Footer() {
                             <ul className="space-y-4 font-mono text-[13px] text-white/60">
                                 <li><Link href="/careers" className="hover:text-white transition-colors">Careers & Opportunities</Link></li>
                                 <li><Link href="/contact" className="hover:text-white transition-colors">Reach out</Link></li>
-                                <li><Link href="/blog" className="hover:text-white transition-colors">Blog | SWAGOD Gazette</Link></li>
                                 <li><Link href="/about" className="hover:text-white transition-colors">Our Story</Link></li>
                                 <li><Link href="/gallery" className="hover:text-white transition-colors">Gallery</Link></li>
                             </ul>

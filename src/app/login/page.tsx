@@ -10,7 +10,6 @@ import { motion } from "framer-motion";
 import { toast } from "sonner";
 import Header from "@/components/layout/Header";
 import Navigation from "@/components/layout/Navigation";
-import Footer from "@/components/layout/Footer";
 
 export default function LoginPage() {
     const router = useRouter();
@@ -188,7 +187,7 @@ export default function LoginPage() {
                     )}
                 </div>
             </div>
-            <Footer />
+            
         </main >
     );
 }

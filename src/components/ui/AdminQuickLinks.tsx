@@ -20,7 +20,7 @@ export default function AdminQuickLinks() {
         <motion.div
             initial={{ opacity: 0, x: 100 }}
             animate={{ opacity: 1, x: 0 }}
-            className="fixed bottom-40 right-6 z-[60] flex flex-col gap-2"
+            className="fixed top-24 right-6 z-[60] flex flex-col gap-2"
         >
             <Link
                 href="/admin"

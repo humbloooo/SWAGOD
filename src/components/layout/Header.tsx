@@ -91,12 +91,12 @@ export default function Header() {
                         <div className="relative w-8 h-8 rounded-full overflow-hidden border border-foreground/10 shadow-sm glow-primary bg-white dark:bg-black transition-colors group-hover:border-primary">
                             <Image src="/assets/swagod-logo.png" alt="Swagod Logo" fill className="object-cover" suppressHydrationWarning />
                         </div>
-                        <span className="text-foreground font-black text-xl tracking-widest uppercase group-hover:text-primary transition-colors">SWAGOD</span>
+                        <span className="text-foreground font-black text-lg sm:text-xl tracking-widest uppercase group-hover:text-primary transition-colors hidden sm:block">SWAGOD</span>
                     </Link>
                 </div>
 
                 {/* Right Side: Currency & Cart */}
-                <div className="flex items-center justify-end w-[150px] md:w-[250px] gap-3 md:gap-5">
+                <div className="flex items-center justify-end w-[100px] sm:w-[150px] md:w-[250px] gap-2 md:gap-5">
                     <div className="hidden lg:flex items-center gap-2 font-mono text-[10px] text-foreground/40 border-r border-foreground/10 pr-4 mr-2">
                         <button onClick={() => setCurrency("ZAR")} className={`${currency === "ZAR" ? 'text-primary font-bold' : 'opacity-40 hover:opacity-100'} transition-all`}>ZAR</button>
                         <span className="opacity-20">/</span>
