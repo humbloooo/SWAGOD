@@ -7,7 +7,7 @@ import { X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 
-interface ArchiveItem {
+interface GalleryItem {
     id?: string;
     title: string;
     image: string;
@@ -15,15 +15,15 @@ interface ArchiveItem {
     likes?: string[];
 }
 
-export default function AdminArchives() {
-    const [archives, setArchives] = useState<ArchiveItem[]>([]);
+export default function AdminGallery() {
+    const [galleries, setGalleries] = useState<GalleryItem[]>([]);
     const [isEditing, setIsEditing] = useState(false);
-    const [newItem, setNewItem] = useState<Partial<ArchiveItem>>({});
+    const [newItem, setNewItem] = useState<Partial<GalleryItem>>({});
 
     useEffect(() => {
-        fetch("/api/archives")
+        fetch("/api/gallery")
             .then((res) => res.json())
-            .then((data) => setArchives(data));
+            .then((data) => setGalleries(data));
     }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -31,18 +31,19 @@ export default function AdminArchives() {
 
         toast.promise(
             async () => {
-                const res = await fetch("/api/archives", {
+                const res = await fetch("/api/gallery", {
                     method: "POST",
+                    headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(newItem),
                 });
-                if (!res.ok) throw new Error("Failed to add archive");
+                if (!res.ok) throw new Error("Failed to add gallery");
                 return res;
             },
             {
                 loading: 'ADDING ITEM...',
                 success: async () => {
-                    const updated = await fetch("/api/archives").then(r => r.json());
-                    setArchives(updated);
+                    const updated = await fetch("/api/gallery").then(r => r.json());
+                    setGalleries(updated);
                     setIsEditing(false);
                     setNewItem({});
                     return 'ITEM ADDED';
@@ -57,7 +58,7 @@ export default function AdminArchives() {
             <div className="container mx-auto">
                 <div className="flex justify-between items-center mb-12">
                     <h1 className="text-4xl font-black uppercase tracking-tighter">
-                        STORE // <span className="text-primary">ARCHIVE</span>
+                        STORE // <span className="text-primary">GALLERY</span>
                     </h1>
                     <button
                         onClick={() => { setIsEditing(true); setNewItem({}); }}
@@ -79,7 +80,7 @@ export default function AdminArchives() {
                                 <button onClick={() => setIsEditing(false)} className="absolute top-6 right-6 text-foreground/40 hover:text-foreground transition-colors">
                                     <X size={24} />
                                 </button>
-                                <h2 className="text-2xl font-black uppercase mb-6">NEW ARCHIVE ITEM</h2>
+                                <h2 className="text-2xl font-black uppercase mb-6">NEW GALLERY ITEM</h2>
                                 <form onSubmit={handleSubmit} className="space-y-4 font-mono text-sm uppercase">
                                     <div>
                                         <label className="block mb-1 text-foreground/40">TITLE</label>
@@ -124,8 +125,8 @@ export default function AdminArchives() {
                 </AnimatePresence>
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {archives.map((item, i) => (
-                        <div key={i} className="relative aspect-[3/4] group border border-foreground/10 overflow-hidden">
+                    {galleries.map((item) => (
+                        <div key={item.id} className="relative aspect-[3/4] group border border-foreground/10 overflow-hidden">
                             <Image src={item.image} alt={item.title} fill className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500" />
                             <div className="absolute bottom-0 left-0 bg-background/80 backdrop-blur-md text-foreground p-3 text-[10px] w-full flex flex-col gap-1">
                                 <div className="font-black truncate uppercase">{item.title}</div>
@@ -134,16 +135,16 @@ export default function AdminArchives() {
                                     <button
                                         onClick={async (e) => {
                                             e.stopPropagation();
-                                            if (!confirm("DELETE?")) return;
+                                            if (!confirm("Are you sure you want to delete this gallery item?")) return;
                                             toast.promise(
                                                 async () => {
-                                                    const res = await fetch(`/api/archives?id=${item.id}`, { method: "DELETE" });
+                                                    const res = await fetch(`/api/gallery?id=${item.id}`, { method: "DELETE" });
                                                     if (!res.ok) throw new Error("Failed");
                                                 },
                                                 {
                                                     loading: 'DELETING...',
                                                     success: () => {
-                                                        setArchives(archives.filter(a => a.id !== item.id!));
+                                                        setGalleries(galleries.filter(a => a.id !== item.id!));
                                                         return 'DELETED';
                                                     },
                                                     error: 'FAILED TO DELETE'

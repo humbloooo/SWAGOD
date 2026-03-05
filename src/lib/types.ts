@@ -11,14 +11,16 @@ export interface Product {
     createdAt?: string;
     likes?: string[]; // Array of user emails who liked the product
     active?: boolean; // Item 82: Soft Delete Flag
+    stockCount?: number;
 }
 
 export interface AuditLog {
     id?: string;
     action: string;
     entity: string;
-    entityId: string;
-    adminEmail: string;
+    entityId?: string;
+    adminEmail?: string;
+    userEmail?: string;
     timestamp?: string;
     details?: string;
 }
@@ -32,9 +34,11 @@ export interface CartItem extends Product {
 export interface SiteSettings {
     heroSlogan?: string; // New field for dynamic slogan
     heroImage?: string; // New field for Hero Wallpaper
+    headerVideoBg?: string; // Video background for Header
     lightModeWallpaper?: string; // Wallpaper specifically for light mode
     latestDropsLimit?: number; // Control number of items on home page
     footerText: string;
+    footerAboutText?: string; // Brand summary in the footer
     // Marquee Settings
     marqueeText?: string;
     showMarquee?: boolean;
@@ -49,6 +53,10 @@ export interface SiteSettings {
     };
     customSocials?: { name: string; url: string }[];
     maintenanceMode?: boolean; // Item 98: Maintenance Mode Toggle
+    showScarcity?: boolean;
+    showUrgency?: boolean;
+    showSocialProof?: boolean;
+    showPersonalization?: boolean;
 }
 
 export interface Feedback {
@@ -72,4 +80,34 @@ export interface AboutData {
     heading: string;
     paragraphs: string[];
     footer: string;
+}
+
+export interface Order {
+    id?: string;
+    orderId: string;
+    userEmail: string;
+    items: CartItem[];
+    total: number;
+    currency: "ZAR" | "USD";
+    status: "pending" | "paid" | "failed" | "shipped";
+    shippingAddress: {
+        fullName: string;
+        address: string;
+        city: string;
+        province: string;
+        zipCode: string;
+        phoneNumber: string;
+    };
+    paystackReference?: string;
+    createdAt?: string;
+}
+
+export interface CheckoutData {
+    fullName: string;
+    email: string;
+    address: string;
+    city: string;
+    province: string;
+    zipCode: string;
+    phone: string;
 }

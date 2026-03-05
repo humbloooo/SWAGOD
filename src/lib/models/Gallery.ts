@@ -11,10 +11,10 @@ export interface IProduct extends Document {
     createdAt?: string;
     likes?: string[];
     active?: boolean;
-    date?: string; // used for Archives
+    date?: string; // used for Galleries
 }
 
-const ArchiveSchema: Schema = new Schema({
+const GallerySchema: Schema = new Schema({
     title: { type: String, required: true },
     price: { type: Number, required: true },
     image: { type: String, required: true },
@@ -30,11 +30,11 @@ const ArchiveSchema: Schema = new Schema({
     timestamps: true,
     toJSON: {
         transform: function (doc, ret) {
-            (ret as any).id = (ret as any)._id.toString();
+            (ret as Record<string, unknown>).id = String((ret as Record<string, unknown>)._id);
             Reflect.deleteProperty(ret, '_id');
             Reflect.deleteProperty(ret, '__v');
         }
     }
 });
 
-export default mongoose.models.Archive || mongoose.model<IProduct>('Archive', ArchiveSchema);
+export default mongoose.models.Gallery || mongoose.model<IProduct>('Gallery', GallerySchema);

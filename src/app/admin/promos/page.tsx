@@ -78,7 +78,7 @@ export default function AdminPromos() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                     {/* List */}
                     <div className="space-y-6">
-                        <h2 className="text-xl font-bold uppercase border-b border-primary/30 pb-4 text-primary font-mono">ACTIVE_ARCHIVE</h2>
+                        <h2 className="text-xl font-bold uppercase border-b border-primary/30 pb-4 text-primary font-mono">ACTIVE_GALLERY</h2>
                         {promos.length === 0 && <p className="text-foreground/40 font-mono italic">NO PROMOS DETECTED.</p>}
                         {promos.map((p, i) => (
                             <div key={i} className={`flex justify-between items-center p-8 border transition-all duration-300 ${p.active ? 'border-primary bg-primary/5' : 'border-foreground/10 bg-foreground/5 opacity-40'}`}>

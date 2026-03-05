@@ -1,0 +1,24 @@
+
+> web@0.1.0 build
+> next build
+
+▲ Next.js 16.1.6 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 34.8s
+  Running TypeScript ...
+Failed to compile.
+
+./src/components/ui/Hero.tsx:71:35
+Type error: Type '{ children: Element; strength: number; }' is not assignable to type 'IntrinsicAttributes & MagneticProps'.
+  Property 'strength' does not exist on type 'IntrinsicAttributes & MagneticProps'.
+
+[0m [90m 69 |[39m                     {[90m/* Secondary CTA */[39m}
+ [90m 70 |[39m                     [33m<[39m[33mLink[39m href[33m=[39m[32m"/tour"[39m[33m>[39m
+[31m[1m>[22m[39m[90m 71 |[39m                         [33m<[39m[33mMagnetic[39m strength[33m=[39m{[35m0.2[39m}[33m>[39m
+ [90m    |[39m                                   [31m[1m^[22m[39m
+ [90m 72 |[39m                             [33m<[39m[33mmotion[39m[33m.[39mdiv
+ [90m 73 |[39m                                 whileHover[33m=[39m{{ scale[33m:[39m [35m1.05[39m[33m,[39m backgroundColor[33m:[39m [32m"rgba(255, 0, 0, 0.05)"[39m }}
+ [90m 74 |[39m                                 whileTap[33m=[39m{{ scale[33m:[39m [35m0.95[39m }}[0m
+Next.js build worker exited with code: 1 and signal: null

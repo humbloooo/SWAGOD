@@ -1,6 +1,6 @@
 import dbConnect from './mongoose';
 import ProductModel from './models/Product';
-import ArchiveModel from './models/Archive';
+import GalleryModel from './models/Gallery';
 import PromoModel from './models/Promo';
 import SiteSettingsModel from './models/SiteSettings';
 import FeedbackModel from './models/Feedback';
@@ -11,7 +11,7 @@ import AuditLogModel from './models/AuditLog';
 import VisitModel from './models/Visit';
 import NewsletterModel from './models/Newsletter';
 import { Product, SiteSettings, Feedback, TourEvent, AuditLog, AboutData } from './types';
-import { PRODUCTS } from './data';
+import { PRODUCTS, TOURS, GALLERIES } from './data';
 
 const isMock = process.env.NEXT_PUBLIC_USE_MOCK_DATA === 'true';
 
@@ -114,32 +114,32 @@ export async function addAuditLog(log: AuditLog): Promise<void> {
     });
 }
 
-// --- ARCHIVES ---
+// --- GALLERIES ---
 
-export async function getArchives(): Promise<Product[]> {
+export async function getGalleries(): Promise<Product[]> {
     try {
         await dbConnect();
-        const docs = await ArchiveModel.find().sort({ date: -1 });
-        return docs.map(doc => doc.toJSON() as unknown as Product);
-    } catch (error) {
-        console.error("Error fetching archives:", error);
-        return [];
+        const docs = await GalleryModel.find().sort({ date: -1 });
+        return docs.map(doc => doc.toJSON());
+    } catch (e) {
+        console.warn("⚠️ Mongoose connection failed to fetch galleries. Falling back to mock data.");
+        return GALLERIES;
     }
 }
 
-export async function addArchive(item: Product): Promise<void> {
+export async function addGallery(item: Product): Promise<void> {
     await dbConnect();
-    const data = { ...item, date: item.createdAt || new Date().toISOString() };
+    const data = { ...item, _id: item.id }; // Prepare data with _id for upsert/create
     if (item.id) {
-        await ArchiveModel.findByIdAndUpdate(item.id, data, { upsert: true, new: true, setDefaultsOnInsert: true });
+        await GalleryModel.findByIdAndUpdate(item.id, data, { upsert: true, new: true, setDefaultsOnInsert: true });
     } else {
-        await ArchiveModel.create(data);
+        await GalleryModel.create(data);
     }
 }
 
-export async function deleteArchive(id: string): Promise<void> {
+export async function deleteGallery(id: string): Promise<void> {
     await dbConnect();
-    await ArchiveModel.findByIdAndDelete(id);
+    await GalleryModel.findByIdAndDelete(id);
 }
 
 // --- FEEDBACK ---
@@ -201,7 +201,14 @@ export async function getSettings(): Promise<SiteSettings> {
         await dbConnect();
         const doc = await SiteSettingsModel.findById('main');
         if (doc) {
-            return doc.toJSON() as unknown as SiteSettings;
+            // Apply transformation to map _id to id and ensure correct type
+            return doc.toJSON({
+                transform: (doc: unknown, ret: Record<string, unknown>) => {
+                    ret.id = ret._id;
+                    delete ret._id;
+                    return ret;
+                }
+            }) as unknown as SiteSettings;
         }
     } catch {
         console.warn("⚠️ Mongoose connection failed to fetch settings. Using defaults.");
@@ -210,7 +217,11 @@ export async function getSettings(): Promise<SiteSettings> {
         footerText: "© 2026 SWAGOD. ALL RIGHTS RESERVED.",
         socials: { instagram: "", twitter: "", tiktok: "" },
         showMarquee: false,
-        maintenanceMode: false
+        maintenanceMode: false,
+        showScarcity: true,
+        showUrgency: true,
+        showSocialProof: true,
+        showPersonalization: true
     };
 }
 
@@ -249,8 +260,8 @@ export async function getTours(): Promise<TourEvent[]> {
         const docs = await TourEventModel.find().sort({ date: 1 });
         return docs.map(doc => doc.toJSON() as unknown as TourEvent);
     } catch (error) {
-        console.error("Error fetching tours:", error);
-        return [];
+        console.warn("⚠️ Mongoose connection failed to fetch tours. Falling back to mock data.");
+        return TOURS as unknown as TourEvent[];
     }
 }
 

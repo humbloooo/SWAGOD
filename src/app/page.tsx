@@ -5,6 +5,7 @@ import Header from "@/components/layout/Header";
 import About from "@/components/ui/About";
 import FeedbackForm from "@/components/ui/FeedbackForm";
 import BackgroundBrackets from "@/components/ui/BackgroundBrackets";
+import WelcomeBanner from "@/components/ui/WelcomeBanner";
 import { getProducts, getAbout, getSettings } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
@@ -24,6 +25,7 @@ export default async function Home() {
   return (
     <main id="main-content" className="min-h-screen pb-[60px] bg-background">
       <Header />
+      <WelcomeBanner enabled={settings?.showPersonalization} />
       <BackgroundBrackets />
       <Hero heroImage={settings?.heroImage} lightModeWallpaper={settings?.lightModeWallpaper} heroSlogan={settings?.heroSlogan} />
       <LatestDrops products={products} />

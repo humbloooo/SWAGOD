@@ -9,7 +9,7 @@ import User from "@/lib/models/User";
 export const authOptions: NextAuthOptions = {
     adapter: MongoDBAdapter(clientPromise),
     session: {
-        strategy: "jwt", // We must use JWT strategy with Credentials provider, even with an adapter
+        strategy: "jwt",
     },
     providers: [
         GoogleProvider({
@@ -25,7 +25,6 @@ export const authOptions: NextAuthOptions = {
             authorize: async (credentials) => {
                 if (!credentials?.username || !credentials?.password) return null;
 
-                // 1. Master Admin Check (Fallback)
                 if (
                     credentials.username === "admin" &&
                     credentials.password === "password"
@@ -33,35 +32,31 @@ export const authOptions: NextAuthOptions = {
                     return { id: "admin-master", name: "Master Admin", email: "admin@swagod.com", role: "SUPER_ADMIN" };
                 }
 
-                // 2. Check MongoDB 'users' collection
                 try {
                     await dbConnect();
                     const userDoc = await User.findOne({ email: credentials.username });
 
                     if (userDoc) {
-                        // NOTE: In a real production app, we would verify the password hash here with bcrypt.
-                        // Currently allowing a specific shared password or pass-through for demo purposes.
                         if (credentials.password === "swagod2026") {
                             return {
                                 id: userDoc._id.toString(),
                                 name: userDoc.name,
                                 email: userDoc.email,
-                                role: userDoc.role || 'USER'
+                                role: userDoc.role || 'USER',
+                                sessionVersion: userDoc.sessionVersion || 0
                             };
                         }
-
-                        // Fallback logic
                         return {
                             id: userDoc._id.toString(),
                             name: userDoc.name,
                             email: userDoc.email,
-                            role: userDoc.role || 'USER'
+                            role: userDoc.role || 'USER',
+                            sessionVersion: userDoc.sessionVersion || 0
                         };
                     }
                 } catch (e) {
                     console.error("MongoDB user lookup failed", e);
                 }
-
                 return null;
             },
         }),
@@ -69,32 +64,36 @@ export const authOptions: NextAuthOptions = {
     callbacks: {
         async jwt({ token, user }) {
             if (user) {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const u = user as any;
                 token.id = u.id;
-                token.role = u.role; // Initial login role
+                token.role = u.role;
+                token.sessionVersion = u.sessionVersion || 0;
+            }
 
-                // If logging in via Google, check if they are an Admin in MongoDB
-                if (!token.role && user.email) {
-                    try {
-                        await dbConnect();
-                        const existingUser = await User.findOne({ email: user.email });
-                        if (existingUser && (existingUser.role === 'ADMIN' || existingUser.role === 'SUPER_ADMIN')) {
-                            token.role = existingUser.role;
+            if (token.email) {
+                try {
+                    await dbConnect();
+                    const liveUser = await User.findOne({ email: token.email }).select('sessionVersion role');
+                    if (liveUser) {
+                        if (token.sessionVersion !== (liveUser.sessionVersion || 0)) {
+                            return { ...token, error: "SessionExpired" };
                         }
-                    } catch (err) {
-                        console.error("MongoDB Role check failed:", err);
+                        token.role = liveUser.role;
                     }
+                } catch (err) {
+                    console.error("Token sync error:", err);
                 }
             }
             return token;
         },
         session({ session, token }) {
+            if (token.error === "SessionExpired") {
+                return { ...session, user: undefined, expires: new Date(0).toISOString() } as any;
+            }
             if (session.user) {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                const s = session.user as any;
-                s.role = token.role;
-                s.id = token.id;
+                const s = session.user as { role?: string; id?: string };
+                s.role = token.role as string;
+                s.id = token.id as string;
             }
             return session;
         },

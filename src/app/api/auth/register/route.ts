@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/mongoose";
 import User from "@/lib/models/User";
+import { addAuditLog } from "@/lib/db";
 
 export async function POST(req: Request) {
     try {
@@ -8,6 +9,14 @@ export async function POST(req: Request) {
 
         if (!email || !password || !name) {
             return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+        }
+
+        // Password Complexity (8+ chars, 1 symbol, 1 number)
+        const passwordRegex = /^(?=.*[!@#$%^&*])(?=.*[0-9]).{8,}$/;
+        if (!passwordRegex.test(password)) {
+            return NextResponse.json({
+                error: "Password must be at least 8 characters long and include one symbol and one number."
+            }, { status: 400 });
         }
 
         await dbConnect();
@@ -18,11 +27,19 @@ export async function POST(req: Request) {
         }
 
         // In a true environment, we'd hash the password here (e.g. bcrypt).
-        await User.create({
+        const user = await User.create({
             email,
             name,
             password, // Storing password securely (or as is per current project setup)
             role: "USER"
+        });
+
+        await addAuditLog({
+            action: "AUTH_REGISTER",
+            entity: "USER",
+            entityId: user._id.toString(),
+            userEmail: email,
+            details: `NEW_USER_CREATED: ${name}`
         });
 
         return NextResponse.json({ success: true });

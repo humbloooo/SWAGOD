@@ -76,12 +76,17 @@ export default function ImageUpload({ value, onChange }: ImageUploadProps) {
     };
 
     if (value) {
+        const isVideo = value.match(/\.(mp4|webm|mov)$/i) || value.includes('/video/');
         return (
-            <div className="relative aspect-square w-full max-w-[200px] border border-gray-200 rounded-lg overflow-hidden group">
-                <Image src={value} alt="Uploaded" fill className="object-cover" />
+            <div className="relative aspect-square w-full max-w-[200px] border border-gray-200 rounded-lg overflow-hidden group bg-black">
+                {isVideo ? (
+                    <video src={value} autoPlay loop muted playsInline className="object-cover w-full h-full" />
+                ) : (
+                    <Image src={value} alt="Uploaded" fill className="object-cover" />
+                )}
                 <button
                     onClick={() => onChange("")}
-                    className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                    className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-10"
                     type="button"
                 >
                     <X size={16} />
@@ -105,7 +110,7 @@ export default function ImageUpload({ value, onChange }: ImageUploadProps) {
         >
             <input
                 type="file"
-                accept="image/*"
+                accept="image/*,video/*"
                 onChange={handleFileChange}
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
             />
@@ -116,7 +121,7 @@ export default function ImageUpload({ value, onChange }: ImageUploadProps) {
                 <div className="flex flex-col items-center text-gray-500">
                     <Upload className="mb-2" size={32} />
                     <p className="font-mono text-sm uppercase font-bold">Drag & Drop or Click</p>
-                    <p className="text-xs text-gray-400 mt-1">Supports JPG, PNG, WEBP</p>
+                    <p className="text-xs text-gray-400 mt-1">Supports JPG, PNG, WEBP, MP4</p>
                 </div>
             )}
         </div>

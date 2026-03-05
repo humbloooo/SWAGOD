@@ -7,10 +7,10 @@ import { Product } from "@/lib/types";
 import Header from "@/components/layout/Header";
 import Navigation from "@/components/layout/Navigation";
 import AddToCartButton from "@/components/ui/AddToCartButton";
-import { ChevronRight, X } from "lucide-react";
+import { ChevronRight, X, Eye, Share2, Timer, Flame, Plus, Minus } from "lucide-react";
 import { motion, AnimatePresence, useScroll } from "framer-motion";
 import { toast } from "sonner";
-import { Plus, Minus } from "lucide-react";
+import Magnetic from "@/components/ui/Magnetic";
 import { useAppStore } from "@/lib/store";
 import { formatPrice } from "@/lib/utils";
 import ProductSchema from "@/components/ui/ProductSchema";
@@ -32,6 +32,8 @@ export default function ProductClient({ id }: ProductClientProps) {
     const { scrollY } = useScroll();
     const [showStickyCart, setShowStickyCart] = useState(false);
     const [viewerCount, setViewerCount] = useState(0);
+    const [settings, setSettings] = useState<any>(null);
+    const [urgencyTimer, setUrgencyTimer] = useState("00:00:00");
 
     // Delivery Estimate (3-7 days from now)
     const [deliveryEstimate, setDeliveryEstimate] = useState("");
@@ -89,10 +91,29 @@ export default function ProductClient({ id }: ProductClientProps) {
         }
         if (id) {
             fetchProduct();
+            // Fetch settings to respect psychological toggles
+            fetch("/api/settings")
+                .then(res => res.json())
+                .then(setSettings)
+                .catch(console.error);
+
             // Generate a stable random number based on part of the ID string
             const idSum = id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-            // Will produce a number between 12 and 45
             setViewerCount((idSum % 34) + 12);
+
+            // 15 Minute Urgency Timer
+            const countdownTime = 15 * 60;
+            let timeRemaining = countdownTime;
+            const interval = setInterval(() => {
+                const h = Math.floor(timeRemaining / 3600);
+                const m = Math.floor((timeRemaining % 3600) / 60);
+                const s = timeRemaining % 60;
+                setUrgencyTimer(
+                    `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`
+                );
+                if (timeRemaining > 0) timeRemaining--;
+            }, 1000);
+            return () => clearInterval(interval);
         }
     }, [id]);
 
@@ -175,7 +196,21 @@ export default function ProductClient({ id }: ProductClientProps) {
                         <motion.div
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
-                            className="relative aspect-[3/4] border border-foreground/10 bg-foreground/5 overflow-hidden cursor-zoom-in group"
+                            whileHover={{ scale: 1.02 }}
+                            onMouseMove={(e) => {
+                                const rect = e.currentTarget.getBoundingClientRect();
+                                const x = e.clientX - rect.left;
+                                const y = e.clientY - rect.top;
+                                const centerX = rect.width / 2;
+                                const centerY = rect.height / 2;
+                                const rotateX = (y - centerY) / 30; // Slightly subtler
+                                const rotateY = (centerX - x) / 30;
+                                (e.currentTarget as HTMLElement).style.transform = `perspective(2000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                            }}
+                            onMouseLeave={(e) => {
+                                (e.currentTarget as HTMLElement).style.transform = `perspective(2000px) rotateX(0deg) rotateY(0deg)`;
+                            }}
+                            className="relative aspect-[4/5] bg-foreground/5 border border-foreground/5 overflow-hidden group cursor-zoom-in preserve-3d transition-[border-color,transform] duration-300"
                             onClick={() => setIsLightboxOpen(true)}
                         >
                             <Image
@@ -219,13 +254,24 @@ export default function ProductClient({ id }: ProductClientProps) {
                                 <span className="px-3 py-1 border border-foreground/10 text-[10px] font-mono text-foreground/40 uppercase tracking-widest">
                                     {product.category}
                                 </span>
-                                {/* Item 31: Scarcity Blip */}
-                                <div className="flex items-center gap-2 px-3 py-1 bg-primary/10 border border-primary/20">
-                                    <span className="w-1.5 h-1.5 bg-primary animate-pulse rounded-full" />
-                                    <span className="text-[8px] font-mono text-primary font-black uppercase tracking-tighter">
-                                        {viewerCount > 0 ? `${viewerCount} VIEWING THIS // ` : ''}LIMITED STOCK
-                                    </span>
-                                </div>
+
+                                {settings?.showScarcity && (
+                                    <div className="flex items-center gap-2 px-3 py-1 bg-primary/10 border border-primary/20">
+                                        <span className="w-1.5 h-1.5 bg-primary animate-pulse rounded-full" />
+                                        <span className="text-[8px] font-mono text-primary font-black uppercase tracking-tighter">
+                                            {settings?.showSocialProof && `${viewerCount} VIEWING // `}
+                                            {product.stockCount && product.stockCount < 10 ? `ONLY ${product.stockCount} PIECES LEFT` : 'LIMITED ARCHIVE'}
+                                        </span>
+                                    </div>
+                                )}
+
+                                {settings?.showUrgency && (
+                                    <div className="flex items-center gap-2 px-3 py-1 bg-foreground/5 border border-foreground/10">
+                                        <span className="text-[8px] font-mono text-foreground/40 uppercase tracking-tighter">
+                                            RESERVATION_WINDOW: <span className="text-foreground font-black">{urgencyTimer}</span>
+                                        </span>
+                                    </div>
+                                )}
                             </div>
                         </motion.div>
 
@@ -292,12 +338,14 @@ export default function ProductClient({ id }: ProductClientProps) {
                                                 placeholder="ENTER CODE"
                                                 className="flex-1 bg-foreground/5 border border-foreground/10 px-4 py-3 font-mono text-xs uppercase tracking-widest focus:border-primary outline-none"
                                             />
-                                            <button
-                                                onClick={handleApplyPromo}
-                                                className="px-6 bg-foreground text-background font-black text-[10px] uppercase tracking-widest hover:bg-primary transition-colors"
-                                            >
-                                                APPLY
-                                            </button>
+                                            <Magnetic>
+                                                <button
+                                                    onClick={handleApplyPromo}
+                                                    className="h-full px-6 bg-foreground text-background font-black text-[10px] uppercase tracking-widest hover:bg-primary transition-colors"
+                                                >
+                                                    APPLY
+                                                </button>
+                                            </Magnetic>
                                         </motion.div>
                                     )}
                                 </AnimatePresence>

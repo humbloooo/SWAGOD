@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { SiteSettings } from "@/lib/types";
 import { toast } from "sonner";
+import { Truck, RefreshCcw, MessageSquare, Twitter, Instagram, Facebook, Mail } from "lucide-react";
 
 export default function Footer() {
     const [settings, setSettings] = useState<SiteSettings | null>(null);
@@ -24,115 +24,155 @@ export default function Footer() {
     const year = new Date().getFullYear();
 
     return (
-        <footer className="bg-background text-foreground pt-24 pb-12 border-t border-foreground/10 dark:border-gray-900">
-            <div className="container mx-auto px-6">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-24">
-                    <div className="col-span-1 md:col-span-2">
-                        <Link href="/" className="flex items-center gap-4 mb-4">
-                            <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-foreground/20 dark:border-white shadow-sm glow-primary bg-background dark:bg-white">
-                                <Image src="/assets/swagod-logo.png" alt="Swagod Logo" fill className="object-cover" suppressHydrationWarning />
-                            </div>
-                            <span className="text-4xl font-black tracking-tighter block">SWAGOD</span>
-                        </Link>
-                        <p className="text-gray-500 max-w-sm font-mono text-sm">
-                            WEAR THE FUTURE. FEAR THE PAST.
-                            <br />
-                            EST. {year}
-                        </p>
+        <footer>
+            {/* TOP SECTION - Shipping, Returns, Support */}
+            <div className="bg-foreground/5 text-foreground py-16 border-t border-foreground/10">
+                <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
+                    {/* SHIPPING */}
+                    <div className="flex flex-col items-center">
+                        <Truck size={28} className="mb-6 stroke-[1.5]" />
+                        <h4 className="font-bold uppercase mb-4 text-xs tracking-[0.2em]">SHIPPING</h4>
+                        <p className="text-sm text-foreground/70 mb-2 font-mono">Delivery 2-5 business days</p>
+                        <p className="text-sm text-foreground/70 font-mono">R90 / Free over R900</p>
                     </div>
-
-                    <div>
-                        <h4 className="font-bold uppercase mb-6 text-gray-400 text-xs tracking-widest">Shop</h4>
-                        <ul className="space-y-4 font-mono text-xs text-gray-300">
-                            <li><Link href="/shop" className="hover:text-primary transition-colors">ALL PRODUCTS</Link></li>
-                            <li><Link href="/shop" className="hover:text-primary transition-colors">CLOTHING</Link></li>
-                            <li><Link href="/shop" className="hover:text-primary transition-colors">ACCESSORIES</Link></li>
-                        </ul>
+                    {/* RETURNS */}
+                    <div className="flex flex-col items-center">
+                        <RefreshCcw size={28} className="mb-6 stroke-[1.5]" />
+                        <h4 className="font-bold uppercase mb-4 text-xs tracking-[0.2em]">RETURNS</h4>
+                        <p className="text-sm text-foreground/70 mb-4 font-mono">Return online orders in-store or online.</p>
+                        <Link href="/faq" className="text-sm text-foreground/70 mb-4 hover:underline hover:text-primary transition-colors font-mono">FAQ's</Link>
+                        <Link href="/support/return" className="text-sm text-foreground hover:text-primary transition-colors border-b border-foreground hover:border-primary font-mono pb-1">Log a Return</Link>
                     </div>
-
-                    {mounted && settings?.showSocials !== false && (
-                        <div>
-                            <h4 className="font-bold uppercase mb-6 text-foreground/50 text-xs tracking-widest">Connect</h4>
-                            <ul className="space-y-4 font-mono text-xs text-foreground/70">
-                                {mounted && settings?.socials ? (
-                                    <>
-                                        {settings.showInstagram !== false && (
-                                            <li><a href={settings.socials.instagram || "#"} target="_blank" className="hover:text-primary transition-colors">INSTAGRAM</a></li>
-                                        )}
-                                        {settings.showTwitter !== false && (
-                                            <li><a href={settings.socials.twitter || "#"} target="_blank" className="hover:text-primary transition-colors">TWITTER</a></li>
-                                        )}
-                                        {settings.showTiktok !== false && (
-                                            <li><a href={settings.socials.tiktok || "#"} target="_blank" className="hover:text-primary transition-colors">TIKTOK</a></li>
-                                        )}
-                                        {settings.customSocials?.map((social, idx) => (
-                                            <li key={idx}><a href={social.url || "#"} target="_blank" className="hover:text-primary transition-colors">{social.name.toUpperCase() || "LINK"}</a></li>
-                                        ))}
-                                        {settings.showInstagram === false && settings.showTwitter === false && settings.showTiktok === false && (!settings.customSocials || settings.customSocials.length === 0) && (
-                                            <li className="text-foreground/40">NO PLATFORMS ACTIVE</li>
-                                        )}
-                                    </>
-                                ) : (
-                                    <li className="text-foreground/40">UNLINKED</li>
-                                )}
-                            </ul>
-                        </div>
-                    )}
-
-                    <div>
-                        <h4 className="font-bold uppercase mb-6 text-gray-400 text-xs tracking-widest">Newsletter</h4>
-                        <p className="font-mono text-[10px] text-gray-500 uppercase tracking-widest mb-4">STAY UPDATED:</p>
-                        <form
-                            onSubmit={async (e) => {
-                                e.preventDefault();
-                                if (!newsletterEmail) return;
-                                setIsSubmitting(true);
-                                try {
-                                    const res = await fetch("/api/newsletter", {
-                                        method: "POST",
-                                        headers: { "Content-Type": "application/json" },
-                                        body: JSON.stringify({ email: newsletterEmail })
-                                    });
-                                    const data = await res.json();
-                                    if (data.success) {
-                                        toast.success(data.message);
-                                        setNewsletterEmail("");
-                                    } else {
-                                        toast.error(data.message);
-                                    }
-                                } catch {
-                                    toast.error("SYSTEM ERROR");
-                                } finally {
-                                    setIsSubmitting(false);
-                                }
-                            }}
-                            className="flex bg-gray-900/50 border border-gray-800 focus-within:border-primary transition-colors"
-                        >
-                            <input
-                                type="email"
-                                value={newsletterEmail}
-                                onChange={(e) => setNewsletterEmail(e.target.value)}
-                                placeholder="ACCESS@PROTO.COL"
-                                className="bg-transparent border-none px-3 py-2 font-mono text-[10px] w-full focus:outline-none uppercase"
-                                suppressHydrationWarning
-                                required
-                            />
-                            <button
-                                type="submit"
-                                disabled={isSubmitting}
-                                className="px-3 py-2 bg-primary text-black font-black text-[10px] uppercase hover:bg-white transition-colors disabled:opacity-50"
-                            >
-                                {isSubmitting ? "..." : "JOIN"}
-                            </button>
-                        </form>
+                    {/* SUPPORT */}
+                    <div className="flex flex-col items-center">
+                        <MessageSquare size={28} className="mb-6 stroke-[1.5]" />
+                        <h4 className="font-bold uppercase mb-4 text-xs tracking-[0.2em]">SUPPORT</h4>
+                        <p className="text-sm text-foreground/70 mb-4 font-mono">We uphold the Consumer Goods and Services Code.</p>
+                        <Link href="/faq" className="text-sm text-foreground/70 mb-4 hover:underline hover:text-primary transition-colors font-mono">FAQ's</Link>
+                        <p className="text-sm text-foreground/70 font-mono uppercase">CGSO PARTICIPANT</p>
                     </div>
                 </div>
+            </div>
 
-                <div className="pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-mono text-gray-600">
-                    <p>{(mounted && settings?.footerText) || `© ${year} SWAGOD. ALL RIGHTS RESERVED.`}</p>
-                    <div className="flex gap-4">
-                        <Link href="/privacy" className="hover:text-primary transition-colors">PRIVACY POLICY</Link>
-                        <Link href="/terms" className="hover:text-primary transition-colors">TERMS OF SERVICE</Link>
+            {/* BOTTOM SECTION - Dark Nav */}
+            <div className="bg-[#111] text-white py-20">
+                <div className="container mx-auto px-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-12 mb-20">
+                        {/* QUICKLINKS */}
+                        <div>
+                            <h4 className="font-bold uppercase mb-8 text-[11px] tracking-[0.2em] text-white">QUICKLINKS</h4>
+                            <ul className="space-y-4 font-mono text-[13px] text-white/60">
+                                <li><Link href="/faq" className="hover:text-white transition-colors">FAQ's</Link></li>
+                                <li><Link href="/support/order" className="hover:text-white transition-colors">How to place an order</Link></li>
+                                <li><Link href="/support/track" className="hover:text-white transition-colors">Track my Order</Link></li>
+                                <li><Link href="/support/return" className="hover:text-white transition-colors">Log a Return</Link></li>
+                                <li><Link href="/support/policy" className="hover:text-white transition-colors">Returns Policy</Link></li>
+                                <li><Link href="/support/shipping" className="hover:text-white transition-colors">Shipping</Link></li>
+                                <li><Link href="/support/pickup" className="hover:text-white transition-colors">Pick up in-store</Link></li>
+                                <li><Link href="/stores" className="hover:text-white transition-colors">Find a Store</Link></li>
+                                <li><Link href="/contact" className="hover:text-white transition-colors">Contact us</Link></li>
+                            </ul>
+                        </div>
+
+                        {/* SWAGOD COMPANY */}
+                        <div>
+                            <h4 className="font-bold uppercase mb-8 text-[11px] tracking-[0.2em] text-white">SWAGOD COMPANY</h4>
+                            <ul className="space-y-4 font-mono text-[13px] text-white/60">
+                                <li><Link href="/careers" className="hover:text-white transition-colors">Careers & Opportunities</Link></li>
+                                <li><Link href="/contact" className="hover:text-white transition-colors">Reach out</Link></li>
+                                <li><Link href="/blog" className="hover:text-white transition-colors">Blog | SWAGOD Gazette</Link></li>
+                                <li><Link href="/about" className="hover:text-white transition-colors">Our Story</Link></li>
+                                <li><Link href="/gallery" className="hover:text-white transition-colors">Gallery</Link></li>
+                            </ul>
+                        </div>
+
+                        {/* SWAGOD BRAND */}
+                        <div>
+                            <h4 className="font-bold uppercase mb-8 text-[11px] tracking-[0.2em] text-white">SWAGOD</h4>
+                            <p className="text-white font-mono text-[13px] mb-6">
+                                {settings?.heroSlogan || "Smart. African. Ambitious."}
+                            </p>
+                            <p className="text-white/60 font-mono text-[13px] mb-8 leading-relaxed pr-4">
+                                {settings?.footerAboutText || "We're a local streetwear brand, born in SA, inspired by Hip-Hop and local streetwear."}
+                            </p>
+                            <Link href="/about" className="text-white/60 hover:text-white transition-colors border-b border-white/60 hover:border-white font-mono text-[13px] pb-1">
+                                Our Story
+                            </Link>
+                        </div>
+
+                        {/* JOIN THE FAM */}
+                        <div>
+                            <h4 className="font-bold uppercase mb-8 text-[11px] tracking-[0.2em] text-white">JOIN THE SWAGOD FAM</h4>
+                            <p className="text-white/60 font-mono text-[13px] mb-6">Events | Collabs | Promos</p>
+                            <form
+                                onSubmit={async (e) => {
+                                    e.preventDefault();
+                                    if (!newsletterEmail) return;
+                                    setIsSubmitting(true);
+                                    try {
+                                        const res = await fetch("/api/newsletter", {
+                                            method: "POST",
+                                            headers: { "Content-Type": "application/json" },
+                                            body: JSON.stringify({ email: newsletterEmail })
+                                        });
+                                        const data = await res.json();
+                                        if (data.success) {
+                                            toast.success(data.message);
+                                            setNewsletterEmail("");
+                                        } else {
+                                            toast.error(data.message);
+                                        }
+                                    } catch {
+                                        toast.error("SYSTEM ERROR");
+                                    } finally {
+                                        setIsSubmitting(false);
+                                    }
+                                }}
+                            >
+                                <div className="flex items-center mb-6 border border-white/20 hover:border-white/40 transition-colors bg-transparent">
+                                    <input
+                                        type="email"
+                                        value={newsletterEmail}
+                                        onChange={(e) => setNewsletterEmail(e.target.value)}
+                                        placeholder="E-mail"
+                                        className="bg-transparent border-none px-4 py-3 font-mono text-[13px] w-full focus:outline-none text-white !cursor-text"
+                                        suppressHydrationWarning
+                                        required
+                                    />
+                                    <button
+                                        type="submit"
+                                        disabled={isSubmitting}
+                                        className="pe-4 text-white hover:text-primary transition-colors disabled:opacity-50"
+                                        aria-label="Subscribe"
+                                    >
+                                        <Mail size={18} />
+                                    </button>
+                                </div>
+                                <button
+                                    type="submit"
+                                    disabled={isSubmitting}
+                                    className="px-8 py-3 bg-white text-black font-bold tracking-[0.2em] text-[11px] uppercase hover:bg-gray-200 transition-colors w-[150px]"
+                                >
+                                    {isSubmitting ? "..." : "SUBSCRIBE"}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    {/* BOTTOM SIGNATURE ROW */}
+                    <div className="flex flex-col gap-8 text-[11px] font-mono text-white/40">
+                        <div className="flex gap-6">
+                            <a href={settings?.socials?.twitter || "#"} className="hover:text-white transition-colors" aria-label="Facebook">
+                                <Facebook size={18} className="stroke-[1.5]" />
+                            </a>
+                            <a href={settings?.socials?.twitter || "#"} className="hover:text-white transition-colors" aria-label="X (Twitter)">
+                                <Twitter size={18} className="stroke-[1.5]" />
+                            </a>
+                            <a href={settings?.socials?.instagram || "#"} className="hover:text-white transition-colors" aria-label="Instagram">
+                                <Instagram size={18} className="stroke-[1.5]" />
+                            </a>
+                        </div>
+                        <p>{(mounted && settings?.footerText) || `© ${year} - SWAGOD`}</p>
                     </div>
                 </div>
             </div>

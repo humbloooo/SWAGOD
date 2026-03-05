@@ -6,8 +6,8 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const FAQS = [
     {
-        q: "WHAT IS THE ARCHIVE PROTOCOL?",
-        a: "THE ARCHIVE REPRESENTS OUR VAULT OF PAST DIMENSIONS. ITEMS REMOVED FROM ACTIVE ROTATION ARE PRESERVED HERE FOR HISTORICAL RECORD."
+        q: "WHAT IS THE GALLERY PROTOCOL?",
+        a: "THE GALLERY REPRESENTS OUR VAULT OF PAST DIMENSIONS. ITEMS REMOVED FROM ACTIVE ROTATION ARE PRESERVED HERE FOR HISTORICAL RECORD."
     },
     {
         q: "HOW LONG DOES SHIPPING TAKE?",
@@ -48,11 +48,17 @@ export default function FAQDrawer() {
                         onClick={() => setIsOpen(false)}
                     >
                         <motion.div
+                            drag="x"
+                            dragConstraints={{ left: 0, right: 0 }}
+                            dragElastic={{ left: 0, right: 0.5 }}
+                            onDragEnd={(e, info) => {
+                                if (info.offset.x > 100) setIsOpen(false);
+                            }}
                             initial={{ x: "100%" }}
                             animate={{ x: 0 }}
                             exit={{ x: "100%" }}
                             transition={{ type: "spring", damping: 30, stiffness: 300 }}
-                            className="w-full max-w-lg bg-background border-l border-foreground/10 h-full p-8 md:p-12 overflow-y-auto"
+                            className="w-full max-w-lg bg-background border-l border-foreground/10 h-full p-8 md:p-12 overflow-y-auto cursor-grab active:cursor-grabbing"
                             onClick={(e) => e.stopPropagation()}
                         >
                             <div className="flex justify-between items-center mb-16">

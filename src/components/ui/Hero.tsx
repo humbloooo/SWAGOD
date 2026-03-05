@@ -7,7 +7,7 @@ import Image from "next/image";
 
 import Link from "next/link";
 import { useTextScramble } from "@/hooks/useTextScramble";
-import Magnetic from "@/components/motion/Magnetic";
+import Magnetic from "@/components/ui/Magnetic";
 import { useTheme } from "next-themes";
 import { useState, useEffect } from "react";
 
@@ -35,7 +35,7 @@ export default function Hero({ heroImage, lightModeWallpaper, heroSlogan }: { he
                     priority
                     suppressHydrationWarning
                 />
-                <div className="absolute inset-0 bg-background/40" /> {/* Adaptive overlay */}
+                <div className="absolute inset-0 bg-transparent dark:bg-background/40" /> {/* Adaptive overlay only in dark mode */}
             </div>
 
             {/* Glitch Content */}

@@ -9,7 +9,18 @@ import { useRouter } from "next/navigation";
 export default function AdminSettings() {
     const [settings, setSettings] = useState<SiteSettings | null>(null);
     const [loading, setLoading] = useState(true);
+    const [isCompact, setIsCompact] = useState(false);
     const router = useRouter();
+
+    useEffect(() => {
+        // Apply compact view class to body if active
+        if (isCompact) {
+            document.body.style.zoom = "0.85";
+        } else {
+            document.body.style.zoom = "1";
+        }
+        return () => { document.body.style.zoom = "1"; };
+    }, [isCompact]);
 
     useEffect(() => {
         fetch("/api/settings")
@@ -52,10 +63,21 @@ export default function AdminSettings() {
         <main className="pb-[100px] pt-32 px-6 text-foreground bg-background">
             <div className="container mx-auto max-w-4xl">
                 <header className="mb-16">
-                    <h1 className="text-6xl md:text-8xl font-black uppercase tracking-tighter mb-4 leading-none">
-                        GLOBAL // <span className="text-primary">CORE</span>
-                    </h1>
-                    <p className="text-primary font-mono uppercase tracking-[0.2em] text-sm italic">SYSTEM CONFIGURATION AND PARAMETERS</p>
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-4">
+                        <div>
+                            <h1 className="text-6xl md:text-8xl font-black uppercase tracking-tighter mb-4 leading-none">
+                                GLOBAL // <span className="text-primary">CORE</span>
+                            </h1>
+                            <p className="text-primary font-mono uppercase tracking-[0.2em] text-sm italic">SYSTEM CONFIGURATION AND PARAMETERS</p>
+                        </div>
+                        <button
+                            type="button"
+                            onClick={() => setIsCompact(!isCompact)}
+                            className="px-4 py-2 border border-primary/30 bg-primary/5 text-primary font-mono text-[10px] uppercase tracking-widest hover:bg-primary hover:text-black transition-all"
+                        >
+                            {isCompact ? "NORMAL VIEW" : "COMPACT VIEW (MOBILE)"}
+                        </button>
+                    </div>
                 </header>
 
                 <form onSubmit={handleSubmit} className="space-y-12">
@@ -103,6 +125,16 @@ export default function AdminSettings() {
                                     <ImageUpload
                                         value={settings.lightModeWallpaper}
                                         onChange={(url) => setSettings({ ...settings, lightModeWallpaper: url })}
+                                        folder="settings"
+                                    />
+                                </div>
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-foreground/40 font-mono text-xs uppercase tracking-widest">HEADER_VIDEO_BACKGROUND (MP4/WEBM)</label>
+                                <div className="p-4 border border-foreground/5 bg-background/20">
+                                    <ImageUpload
+                                        value={settings.headerVideoBg}
+                                        onChange={(url) => setSettings({ ...settings, headerVideoBg: url })}
                                         folder="settings"
                                     />
                                 </div>
@@ -242,6 +274,66 @@ export default function AdminSettings() {
                         </div>
                     </div>
 
+                    <div className="bg-foreground/5 border border-foreground/10 p-10 backdrop-blur-md relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                            <h2 className="text-8xl font-black">$$$</h2>
+                        </div>
+                        <h3 className="text-xl font-black uppercase mb-8 border-b border-foreground/10 pb-4 text-primary font-mono">REVENUE // PSYCHOLOGY</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <label className="flex items-center gap-4 group cursor-pointer p-4 border border-foreground/5 bg-foreground/5 hover:border-primary/30 transition-all">
+                                <input
+                                    type="checkbox"
+                                    className="w-6 h-6 bg-foreground/5 border border-foreground/10 checked:bg-primary accent-primary"
+                                    checked={settings.showScarcity ?? true}
+                                    onChange={(e) => setSettings({ ...settings, showScarcity: e.target.checked })}
+                                />
+                                <div className="flex flex-col">
+                                    <span className="font-black uppercase tracking-widest text-[10px] group-hover:text-primary transition-colors">ACTIVATE_SCARCITY</span>
+                                    <span className="text-[8px] text-foreground/40 font-mono uppercase tracking-[0.2em] mt-1">SHOWS "ONLY X LEFT" ALERTS</span>
+                                </div>
+                            </label>
+
+                            <label className="flex items-center gap-4 group cursor-pointer p-4 border border-foreground/5 bg-foreground/5 hover:border-primary/30 transition-all">
+                                <input
+                                    type="checkbox"
+                                    className="w-6 h-6 bg-foreground/5 border border-foreground/10 checked:bg-primary accent-primary"
+                                    checked={settings.showUrgency ?? true}
+                                    onChange={(e) => setSettings({ ...settings, showUrgency: e.target.checked })}
+                                />
+                                <div className="flex flex-col">
+                                    <span className="font-black uppercase tracking-widest text-[10px] group-hover:text-primary transition-colors">ACTIVATE_URGENCY</span>
+                                    <span className="text-[8px] text-foreground/40 font-mono uppercase tracking-[0.2em] mt-1">SHOWS COUNTDOWN TIMERS</span>
+                                </div>
+                            </label>
+
+                            <label className="flex items-center gap-4 group cursor-pointer p-4 border border-foreground/5 bg-foreground/5 hover:border-primary/30 transition-all">
+                                <input
+                                    type="checkbox"
+                                    className="w-6 h-6 bg-foreground/5 border border-foreground/10 checked:bg-primary accent-primary"
+                                    checked={settings.showSocialProof ?? true}
+                                    onChange={(e) => setSettings({ ...settings, showSocialProof: e.target.checked })}
+                                />
+                                <div className="flex flex-col">
+                                    <span className="font-black uppercase tracking-widest text-[10px] group-hover:text-primary transition-colors">ACTIVATE_SOCIAL_PROOF</span>
+                                    <span className="text-[8px] text-foreground/40 font-mono uppercase tracking-[0.2em] mt-1">SHOWS RECENT PURCHASES</span>
+                                </div>
+                            </label>
+
+                            <label className="flex items-center gap-4 group cursor-pointer p-4 border border-foreground/5 bg-foreground/5 hover:border-primary/30 transition-all">
+                                <input
+                                    type="checkbox"
+                                    className="w-6 h-6 bg-foreground/5 border border-foreground/10 checked:bg-primary accent-primary"
+                                    checked={settings.showPersonalization ?? true}
+                                    onChange={(e) => setSettings({ ...settings, showPersonalization: e.target.checked })}
+                                />
+                                <div className="flex flex-col">
+                                    <span className="font-black uppercase tracking-widest text-[10px] group-hover:text-primary transition-colors">ACTIVATE_PERSONALIZATION</span>
+                                    <span className="text-[8px] text-foreground/40 font-mono uppercase tracking-[0.2em] mt-1">CUSTOMIZES CONTENT FOR RETURNING USERS</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
                     <div className="bg-foreground/5 border border-foreground/10 p-10 backdrop-blur-md">
                         <h3 className="text-xl font-black uppercase mb-8 border-b border-foreground/10 pb-4 text-primary font-mono">COMMUNICATION_ARRAY</h3>
                         <div className="space-y-6">
@@ -253,6 +345,19 @@ export default function AdminSettings() {
                                     onChange={(e) => setSettings({ ...settings, showSocials: e.target.checked })}
                                 />
                                 <span className="font-black uppercase tracking-widest group-hover:text-primary transition-colors">ACTIVATE_SOCIAL_LINKS</span>
+                            </label>
+
+                            <label className="flex items-center gap-4 group cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    className="w-6 h-6 bg-foreground/5 border border-foreground/10 checked:bg-primary accent-primary"
+                                    checked={settings.maintenanceMode || false}
+                                    onChange={(e) => setSettings({ ...settings, maintenanceMode: e.target.checked })}
+                                />
+                                <div className="flex flex-col">
+                                    <span className="font-black uppercase tracking-widest group-hover:text-primary transition-colors">ACTIVATE_MAINTENANCE_MODE</span>
+                                    <span className="text-[8px] text-red-500 font-mono uppercase tracking-[0.2em] mt-1">WARNING: THIS LOCKS THE STORE FROM PUBLIC ACCESS</span>
+                                </div>
                             </label>
 
                             <label className="flex items-center gap-4 group cursor-pointer">
@@ -303,7 +408,7 @@ export default function AdminSettings() {
                         SYNC_SYSTEM_CHANGES
                     </button>
                 </form >
-            </div >
-        </main >
+            </div>
+        </main>
     );
 }

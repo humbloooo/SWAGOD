@@ -9,6 +9,7 @@ import Link from "next/link";
 import { Product } from "@/lib/types";
 import { formatPrice } from "@/lib/utils";
 import { useEscapeKey } from "@/lib/hooks/useEscapeKey";
+import { useRouter } from "next/navigation";
 
 export default function CartDrawer() {
     const { items, isCartOpen, closeCart, removeItem, total, addItem, currency } = useCartStore();
@@ -50,11 +51,17 @@ export default function CartDrawer() {
 
                     {/* Drawer */}
                     <motion.div
+                        drag="x"
+                        dragConstraints={{ left: 0, right: 0 }}
+                        dragElastic={{ left: 0, right: 0.5 }}
+                        onDragEnd={(e, info) => {
+                            if (info.offset.x > 100) closeCart();
+                        }}
                         initial={{ x: "100%" }}
                         animate={{ x: 0 }}
                         exit={{ x: "100%" }}
                         transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                        className="fixed top-0 right-0 h-full w-full max-w-md bg-background/90 backdrop-blur-xl z-[70] shadow-2xl flex flex-col border-l border-foreground/10 text-foreground"
+                        className="fixed top-0 right-0 h-full w-full max-w-md bg-background/90 backdrop-blur-xl z-[70] shadow-2xl flex flex-col border-l border-foreground/10 text-foreground cursor-grab active:cursor-grabbing"
                     >
                         <div className="flex items-center justify-between p-6 border-b border-gray-100">
                             <h2 className="text-xl font-black uppercase tracking-tighter">Your Cart</h2>
@@ -116,7 +123,7 @@ export default function CartDrawer() {
                                         {recommendations.map(product => (
                                             <div key={product.id} className="flex gap-4 border border-gray-100 p-2 hover:border-black transition-colors">
                                                 <Link href={`/product/${product.id!}`} onClick={closeCart} className="relative w-16 h-20 bg-surface flex-shrink-0">
-                                                    <Image src={product.image || "/assets/placeholder.png"} alt={product.title} fill className="object-cover" />
+                                                    <Image src={product.image ? (product.image.startsWith('http') || product.image.startsWith('/') ? product.image : `/${product.image}`) : "/assets/placeholder.png"} alt={product.title} fill className="object-cover" />
                                                 </Link>
                                                 <div className="flex-1 flex flex-col justify-between">
                                                     <div>
@@ -173,23 +180,26 @@ import { useSession, signIn } from "next-auth/react";
 
 function CheckoutButton() {
     const { data: session } = useSession();
+    const router = useRouter();
+    const { closeCart } = useCartStore();
 
     const handleCheckout = () => {
-        alert("PROCEEDING TO SECURE CHECKOUT...");
+        closeCart();
+        router.push("/checkout");
     };
 
     return (
         <div className="flex flex-col gap-3">
             <button
                 onClick={handleCheckout}
-                className="w-full py-4 bg-primary text-white font-bold uppercase tracking-widest hover:brightness-110 transition-all glow-primary hover:scale-[1.02] active:scale-[0.98]"
+                className="w-full py-4 bg-primary text-background font-black uppercase tracking-[0.2em] hover:bg-white transition-all glow-primary hover:scale-[1.02] active:scale-[0.98] shadow-2xl"
             >
-                Secure Yours
+                Secure Items
             </button>
             {!session && (
                 <button
                     onClick={() => signIn("google")}
-                    className="w-full py-3 bg-background text-foreground text-xs font-bold uppercase tracking-widest border border-foreground hover:bg-foreground/5 transition-colors"
+                    className="w-full py-3 bg-foreground/5 text-foreground text-[10px] font-bold uppercase tracking-widest border border-foreground/10 hover:bg-foreground/10 transition-colors"
                 >
                     Login to Save Order
                 </button>

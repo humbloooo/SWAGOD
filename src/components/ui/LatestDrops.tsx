@@ -28,7 +28,7 @@ export default function LatestDrops({ products }: LatestDropsProps) {
                     <h2 className="text-[12vw] md:text-9xl font-black uppercase tracking-tighter leading-none mb-4">
                         NEW <span className="text-primary italic">RELEASES</span>
                     </h2>
-                    <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-foreground/70 dark:text-foreground/40 italic">{"//"} CURRENT INVENTORY ARCHIVE</p>
+                    <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-foreground/70 dark:text-foreground/40 italic">{"//"} CURRENT INVENTORY GALLERY</p>
                 </header>
                 <div className="hidden md:flex flex-col items-end gap-2">
                     <span className="text-[10px] font-mono text-foreground/20 uppercase tracking-widest">COLLECTION STATUS: ACTIVE</span>

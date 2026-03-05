@@ -80,12 +80,13 @@
 }
 
 .dark {
-  --background: #000000;
+  --background: #0A0A0A;
+  /* Ebony Palette */
   --foreground: #FFFFFF;
   --surface: #121212;
   --glow-primary: 0 0 20px rgba(255, 0, 0, 0.6);
-  --brutalist-border: 0.5px solid rgba(255, 255, 255, 0.1);
-  --brutalist-border-white: 0.5px solid rgba(255, 255, 255, 0.1);
+  --brutalist-border: 0.5px solid rgba(255, 255, 255, 0.15);
+  --brutalist-border-white: 0.5px solid rgba(255, 255, 255, 0.15);
 }
 
 body {
@@ -93,11 +94,15 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans);
   letter-spacing: -0.05em;
-  cursor: auto !important;
   overflow-x: hidden;
+  transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Item 1: Grainy Texture Overlay */
+.dark * {
+  cursor: none !important;
+}
+
+/* Item 1: Grainy Texture Overlay (High Quality) */
 .grain-overlay {
   position: fixed;
   top: 0;
@@ -106,8 +111,9 @@ body {
   height: 100%;
   pointer-events: none;
   z-index: 9999;
-  opacity: 0.05;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.08;
+  background-image: url("https://res.cloudinary.com/dyd911fv0/image/upload/v1642142232/grain_tufpob.png");
+  mix-blend-mode: overlay;
 }
 
 /* Item 4: Scanline Animation */
@@ -171,19 +177,23 @@ body {
   background: var(--color-primary);
 }
 
-/* Glassmorphism Refined */
+/* Glassmorphism Refined (Elite Depth) */
 .glass {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
   border: var(--brutalist-border);
 }
 
 .dark-glass {
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: rgba(10, 10, 10, 0.65);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
   border: var(--brutalist-border-white);
+}
+
+.micro-gradient {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
 }
 
 /* Glitch Effect on Hover */

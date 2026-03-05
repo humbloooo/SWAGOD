@@ -8,8 +8,9 @@ import { useCachedProducts } from "@/lib/hooks/useCachedProducts";
 import React, { memo, useState } from "react";
 import { Product } from "@/lib/types";
 import { useAppStore } from "@/lib/store";
-import { formatPrice } from "@/lib/utils";
+import { formatPrice, cn } from "@/lib/utils";
 import { useEffect } from "react";
+import { motion } from "framer-motion";
 
 const AVAILABLE_SIZES = ["S", "M", "L", "XL", "XXL"];
 const AVAILABLE_CATEGORIES = ["male", "female", "unisex", "merch"];
@@ -119,15 +120,21 @@ export default function Shop() {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8 mb-24">
+                <div className="grid grid-cols-2 md:grid-cols-4 grid-flow-dense gap-4 md:gap-8 mb-24">
                     {isLoading ? (
-                        [...Array(8)].map((_, i) => (
-                            <div key={i} className="aspect-[3/4] bg-foreground/5 dark:bg-white/5 animate-pulse border border-foreground/10 dark:border-white/10" />
+                        [...Array(12)].map((_, i) => (
+                            <div key={i} className={`bg-foreground/5 dark:bg-white/5 animate-pulse border border-foreground/10 dark:border-white/10 ${i % 5 === 0 ? "col-span-2 row-span-2 aspect-square" : "aspect-[3/4]"
+                                }`} />
                         ))
                     ) : (
                         <>
-                            {filteredProducts.map((product) => (
-                                <ShopProductCard key={product.id!} product={product} currency={currency} />
+                            {filteredProducts.map((product, idx) => (
+                                <ShopProductCard
+                                    key={product.id!}
+                                    product={product}
+                                    currency={currency}
+                                    className={idx % 5 === 0 ? "col-span-2 row-span-2" : ""}
+                                />
                             ))}
                             {filteredProducts.length === 0 && (
                                 <div className="col-span-full py-24 text-center border border-foreground/10 dark:border-white/10 bg-foreground/5 dark:bg-white/5 backdrop-blur-sm">
@@ -158,10 +165,39 @@ export default function Shop() {
     );
 }
 
-const ShopProductCard = memo(function ShopProductCard({ product, currency }: { product: Product, currency: "ZAR" | "USD" }) {
+const ShopProductCard = memo(function ShopProductCard({
+    product,
+    currency,
+    className = ""
+}: {
+    product: Product,
+    currency: "ZAR" | "USD",
+    className?: string
+}) {
     return (
-        <Link href={`/product/${product.id!}`} prefetch={true} className="group block">
-            <div className="relative aspect-[3/4] border border-foreground/10 bg-foreground/5 mb-4 overflow-hidden group-hover:border-primary transition-colors">
+        <Link
+            href={`/product/${product.id!}`}
+            prefetch={true}
+            className={cn("group block overflow-hidden", className)}
+            onClick={() => { if (window.navigator.vibrate) window.navigator.vibrate(5); }}
+        >
+            <motion.div
+                whileHover={{ scale: 1.02 }}
+                onMouseMove={(e: React.MouseEvent<HTMLDivElement>) => {
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const rotateX = (y - centerY) / 20;
+                    const rotateY = (centerX - x) / 20;
+                    (e.currentTarget as HTMLElement).style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                }}
+                onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
+                    (e.currentTarget as HTMLElement).style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg)`;
+                }}
+                className="relative aspect-[3/4] border border-foreground/10 bg-foreground/5 mb-4 overflow-hidden group-hover:border-primary transition-[border-color,transform] duration-200 ease-out preserve-3d"
+            >
                 <Image
                     src={product.image || "/assets/placeholder.png"}
                     alt={product.title}
@@ -185,7 +221,7 @@ const ShopProductCard = memo(function ShopProductCard({ product, currency }: { p
                 <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-sm border border-white/10 text-white px-2 py-1 text-[8px] font-mono tracking-widest hidden group-hover:block uppercase">
                     {product.likes?.length || 0} SAVED
                 </div>
-            </div>
+            </motion.div>
             <h3 className="font-bold uppercase text-lg text-foreground group-hover:text-primary transition-colors">{product.title}</h3>
             <p className="font-mono text-sm text-foreground/60">{formatPrice(product.price, currency)}</p>
         </Link>

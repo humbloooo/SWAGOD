@@ -1,4 +1,4 @@
-import { Product } from "./types";
+import { Product, TourEvent } from "./types";
 
 export type { Product };
 
@@ -66,4 +66,14 @@ export const PRODUCTS: Product[] = [
         subCategory: "shirts",
         description: "Extended graphics on back.",
     },
+];
+
+export const TOURS: TourEvent[] = [
+    { id: "t1", date: "2026-06-12", city: "Cape Town", venue: "The Gallery", soldOut: false },
+    { id: "t2", date: "2026-07-20", city: "Johannesburg", venue: "Sector 7", soldOut: true },
+    { id: "t3", date: "2026-08-15", city: "London", venue: "Dystopia Hall", ticketLink: "#" }
+];
+
+export const GALLERIES: Product[] = [
+    { id: "a1", title: "PROTOTYPE-01", price: 120, image: "/assets/Clothes/guy wearing swagod shirt.jpg", category: "merch", description: "The first transmission." }
 ];

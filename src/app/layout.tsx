@@ -10,9 +10,33 @@ const interTight = Inter_Tight({
   preload: true,
 });
 
-import { constructMetadata } from "@/lib/seo";
-
-export const metadata: Metadata = constructMetadata();
+export const metadata: Metadata = {
+  title: "SWAGOD // DYSTOPIAN ARCHIVE",
+  description: "Luxury Streetwear for the Unseen. Crafted in the Shadows.",
+  viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0",
+  openGraph: {
+    title: "SWAGOD // DYSTOPIAN ARCHIVE",
+    description: "Luxury Streetwear for the Unseen.",
+    url: "https://swagod.co.za",
+    siteName: "SWAGOD",
+    images: [
+      {
+        url: "/assets/swagod-logo.png",
+        width: 800,
+        height: 800,
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  manifest: "/manifest.json",
+  twitter: {
+    card: "summary_large_image",
+    title: "SWAGOD // DYSTOPIAN ARCHIVE",
+    description: "Luxury Streetwear for the Unseen.",
+    images: ["/assets/swagod-logo.png"],
+  },
+};
 
 import { Providers } from "@/components/ui/Providers";
 import { ThemeProvider } from "@/components/ui/ThemeProvider";
@@ -30,6 +54,8 @@ import { Toaster } from "sonner";
 import ScrollProgress from "@/components/ui/ScrollProgress";
 import ScrollToTop from "@/components/ui/ScrollToTop";
 import SiteTracker from "@/components/SiteTracker";
+import { motion } from "framer-motion";
+import CustomCursor from "@/components/layout/CustomCursor";
 
 export default async function RootLayout({
   children,
@@ -54,13 +80,35 @@ export default async function RootLayout({
           <Providers>
             <div className="grain-overlay" />
             <div className="scanline-overlay" />
+            <CustomCursor />
             <ScrollProgress />
             <ScrollToTop />
             <SiteTracker />
             {isMaintenance ? (
-              <main className="min-h-screen flex flex-col items-center justify-center p-6 text-center">
-                <h1 className="text-6xl md:text-9xl font-black uppercase tracking-tighter mb-6">SYSTEM_PAUSED</h1>
-                <p className="font-mono text-xs text-white/40 uppercase tracking-widest max-w-sm">The timeline is being recalibrated. Return shortly for the next transmission.</p>
+              <main className="min-h-screen flex flex-col items-center justify-center p-6 text-center bg-black relative overflow-hidden">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent animate-pulse" />
+                <div className="relative z-10 space-y-8">
+                  <div className="inline-block px-4 py-1 border border-primary/30 bg-primary/10 text-primary font-mono text-[10px] uppercase tracking-[0.4em] mb-4">
+                    ESTABLISHING SECURE CONNECTION...
+                  </div>
+                  <h1 className="text-6xl md:text-9xl font-black uppercase tracking-tighter leading-none glitch-text">
+                    SYSTEM_<span className="text-primary italic">PAUSED</span>
+                  </h1>
+                  <p className="font-mono text-[10px] md:text-sm text-white/40 uppercase tracking-[0.3em] max-w-lg mx-auto leading-relaxed">
+                    The Swagod protocol is undergoing a scheduled recalibration of its reality layer.
+                    Retail nodes are temporarily offline. Check back during the next transmission window.
+                  </p>
+                  <div className="pt-12 flex flex-col items-center gap-4">
+                    <div className="w-48 h-[1px] bg-white/10 relative overflow-hidden">
+                      <motion.div
+                        className="absolute inset-0 bg-primary w-full"
+                        animate={{ x: ["-100%", "100%"] }}
+                        transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                      />
+                    </div>
+                    <span className="text-[9px] font-mono text-primary/60 uppercase tracking-widest animate-pulse">RECALIBRATING_TIMELINE...</span>
+                  </div>
+                </div>
               </main>
             ) : (
               children

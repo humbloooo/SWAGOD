@@ -1,0 +1,23 @@
+
+> web@0.1.0 build
+> next build
+
+▲ Next.js 16.1.6 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 17.8s
+  Running TypeScript ...
+Failed to compile.
+
+./src/lib/db.ts:206:29
+Type error: Parameter 'doc' implicitly has an 'any' type.
+
+[0m [90m 204 |[39m             [90m// Apply transformation to map _id to id and ensure correct type[39m
+ [90m 205 |[39m             [36mreturn[39m doc[33m.[39mtoJSON({
+[31m[1m>[22m[39m[90m 206 |[39m                 transform[33m:[39m (doc[33m,[39m ret) [33m=>[39m {
+ [90m     |[39m                             [31m[1m^[22m[39m
+ [90m 207 |[39m                     ret[33m.[39mid [33m=[39m ret[33m.[39m_id[33m;[39m
+ [90m 208 |[39m                     [36mdelete[39m ret[33m.[39m_id[33m;[39m
+ [90m 209 |[39m                     [36mreturn[39m ret[33m;[39m[0m
+Next.js build worker exited with code: 1 and signal: null

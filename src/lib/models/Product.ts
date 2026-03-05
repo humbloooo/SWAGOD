@@ -12,6 +12,7 @@ export interface IProduct extends Document {
     likes?: string[];
     active?: boolean;
     subCategory?: string;
+    stockCount?: number;
 }
 
 const ProductSchema: Schema = new Schema({
@@ -25,7 +26,8 @@ const ProductSchema: Schema = new Schema({
     images: [{ type: String }],
     createdAt: { type: String, default: () => new Date().toISOString() },
     likes: [{ type: String }],
-    active: { type: Boolean, default: true }
+    active: { type: Boolean, default: true },
+    stockCount: { type: Number, default: 10 }
 }, {
     timestamps: true,
     toJSON: {

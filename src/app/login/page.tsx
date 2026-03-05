@@ -1,7 +1,7 @@
 "use client";
 
 import { signIn } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { AboutData } from "@/lib/types";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -10,6 +10,7 @@ import { motion } from "framer-motion";
 import { toast } from "sonner";
 import Header from "@/components/layout/Header";
 import Navigation from "@/components/layout/Navigation";
+import Footer from "@/components/layout/Footer";
 
 export default function LoginPage() {
     const router = useRouter();
@@ -56,7 +57,7 @@ export default function LoginPage() {
     };
 
     return (
-        <main className="min-h-screen bg-background relative overflow-hidden flex flex-col font-sans">
+        <main className="min-h-screen bg-background relative flex flex-col font-sans">
             <Header />
             <Navigation />
 
@@ -67,7 +68,13 @@ export default function LoginPage() {
                 </button>
             </div>
 
-            <div className="flex-1 flex flex-col items-center justify-center p-6 z-10 pt-32 pb-32 gap-8 max-w-lg mx-auto w-full">
+            <div id="login-container" className="flex-1 relative flex flex-col items-center justify-center p-6 z-10 pt-32 pb-32 gap-8 w-full overflow-hidden">
+                {/* Background Elements - Responsive Animated Watermarks */}
+                <div className="absolute inset-0 pointer-events-none z-0">
+                    {[...Array(4)].map((_, i) => (
+                        <BouncingLogo key={i} />
+                    ))}
+                </div>
                 {/* Form Section */}
                 <div className="w-full max-w-md bg-background border border-foreground p-8 shadow-[8px_8px_0px_0px_var(--foreground)] transition-colors">
                     <h1 className="text-4xl font-black uppercase tracking-tighter mb-2 text-center">
@@ -181,41 +188,73 @@ export default function LoginPage() {
                     )}
                 </div>
             </div>
-
-            {/* Background Elements - Responsive Animated Watermarks */}
-            <div className="absolute inset-0 pointer-events-none opacity-[0.03] z-0 overflow-hidden">
-                {[...Array(6)].map((_, i) => (
-                    <motion.div
-                        key={i}
-                        initial={{
-                            x: (i * 15) + "%",
-                            y: (i * 15) + "%",
-                            rotate: i * 45
-                        }}
-                        animate={{
-                            x: [
-                                ((i * 15) % 100) + "%",
-                                ((i * 35) % 100) + "%",
-                                ((i * 15) % 100) + "%"
-                            ],
-                            y: [
-                                ((i * 25) % 100) + "%",
-                                ((i * 55) % 100) + "%",
-                                ((i * 25) % 100) + "%"
-                            ],
-                            rotate: [0, 180, 360]
-                        }}
-                        transition={{
-                            duration: 25 + (i * 5),
-                            repeat: Infinity,
-                            ease: "linear"
-                        }}
-                        className="absolute text-[8vw] font-black uppercase whitespace-nowrap text-foreground select-none"
-                    >
-                        SWAGOD
-                    </motion.div>
-                ))}
-            </div>
+            <Footer />
         </main >
     );
 }
+
+const BouncingLogo = () => {
+    const logoRef = useRef<HTMLDivElement>(null);
+    const pos = useRef({ x: 0, y: 0 });
+    const vel = useRef({ x: 0, y: 0 });
+
+    useEffect(() => {
+        // Hydration safety
+        pos.current = {
+            x: Math.random() * (window.innerWidth - 200),
+            y: Math.random() * (window.innerHeight - 100)
+        };
+        vel.current = {
+            x: (Math.random() > 0.5 ? 1 : -1) * (1 + Math.random() * 1.5),
+            y: (Math.random() > 0.5 ? 1 : -1) * (1 + Math.random() * 1.5)
+        };
+
+        let animationFrameId: number;
+
+        const animate = () => {
+            if (logoRef.current) {
+                const rect = logoRef.current.getBoundingClientRect();
+
+                // Update position
+                pos.current.x += vel.current.x;
+                pos.current.y += vel.current.y;
+
+                const container = document.getElementById('login-container');
+                if (!container) return;
+                const containerRect = container.getBoundingClientRect();
+
+                if (pos.current.x <= 0) {
+                    vel.current.x *= -1;
+                    pos.current.x = 0;
+                } else if (pos.current.x + rect.width >= containerRect.width) {
+                    vel.current.x *= -1;
+                    pos.current.x = containerRect.width - rect.width;
+                }
+
+                if (pos.current.y <= 0) {
+                    vel.current.y *= -1;
+                    pos.current.y = 0;
+                } else if (pos.current.y + rect.height >= containerRect.height) {
+                    vel.current.y *= -1;
+                    pos.current.y = containerRect.height - rect.height;
+                }
+
+                logoRef.current.style.transform = `translate(${pos.current.x}px, ${pos.current.y}px)`;
+            }
+            animationFrameId = requestAnimationFrame(animate);
+        };
+
+        animate();
+        return () => cancelAnimationFrame(animationFrameId);
+    }, []);
+
+    return (
+        <div
+            ref={logoRef}
+            className="absolute top-0 left-0 text-[10vw] md:text-[8vw] font-black uppercase whitespace-nowrap text-foreground select-none opacity-[0.03]"
+            style={{ willChange: 'transform' }}
+        >
+            SWAGOD
+        </div>
+    );
+};

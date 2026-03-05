@@ -119,7 +119,7 @@ export default function Search({ isOpen, onClose }: SearchProps) {
                             <input
                                 autoFocus
                                 type="text"
-                                placeholder="SEARCH ARCHIVES / PRODUCTS"
+                                placeholder="SEARCH GALLERIES / PRODUCTS"
                                 className="bg-transparent text-4xl md:text-6xl font-black uppercase text-foreground outline-none w-full placeholder:text-foreground/20 tracking-tighter"
                                 value={query}
                                 onChange={(e) => setQuery(e.target.value)}
@@ -158,28 +158,54 @@ export default function Search({ isOpen, onClose }: SearchProps) {
                             )}
 
                             {!isLoading && query.length < 2 && popular.length > 0 && (
-                                <div>
-                                    <h4 className="text-foreground/40 font-mono text-xs uppercase tracking-widest mb-6 border-b border-foreground/10 pb-2">SUGGESTED DISCOVERIES</h4>
-                                    <div className="grid gap-4">
-                                        {popular.map((product) => (
-                                            <Link
-                                                key={product.id}
-                                                href={`/product/${product.id}`}
-                                                onClick={onClose}
-                                                className="group flex items-center justify-between p-4 border border-foreground/5 dark:border-white/5 hover:border-primary transition-colors bg-foreground/5 dark:bg-white/5"
-                                            >
-                                                <div className="flex items-center gap-4">
-                                                    <div className="w-12 h-12 relative overflow-hidden">
-                                                        <Image src={product.image} alt={product.title} fill className="object-cover" />
+                                <div className="space-y-12">
+                                    <div>
+                                        <h4 className="text-foreground/40 font-mono text-[10px] uppercase tracking-[0.3em] mb-6 flex items-center gap-2">
+                                            <span className="w-1 h-1 bg-primary rounded-full animate-pulse" />
+                                            RECOMMENDED_FILTERS
+                                        </h4>
+                                        <div className="flex flex-wrap gap-3">
+                                            {["ACCESSORIES", "SHIRTS", "JERSEYS", "HATS", "HOODIES", "OUTERWEAR"].map(chip => (
+                                                <button
+                                                    key={chip}
+                                                    onClick={() => {
+                                                        if (window.navigator.vibrate) window.navigator.vibrate(10);
+                                                        setQuery(chip);
+                                                    }}
+                                                    className="px-4 py-2 border border-foreground/10 hover:border-primary hover:text-primary transition-all font-mono text-[10px] uppercase tracking-widest bg-foreground/5 hover:scale-105"
+                                                >
+                                                    {chip}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <h4 className="text-foreground/40 font-mono text-[10px] uppercase tracking-[0.3em] mb-6 flex items-center gap-2">
+                                            <span className="w-1 h-1 bg-primary rounded-full animate-pulse" />
+                                            SUGGESTED DISCOVERIES
+                                        </h4>
+                                        <div className="grid gap-4">
+                                            {popular.map((product) => (
+                                                <Link
+                                                    key={product.id}
+                                                    href={`/product/${product.id}`}
+                                                    onClick={onClose}
+                                                    className="group flex items-center justify-between p-4 border border-foreground/5 dark:border-white/5 hover:border-primary transition-colors bg-foreground/5 dark:bg-white/5"
+                                                >
+                                                    <div className="flex items-center gap-4">
+                                                        <div className="w-12 h-12 relative overflow-hidden">
+                                                            <Image src={product.image} alt={product.title} fill className="object-cover" />
+                                                        </div>
+                                                        <div>
+                                                            <h3 className="text-sm font-bold text-foreground uppercase">{product.title}</h3>
+                                                            <p className="text-primary font-mono text-xs">{formatPrice(product.price, currency)}</p>
+                                                        </div>
                                                     </div>
-                                                    <div>
-                                                        <h3 className="text-sm font-bold text-foreground uppercase">{product.title}</h3>
-                                                        <p className="text-primary font-mono text-xs">{formatPrice(product.price, currency)}</p>
-                                                    </div>
-                                                </div>
-                                                <ArrowRight size={16} className="text-foreground/30 group-hover:text-primary transition-colors" />
-                                            </Link>
-                                        ))}
+                                                    <ArrowRight size={16} className="text-foreground/30 group-hover:text-primary transition-colors" />
+                                                </Link>
+                                            ))}
+                                        </div>
                                     </div>
                                 </div>
                             )}

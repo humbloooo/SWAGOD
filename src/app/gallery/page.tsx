@@ -1,24 +1,24 @@
 import Header from "@/components/layout/Header";
 import Navigation from "@/components/layout/Navigation";
 import Image from "next/image";
-import { getArchives } from "@/lib/db";
+import { getGalleries } from "@/lib/db";
 import { Product } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
-export default async function Archive() {
-    const archives = await getArchives();
+export default async function Gallery() {
+    const galleries = await getGalleries();
 
     return (
         <main className="min-h-screen bg-background pb-[60px] pt-24">
             <Header />
             <div className="container mx-auto px-6">
                 <h1 className="text-5xl md:text-8xl font-black uppercase tracking-tighter mb-12">
-                    The {"//"} <span className="text-primary">Archive</span>
+                    The {"//"} <span className="text-primary">Gallery</span>
                 </h1>
 
                 <div className="columns-1 md:columns-2 lg:columns-3 gap-4 space-y-4">
-                    {archives.map((item: Product) => (
+                    {galleries.map((item: Product) => (
                         <div key={item.id} className="relative break-inside-avoid aspect-[3/4] bg-surface group overflow-hidden border border-white/5 hover:border-primary transition-colors">
                             <Image
                                 src={item.image}

@@ -22,6 +22,10 @@ export function constructMetadata({
             description,
             images: [{ url: image }]
         },
+        icons: {
+            icon: "/assets/swagod-logo.png",
+            apple: "/assets/swagod-logo.png",
+        },
         twitter: {
             card: "summary_large_image",
             title,

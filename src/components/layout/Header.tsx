@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ShoppingBag, Search as SearchIcon } from "lucide-react";
+import { Menu, X, ShoppingBag, Search as SearchIcon, User as UserIcon, LogOut, Settings as SettingsIcon } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { signOut, useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 const CartDrawer = dynamic(() => import("@/components/layout/CartDrawer"), { ssr: false });
 const Search = dynamic(() => import("@/components/layout/Search"), { ssr: false });
@@ -55,12 +56,25 @@ export default function Header() {
                     visible: { y: 0 },
                     hidden: { y: "-100%" },
                 }}
-                animate={hidden ? "hidden" : "visible"}
+                animate="visible"
                 transition={{ duration: 0.35, ease: "easeInOut" }}
-                className="fixed top-0 left-0 w-full h-16 bg-background/80 backdrop-blur-md z-50 flex items-center justify-between px-4 md:px-6 border-b border-foreground/5"
+                className="fixed top-0 left-0 w-full h-16 z-50 flex items-center justify-between px-4 md:px-6 border-b border-foreground/5 overflow-hidden"
             >
+                {settings?.headerVideoBg ? (
+                    <>
+                        <video
+                            src={settings.headerVideoBg}
+                            autoPlay loop muted playsInline
+                            className="absolute inset-0 w-full h-full object-cover -z-20 opacity-70"
+                        />
+                        <div className="absolute inset-0 w-full h-full bg-background/30 backdrop-blur-sm -z-10" />
+                    </>
+                ) : (
+                    <div className="absolute inset-0 w-full h-full bg-background/80 backdrop-blur-md -z-10" />
+                )}
+
                 {/* Left Side: Navigation Menu Toggle */}
-                <div className="flex items-center w-[100px]">
+                <div className="flex items-center w-[100px] z-10">
                     <button
                         onClick={() => setIsOpen(true)}
                         className="text-foreground hover:text-primary transition-colors flex items-center gap-2"
@@ -90,7 +104,10 @@ export default function Header() {
                     </div>
 
                     <button
-                        onClick={() => setIsSearchOpen(true)}
+                        onClick={() => {
+                            if (window.navigator.vibrate) window.navigator.vibrate(10);
+                            setIsSearchOpen(true);
+                        }}
                         className="text-foreground hover:text-primary transition-colors"
                         aria-label="Search Collection"
                         suppressHydrationWarning
@@ -98,8 +115,13 @@ export default function Header() {
                         <SearchIcon size={20} className="icon-industrial" suppressHydrationWarning />
                     </button>
 
+                    <UserPortal />
+
                     <button
-                        onClick={openCart}
+                        onClick={() => {
+                            if (window.navigator.vibrate) window.navigator.vibrate(10);
+                            openCart();
+                        }}
                         className="group relative flex items-center gap-2 text-foreground hover:text-primary transition-colors"
                         aria-label="View Cart"
                         suppressHydrationWarning
@@ -164,7 +186,7 @@ export default function Header() {
                                 { l: "Home", h: "/" },
                                 { l: "Collections", h: "/shop" },
                                 { l: "Tour", h: "/tour" },
-                                { l: "Archive", h: "/archive" },
+                                { l: "Gallery", h: "/gallery" },
                                 { l: "Login", h: "/login" },
                             ].map((item, i) => (
                                 <motion.div
@@ -207,5 +229,98 @@ export default function Header() {
                 )}
             </AnimatePresence>
         </>
+    );
+}
+
+function UserPortal() {
+    const { data: session } = useSession();
+    const [showUserMenu, setShowUserMenu] = useState(false);
+    const isAdmin = session?.user?.email === "kuntatswelope9@gmail.com" || (session?.user as { role?: string })?.role === "admin";
+
+    return (
+        <div className="relative">
+            {session ? (
+                <button
+                    onClick={() => {
+                        if (window.navigator.vibrate) window.navigator.vibrate(10);
+                        setShowUserMenu(!showUserMenu);
+                    }}
+                    className="flex items-center gap-2 group"
+                >
+                    <div className="w-8 h-8 rounded-full border border-foreground/10 overflow-hidden group-hover:border-primary transition-all">
+                        {session.user?.image ? (
+                            <Image src={session.user.image} alt="User" width={32} height={32} className="object-cover" />
+                        ) : (
+                            <div className="w-full h-full bg-foreground/5 flex items-center justify-center">
+                                <UserIcon size={14} className="text-foreground/40" />
+                            </div>
+                        )}
+                    </div>
+                </button>
+            ) : (
+                <Link
+                    href="/login"
+                    onClick={() => { if (window.navigator.vibrate) window.navigator.vibrate(10); }}
+                    className="text-[10px] font-mono font-black uppercase tracking-widest hover:text-primary transition-colors border border-foreground/10 px-3 py-1 bg-foreground/5"
+                >
+                    LOGIN
+                </Link>
+            )}
+
+            <AnimatePresence>
+                {showUserMenu && session && (
+                    <>
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="fixed inset-0 z-40 bg-black/5 md:hidden"
+                            onClick={() => setShowUserMenu(false)}
+                        />
+                        <motion.div
+                            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                            className="absolute top-12 right-0 w-64 bg-background/95 backdrop-blur-xl border border-foreground/10 shadow-2xl z-50 p-6 flex flex-col gap-4 text-foreground"
+                        >
+                            <div className="pb-4 border-b border-foreground/10">
+                                <p className="text-[8px] font-mono text-foreground/40 uppercase tracking-widest">AUTHORIZED_CITIZEN</p>
+                                <p className="font-black uppercase truncate">{session.user?.name}</p>
+                            </div>
+
+                            <div className="flex flex-col gap-1">
+                                {isAdmin && (
+                                    <Link
+                                        href="/admin"
+                                        onClick={() => setShowUserMenu(false)}
+                                        className="flex items-center gap-3 p-2 hover:bg-primary/10 hover:text-primary transition-colors text-[10px] font-black uppercase tracking-widest"
+                                    >
+                                        <SettingsIcon size={14} />
+                                        ADMIN_PANEL
+                                    </Link>
+                                )}
+                                <Link
+                                    href="/gallery"
+                                    onClick={() => { if (window.navigator.vibrate) window.navigator.vibrate(5); }}
+                                    className="px-6 py-2 text-xs font-mono font-bold tracking-[0.2em] border border-foreground/20 rounded hover:border-foreground hover:bg-foreground hover:text-background transition-all"
+                                >
+                                    MY_GALLERY<ShoppingBag size={14} />
+                                </Link>
+                                <button
+                                    onClick={() => {
+                                        if (window.navigator.vibrate) window.navigator.vibrate(20);
+                                        signOut();
+                                    }}
+                                    className="flex items-center gap-3 p-2 hover:bg-red-500/10 text-red-500 transition-colors text-[10px] font-black uppercase tracking-widest text-left"
+                                >
+                                    <LogOut size={14} />
+                                    TERMINATE_SESSION
+                                </button>
+                            </div>
+                        </motion.div>
+                    </>
+                )}
+            </AnimatePresence>
+        </div>
     );
 }
