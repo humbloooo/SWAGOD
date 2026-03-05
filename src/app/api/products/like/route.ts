@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/auth";
 import dbConnect from "@/lib/mongoose";
 import Product from "@/lib/models/Product";
+import { revalidatePath } from "next/cache";
 
 export async function POST(request: Request) {
     const session = await getServerSession(authOptions);
@@ -21,7 +22,7 @@ export async function POST(request: Request) {
             : { $pull: { likes: userEmail } };
 
         const doc = await Product.findByIdAndUpdate(productId, updateQuery, { new: true });
-
+        revalidatePath("/", "layout");
         if (!doc) {
             return NextResponse.json({ error: "Not found" }, { status: 404 });
         }

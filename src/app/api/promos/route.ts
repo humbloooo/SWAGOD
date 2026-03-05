@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getPromos, addPromo, updatePromo, deletePromo } from "@/lib/db";
 import { Product } from "@/lib/types";
+import { revalidatePath } from "next/cache";
 
 export const dynamic = "force-dynamic";
 
@@ -20,6 +21,7 @@ export async function POST(request: Request) {
         delete newPromo.id;
     }
     await addPromo(newPromo);
+    revalidatePath("/", "layout");
     return NextResponse.json({ success: true });
 }
 
@@ -29,6 +31,7 @@ export async function PUT(request: Request) {
         return NextResponse.json({ error: "Promo ID required" }, { status: 400 });
     }
     await updatePromo(body as Product & { id: string });
+    revalidatePath("/", "layout");
     return NextResponse.json({ success: true });
 }
 
@@ -37,6 +40,7 @@ export async function DELETE(request: Request) {
     const id = searchParams.get("id");
     if (id) {
         await deletePromo(id);
+        revalidatePath("/", "layout");
         return NextResponse.json({ success: true });
     }
     return NextResponse.json({ error: "Missing ID" }, { status: 400 });

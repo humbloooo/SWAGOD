@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getAbout, saveAbout } from '@/lib/db';
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
+import { revalidatePath } from "next/cache";
 
 export async function GET() {
     const data = await getAbout();
@@ -19,6 +20,7 @@ export async function POST(request: Request) {
     try {
         const data = await request.json();
         await saveAbout(data);
+        revalidatePath("/", "layout");
         return NextResponse.json({ success: true });
     } catch (error) {
         console.error("DEBUG: Failed to save about:", error);

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getTours, addTour, deleteTour } from '@/lib/db';
 import { TourEvent } from '@/lib/types';
+import { revalidatePath } from "next/cache";
 
 export async function GET() {
     const tours = await getTours();
@@ -14,6 +15,7 @@ export async function POST(request: Request) {
             delete body.id;
         }
         await addTour(body as TourEvent);
+        revalidatePath("/", "layout");
         return NextResponse.json({ success: true });
     } catch {
         return NextResponse.json({ error: 'Failed to add tour' }, { status: 500 });
@@ -27,6 +29,7 @@ export async function DELETE(request: Request) {
         if (!id) return NextResponse.json({ error: 'ID required' }, { status: 400 });
 
         await deleteTour(id);
+        revalidatePath("/", "layout");
         return NextResponse.json({ success: true });
     } catch {
         return NextResponse.json({ error: 'Failed to delete tour' }, { status: 500 });

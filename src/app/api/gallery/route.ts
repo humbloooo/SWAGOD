@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getGalleries, addGallery, deleteGallery } from '@/lib/db';
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
+import { revalidatePath } from "next/cache";
 
 export async function GET() {
     const data = await getGalleries();
@@ -19,6 +20,7 @@ export async function POST(request: Request) {
     try {
         const newItem = await request.json();
         await addGallery(newItem);
+        revalidatePath("/", "layout");
         return NextResponse.json({ success: true, product: newItem });
     } catch (error) {
         console.error("DEBUG: Failed to add gallery item:", error);
@@ -41,6 +43,7 @@ export async function DELETE(request: Request) {
 
     try {
         await deleteGallery(id);
+        revalidatePath("/", "layout");
         return NextResponse.json({ success: true });
     } catch (error) {
         console.error("DEBUG: Failed to delete gallery item:", error);

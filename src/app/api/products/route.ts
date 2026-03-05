@@ -4,6 +4,7 @@ import { apiError } from '@/lib/api-error';
 import { Product } from '@/lib/types';
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
+import { revalidatePath } from "next/cache";
 
 export const revalidate = 60; // Cache for 60 seconds
 
@@ -38,6 +39,7 @@ export async function POST(request: Request) {
         });
 
         await addProduct(product);
+        revalidatePath("/", "layout");
         return NextResponse.json({ success: true, product });
     } catch (e) {
         console.error("POST /api/products error:", e);
@@ -60,6 +62,7 @@ export async function PUT(request: Request) {
         }
 
         await updateProduct(updatedProduct as Product & { id: string });
+        revalidatePath("/", "layout");
         return NextResponse.json({ success: true, product: updatedProduct });
     } catch (e) {
         return apiError(e instanceof Error ? e.message : "Failed to update product");
@@ -81,6 +84,7 @@ export async function DELETE(request: Request) {
             adminEmail: session?.user?.email || "SYSTEM"
         });
         await deleteProduct(id);
+        revalidatePath("/", "layout");
         return NextResponse.json({ success: true });
     } catch (e) {
         return apiError(e instanceof Error ? e.message : "Failed to delete from inventory");

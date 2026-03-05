@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getSettings, saveSettings } from "@/lib/db";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
+import { revalidatePath } from "next/cache";
 
 export const dynamic = "force-dynamic";
 
@@ -25,6 +26,7 @@ export async function POST(request: Request) {
     try {
         const body = await request.json();
         await saveSettings(body);
+        revalidatePath("/", "layout");
         return NextResponse.json({ success: true });
     } catch (error) {
         console.error("DEBUG: Failed to save settings:", error);
