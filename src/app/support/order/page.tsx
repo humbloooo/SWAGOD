@@ -1,20 +1,26 @@
-import Header from "@/components/layout/Header";
 import Navigation from "@/components/layout/Navigation";
+import Header from "@/components/layout/Header";
 
 export default function OrderSupportPage() {
     return (
-        <main className="min-h-screen bg-background relative flex flex-col font-sans pt-24">
+        <main className="min-h-screen pb-[60px] bg-background">
             <Header />
-            <Navigation />
-            <div className="flex-1 flex flex-col items-center justify-center p-6 z-10 py-32 gap-8 text-center bg-background">
-                <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter">
-                    COMING SOON //
+            <div className="container mx-auto px-6 pt-32 mb-20 max-w-4xl">
+                <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-8">
+                    HOW TO PLACE AN <span className="text-primary">ORDER</span>
                 </h1>
-                <p className="font-mono text-foreground/50 max-w-lg leading-relaxed uppercase">
-                    This sector is currently being decrypted. Check back later for updates to our policies and information.
-                </p>
+                <div className="space-y-6 text-foreground/80 font-mono text-sm uppercase tracking-widest leading-relaxed">
+                    <p>
+                        01. BROWSE OUR INVENTORY AND SELECT YOUR DESIRED ITEMS.<br />
+                        02. CHOOSE YOUR SIZE AND ADD ITEMS TO YOUR CART.<br />
+                        03. PROCEED TO CHECKOUT TO ENTER YOUR SHIPPING DETAILS.<br />
+                        04. COMPLETE PAYMENT SECURELY USING OUR GATEWAY.<br />
+                        05. RECEIVE YOUR CONFIRMATION EMAIL WITH TRACKING DETAILS.
+                    </p>
+                    <p className="mt-8 text-xs text-foreground/40 italic">ALL TRANSACTIONS ARE ENCRYPTED AND SECURE.</p>
+                </div>
             </div>
-            
+            <Navigation />
         </main>
     );
 }

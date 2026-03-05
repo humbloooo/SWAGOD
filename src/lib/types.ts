@@ -3,7 +3,7 @@ export interface Product {
     title: string;
     price: number;
     image: string;
-    category: "merch" | "male" | "female" | "unisex";
+    category: "merch" | "male" | "female";
     subCategory?: "accessories" | "shirts" | "jerseys" | "hoodies" | "hats" | "other" | string;
     description: string;
     sizes?: string[];
@@ -42,6 +42,7 @@ export interface SiteSettings {
     // Marquee Settings
     marqueeText?: string;
     showMarquee?: boolean;
+    featuredCategory?: string; // New field for Home Page Category Selection
     showSocials?: boolean; // Control visibility of entire block
     showInstagram?: boolean;
     showTwitter?: boolean;
@@ -57,6 +58,17 @@ export interface SiteSettings {
     showUrgency?: boolean;
     showSocialProof?: boolean;
     showPersonalization?: boolean;
+    freeShippingText?: string;
+    contactInfo?: {
+        email: string;
+        phone: string;
+        address: string;
+        hours: string;
+    };
+    faqItems?: {
+        question: string;
+        answer: string;
+    }[];
 }
 
 export interface Feedback {

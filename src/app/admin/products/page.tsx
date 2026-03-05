@@ -176,7 +176,7 @@ export default function AdminProducts() {
                                     </button>
 
                                     <div className="w-20 h-20 bg-foreground/10 border border-foreground/10 relative overflow-hidden">
-                                        {product.image ? (
+                                        {product.image && (product.image.startsWith('http') || product.image.startsWith('/')) ? (
                                             <Image src={product.image} alt={product.title} fill className="object-cover group-hover:scale-110 transition-transform duration-500" />
                                         ) : (
                                             <div className="w-full h-full flex items-center justify-center opacity-20">
@@ -288,11 +288,10 @@ export default function AdminProducts() {
                                         <select
                                             className="w-full bg-foreground/5 border border-foreground/10 p-4 focus:border-primary outline-none transition-all appearance-none uppercase"
                                             value={currentProduct.category || "male"}
-                                            onChange={e => setCurrentProduct({ ...currentProduct, category: e.target.value as "male" | "female" | "unisex" | "merch" })}
+                                            onChange={e => setCurrentProduct({ ...currentProduct, category: e.target.value as "male" | "female" | "merch" })}
                                         >
                                             <option value="male">MALE</option>
                                             <option value="female">FEMALE</option>
-                                            <option value="unisex">UNISEX</option>
                                             <option value="merch">MERCH</option>
                                         </select>
                                     </div>

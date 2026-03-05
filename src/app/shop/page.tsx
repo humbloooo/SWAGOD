@@ -13,7 +13,7 @@ import { useEffect } from "react";
 import { motion } from "framer-motion";
 
 const AVAILABLE_SIZES = ["S", "M", "L", "XL", "XXL"];
-const AVAILABLE_CATEGORIES = ["male", "female", "unisex", "merch"];
+const AVAILABLE_CATEGORIES = ["male", "female", "merch"];
 const AVAILABLE_SUBCATEGORIES = ["accessories", "shirts", "jerseys", "hoodies", "hats", "other"];
 
 export default function Shop() {

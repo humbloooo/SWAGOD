@@ -6,7 +6,6 @@ import { AboutData } from "@/lib/types";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Loader2, ArrowLeft, Eye, EyeOff } from "lucide-react";
-import { motion } from "framer-motion";
 import { toast } from "sonner";
 import Header from "@/components/layout/Header";
 import Navigation from "@/components/layout/Navigation";
@@ -187,7 +186,7 @@ export default function LoginPage() {
                     )}
                 </div>
             </div>
-            
+
         </main >
     );
 }
@@ -250,7 +249,7 @@ const BouncingLogo = () => {
     return (
         <div
             ref={logoRef}
-            className="absolute top-0 left-0 text-[10vw] md:text-[8vw] font-black uppercase whitespace-nowrap text-foreground select-none opacity-[0.03]"
+            className="absolute top-0 left-0 text-[4vw] md:text-[3vw] font-black uppercase whitespace-nowrap text-foreground select-none opacity-[0.03]"
             style={{ willChange: 'transform' }}
         >
             SWAGOD

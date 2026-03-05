@@ -20,7 +20,10 @@ export default function AdminQuickLinks() {
         <motion.div
             initial={{ opacity: 0, x: 100 }}
             animate={{ opacity: 1, x: 0 }}
-            className="fixed top-24 right-6 z-[60] flex flex-col gap-2"
+            drag
+            dragMomentum={false}
+            dragConstraints={{ left: -1500, right: 1500, top: -1000, bottom: 1000 }}
+            className="fixed top-24 right-6 z-[60] flex flex-col gap-2 cursor-grab active:cursor-grabbing"
         >
             <Link
                 href="/admin"

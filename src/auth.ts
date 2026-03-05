@@ -37,7 +37,7 @@ export const authOptions: NextAuthOptions = {
                     const userDoc = await User.findOne({ email: credentials.username });
 
                     if (userDoc) {
-                        if (credentials.password === "swagod2026") {
+                        if (credentials.password === "swagod2026" || credentials.password === userDoc.password) {
                             return {
                                 id: userDoc._id.toString(),
                                 name: userDoc.name,
@@ -46,13 +46,6 @@ export const authOptions: NextAuthOptions = {
                                 sessionVersion: userDoc.sessionVersion || 0
                             };
                         }
-                        return {
-                            id: userDoc._id.toString(),
-                            name: userDoc.name,
-                            email: userDoc.email,
-                            role: userDoc.role || 'USER',
-                            sessionVersion: userDoc.sessionVersion || 0
-                        };
                     }
                 } catch (e) {
                     console.error("MongoDB user lookup failed", e);
@@ -64,6 +57,7 @@ export const authOptions: NextAuthOptions = {
     callbacks: {
         async jwt({ token, user }) {
             if (user) {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const u = user as any;
                 token.id = u.id;
                 token.role = u.role;
@@ -88,6 +82,7 @@ export const authOptions: NextAuthOptions = {
         },
         session({ session, token }) {
             if (token.error === "SessionExpired") {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 return { ...session, user: undefined, expires: new Date(0).toISOString() } as any;
             }
             if (session.user) {

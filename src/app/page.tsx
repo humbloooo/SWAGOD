@@ -28,7 +28,7 @@ export default async function Home() {
       <WelcomeBanner enabled={settings?.showPersonalization} />
       <BackgroundBrackets />
       <Hero heroImage={settings?.heroImage} lightModeWallpaper={settings?.lightModeWallpaper} heroSlogan={settings?.heroSlogan} />
-      <LatestDrops products={products} />
+      <LatestDrops products={products} featuredCategory={settings?.featuredCategory} latestDropsLimit={settings?.latestDropsLimit} />
       <FeedbackForm />
       {aboutData && <About data={aboutData} />}
       <Navigation />

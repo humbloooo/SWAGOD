@@ -11,11 +11,11 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
         }
 
-        // Password Complexity (8+ chars, 1 symbol, 1 number)
-        const passwordRegex = /^(?=.*[!@#$%^&*])(?=.*[0-9]).{8,}$/;
+        // Password length check to align with frontend
+        const passwordRegex = /^.{6,}$/;
         if (!passwordRegex.test(password)) {
             return NextResponse.json({
-                error: "Password must be at least 8 characters long and include one symbol and one number."
+                error: "Password must be at least 6 characters long."
             }, { status: 400 });
         }
 

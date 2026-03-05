@@ -13,9 +13,11 @@ import { formatPrice } from "@/lib/utils";
 
 interface LatestDropsProps {
     products: Product[];
+    featuredCategory?: string;
+    latestDropsLimit?: number;
 }
 
-export default function LatestDrops({ products }: LatestDropsProps) {
+export default function LatestDrops({ products, featuredCategory, latestDropsLimit }: LatestDropsProps) {
     const { addItem, openCart, currency } = useAppStore();
     const sortedProducts = [...products].sort((a, b) => (b.createdAt || "").localeCompare(a.createdAt || ""));
 
@@ -39,12 +41,20 @@ export default function LatestDrops({ products }: LatestDropsProps) {
             {/* CLOTHING SECTION */}
             <div className="container mx-auto px-6 mb-20 relative z-10">
                 <h3 className="text-xs font-mono font-bold uppercase tracking-[0.3em] mb-12 flex items-center gap-4">
-                    <span className="w-8 h-[1px] bg-primary glow-primary"></span> APPAREL
+                    <span className="w-8 h-[1px] bg-primary glow-primary"></span> {featuredCategory && featuredCategory !== 'all' ? featuredCategory : 'ALL APPAREL'}
                 </h3>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {sortedProducts.filter(p => ['male', 'female', 'unisex'].includes((p.category || "").toLowerCase())).length > 0 ? (
-                        sortedProducts.filter(p => ['male', 'female', 'unisex'].includes((p.category || "").toLowerCase())).slice(0, 4).map((product, index) => (
-                            <ProductCard key={product.id} product={product} index={index} addItem={addItem} openCart={openCart} currency={currency} />
+                <div className="flex overflow-x-auto gap-4 snap-x snap-mandatory pb-4 hide-scrollbar" style={{ scrollbarWidth: 'none' }}>
+                    {sortedProducts.filter(p => {
+                        const isApparel = ['male', 'female'].includes((p.category || "").toLowerCase());
+                        if (!featuredCategory || featuredCategory === 'all') return isApparel;
+                        return isApparel && (p.category?.toLowerCase() === featuredCategory.toLowerCase() || p.subCategory?.toLowerCase() === featuredCategory.toLowerCase());
+                    }).length > 0 ? (
+                        sortedProducts.filter(p => {
+                            const isApparel = ['male', 'female'].includes((p.category || "").toLowerCase());
+                            if (!featuredCategory || featuredCategory === 'all') return isApparel;
+                            return isApparel && (p.category?.toLowerCase() === featuredCategory.toLowerCase() || p.subCategory?.toLowerCase() === featuredCategory.toLowerCase());
+                        }).slice(0, latestDropsLimit || 8).map((product, index) => (
+                            <ProductCard key={product.id} product={product} index={index} addItem={addItem} openCart={openCart} currency={currency} className="min-w-[75vw] md:min-w-[25vw] snap-center shrink-0" />
                         ))
                     ) : products.length === 0 ? (
                         <>
@@ -53,10 +63,10 @@ export default function LatestDrops({ products }: LatestDropsProps) {
                             ))}
                         </>
                     ) : (
-                        <div className="col-span-full py-12 text-center border border-foreground/10 bg-foreground/5 backdrop-blur-sm">
+                        <div className="w-full flex flex-col items-center justify-center py-12 border border-foreground/10 bg-foreground/5 backdrop-blur-sm">
                             <span className="text-4xl block mb-4">🦇</span>
                             <h3 className="text-xl font-black uppercase tracking-widest text-foreground/80 dark:text-foreground/50">NO ACTIVE INVENTORY</h3>
-                            <p className="font-mono text-xs text-foreground/60 dark:text-foreground/30 tracking-widest mt-2 uppercase">Check back later for new releases.</p>
+                            <p className="font-mono text-xs text-foreground/60 dark:text-foreground/30 tracking-widest mt-2 uppercase text-center max-w-sm">No items matching &quot;{featuredCategory || 'ALL APPAREL'}&quot; are currently scheduled for release.</p>
                         </div>
                     )}
                 </div>
@@ -67,7 +77,7 @@ export default function LatestDrops({ products }: LatestDropsProps) {
                 <h3 className="text-xs font-mono font-bold uppercase tracking-[0.3em] mb-12 flex items-center gap-4">
                     <span className="w-8 h-[1px] bg-primary"></span> MERCH EXCLUSIVES
                 </h3>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="flex overflow-x-auto gap-4 snap-x snap-mandatory pb-4 hide-scrollbar" style={{ scrollbarWidth: 'none' }}>
                     {sortedProducts.filter(p => {
                         const cat = (p.category || "").toLowerCase();
                         return cat === 'merch';
@@ -75,8 +85,8 @@ export default function LatestDrops({ products }: LatestDropsProps) {
                         sortedProducts.filter(p => {
                             const cat = (p.category || "").toLowerCase();
                             return cat === 'merch';
-                        }).slice(0, 4).map((product, index) => (
-                            <ProductCard key={product.id} product={product} index={index} addItem={addItem} openCart={openCart} currency={currency} />
+                        }).slice(0, latestDropsLimit || 8).map((product, index) => (
+                            <ProductCard key={product.id} product={product} index={index} addItem={addItem} openCart={openCart} currency={currency} className="min-w-[75vw] md:min-w-[25vw] snap-center shrink-0" />
                         ))
                     ) : products.length === 0 ? (
                         <>
@@ -85,10 +95,10 @@ export default function LatestDrops({ products }: LatestDropsProps) {
                             ))}
                         </>
                     ) : (
-                        <div className="col-span-full py-12 text-center border border-foreground/10 bg-foreground/5 backdrop-blur-sm">
+                        <div className="w-full flex flex-col items-center justify-center py-12 border border-foreground/10 bg-foreground/5 backdrop-blur-sm">
                             <span className="text-4xl block mb-4">🦇</span>
-                            <h3 className="text-xl font-black uppercase tracking-widest text-foreground/80 dark:text-foreground/50">NO ACTIVE INVENTORY</h3>
-                            <p className="font-mono text-xs text-foreground/60 dark:text-foreground/30 tracking-widest mt-2 uppercase">Check back later for new releases.</p>
+                            <h3 className="text-xl font-black uppercase tracking-widest text-foreground/80 dark:text-foreground/50">NO MERCHANDISE</h3>
+                            <p className="font-mono text-xs text-foreground/60 dark:text-foreground/30 tracking-widest mt-2 uppercase text-center max-w-sm">Check back later for new exclusive drops.</p>
                         </div>
                     )}
                 </div>
@@ -103,14 +113,14 @@ export default function LatestDrops({ products }: LatestDropsProps) {
     );
 }
 
-const ProductCard = memo(function ProductCard({ product, index, addItem, openCart, currency }: { product: Product, index: number, addItem: (p: Product, s?: string) => void, openCart: () => void, currency: "ZAR" | "USD" }) {
+const ProductCard = memo(function ProductCard({ product, index, addItem, openCart, currency, className }: { product: Product, index: number, addItem: (p: Product, s?: string) => void, openCart: () => void, currency: "ZAR" | "USD", className?: string }) {
     return (
         <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.6, delay: (index % 4) * 0.1 }}
-            className="group relative aspect-[3/4] brutalist-card overflow-hidden hover:border-primary transition-all duration-500 border border-foreground/5"
+            className={`group relative aspect-[3/4] brutalist-card overflow-hidden hover:border-primary transition-all duration-500 border border-foreground/5 ${className || ''}`}
         >
             <Link href={`/product/${product.id!}`} prefetch={true} className="block relative w-full h-full">
                 <Image

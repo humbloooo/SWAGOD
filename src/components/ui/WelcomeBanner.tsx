@@ -18,7 +18,14 @@ export default function WelcomeBanner({ enabled }: WelcomeBannerProps) {
             // Only show if haven't shown in this session
             const hasSeen = sessionStorage.getItem('welcome_seen');
             if (!hasSeen) {
-                const timer = setTimeout(() => setIsVisible(true), 1500);
+                const timer = setTimeout(() => {
+                    setIsVisible(true);
+                    // Auto-hide after 5 seconds
+                    setTimeout(() => {
+                        setIsVisible(false);
+                        sessionStorage.setItem('welcome_seen', 'true');
+                    }, 5000);
+                }, 1500);
                 return () => clearTimeout(timer);
             }
         }
@@ -40,8 +47,7 @@ export default function WelcomeBanner({ enabled }: WelcomeBannerProps) {
                 >
                     <div className="bg-primary text-background px-8 py-3 flex items-center gap-6 shadow-2xl border border-white/20 pointer-events-auto">
                         <div className="flex flex-col">
-                            <span className="text-[8px] font-mono font-black uppercase tracking-[0.3em] opacity-60">PERSONALIZATION_ENGINE_ACTIVE</span>
-                            <span className="font-black uppercase tracking-tighter italic">WELCOME BACK, {session?.user?.name?.split(' ')[0] || 'CITIZEN'}</span>
+                            <span className="font-black uppercase tracking-tighter italic">Logged in as the Administration,</span>
                         </div>
                         <div className="w-[1px] h-8 bg-background/20" />
                         <button
