@@ -3,11 +3,11 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Product } from "@/lib/types";
+import { Product, SiteSettings } from "@/lib/types";
 import Header from "@/components/layout/Header";
 import Navigation from "@/components/layout/Navigation";
 import AddToCartButton from "@/components/ui/AddToCartButton";
-import { ChevronRight, X, Eye, Share2, Timer, Flame, Plus, Minus } from "lucide-react";
+import { ChevronRight, X, Plus, Minus } from "lucide-react";
 import { motion, AnimatePresence, useScroll } from "framer-motion";
 import { toast } from "sonner";
 import Magnetic from "@/components/ui/Magnetic";
@@ -32,7 +32,7 @@ export default function ProductClient({ id }: ProductClientProps) {
     const { scrollY } = useScroll();
     const [showStickyCart, setShowStickyCart] = useState(false);
     const [viewerCount, setViewerCount] = useState(0);
-    const [settings, setSettings] = useState<any>(null);
+    const [settings, setSettings] = useState<SiteSettings | null>(null);
     const [urgencyTimer, setUrgencyTimer] = useState("00:00:00");
 
     // Delivery Estimate (3-7 days from now)
@@ -92,7 +92,7 @@ export default function ProductClient({ id }: ProductClientProps) {
         if (id) {
             fetchProduct();
             // Fetch settings to respect psychological toggles
-            fetch("/api/settings")
+            fetch("/api/settings", { cache: "no-store" })
                 .then(res => res.json())
                 .then(setSettings)
                 .catch(console.error);

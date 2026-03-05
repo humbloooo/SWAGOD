@@ -3,7 +3,7 @@ import { getSettings, saveSettings } from "@/lib/db";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
 
-export const revalidate = 300; // Cache for 5 minutes
+export const dynamic = "force-dynamic";
 
 export async function GET() {
     try {

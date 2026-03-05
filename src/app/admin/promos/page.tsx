@@ -17,11 +17,11 @@ export default function AdminPromos() {
     const [settings, setSettings] = useState<SiteSettings | null>(null);
 
     useEffect(() => {
-        fetch("/api/promos")
+        fetch("/api/promos", { cache: "no-store" })
             .then((res) => res.json())
             .then((data) => setPromos(Array.isArray(data) ? data : []));
 
-        fetch("/api/settings")
+        fetch("/api/settings", { cache: "no-store" })
             .then((res) => res.json())
             .then((data) => setSettings(data))
             .catch(console.error);
@@ -35,7 +35,7 @@ export default function AdminPromos() {
         });
 
         if (res.ok) {
-            const updated = await fetch("/api/promos").then(r => r.json());
+            const updated = await fetch("/api/promos", { cache: "no-store" }).then(r => r.json());
             setPromos(Array.isArray(updated) ? updated : []);
             setNewItem({ code: "", discount: 10, active: true });
             toast.success("PROMO DEPLOYED");

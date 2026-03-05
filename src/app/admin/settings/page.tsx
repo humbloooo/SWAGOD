@@ -23,7 +23,7 @@ export default function AdminSettings() {
     }, [isCompact]);
 
     useEffect(() => {
-        fetch("/api/settings")
+        fetch("/api/settings", { cache: "no-store" })
             .then((res) => res.json())
             .then((data) => {
                 setSettings(data);

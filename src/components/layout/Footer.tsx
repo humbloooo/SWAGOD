@@ -15,7 +15,7 @@ export default function Footer() {
 
     useEffect(() => {
         setTimeout(() => setMounted(true), 0);
-        fetch("/api/settings")
+        fetch("/api/settings", { cache: "no-store" })
             .then(res => res.json())
             .then(data => setSettings(data))
             .catch(err => console.error("Failed to load settings", err));
