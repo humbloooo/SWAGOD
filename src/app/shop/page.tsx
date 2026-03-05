@@ -199,14 +199,14 @@ const ShopProductCard = memo(function ShopProductCard({
                 className="relative aspect-[3/4] border border-foreground/10 bg-foreground/5 mb-4 overflow-hidden group-hover:border-primary transition-[border-color,transform] duration-200 ease-out preserve-3d"
             >
                 <Image
-                    src={product.image || "/assets/placeholder.png"}
+                    src={product.image ? (product.image.startsWith('http') || product.image.startsWith('/') ? product.image : `/${product.image}`) : "/assets/placeholder.png"}
                     alt={product.title}
                     fill
                     className="object-cover transition-opacity duration-500 group-hover:opacity-0"
                 />
                 {product.images && product.images.length > 1 && (
                     <Image
-                        src={product.images[1]}
+                        src={product.images[1].startsWith('http') || product.images[1].startsWith('/') ? product.images[1] : `/${product.images[1]}`}
                         alt={`${product.title} alternate`}
                         fill
                         className="object-cover absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100 group-hover:scale-105"
