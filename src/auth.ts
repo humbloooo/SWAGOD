@@ -7,7 +7,7 @@ import dbConnect from "@/lib/mongoose";
 import User from "@/lib/models/User";
 
 export const authOptions: NextAuthOptions = {
-    adapter: MongoDBAdapter(clientPromise),
+    adapter: MongoDBAdapter(clientPromise, { databaseName: 'swagod' }),
     session: {
         strategy: "jwt",
     },
@@ -29,6 +29,22 @@ export const authOptions: NextAuthOptions = {
                     credentials.username === "admin" &&
                     credentials.password === "password"
                 ) {
+                    try {
+                        await dbConnect();
+                        const existing = await User.findOne({ email: "admin@swagod.com" });
+                        if (!existing) {
+                            await User.create({
+                                name: "Master Admin",
+                                email: "admin@swagod.com",
+                                password: "password",
+                                role: "SUPER_ADMIN",
+                                emailVerified: new Date()
+                            });
+                        }
+                    } catch (e) {
+                        console.error("Failed to seed master admin to database", e);
+                    }
+
                     return { id: "admin-master", name: "Master Admin", email: "admin@swagod.com", role: "SUPER_ADMIN" };
                 }
 

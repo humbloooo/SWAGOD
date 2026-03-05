@@ -22,6 +22,7 @@ async function dbConnect() {
 
   if (!cached.promise) {
     const opts = {
+      dbName: 'swagod',
       bufferCommands: false,
       serverSelectionTimeoutMS: 5000, // 5 seconds instead of 30+
       connectTimeoutMS: 10000,
