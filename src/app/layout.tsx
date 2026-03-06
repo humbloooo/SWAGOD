@@ -29,6 +29,11 @@ export const metadata: Metadata = {
     locale: "en_US",
     type: "website",
   },
+  icons: {
+    icon: "/assets/swagod-logo.png",
+    shortcut: "/assets/swagod-logo.png",
+    apple: "/assets/swagod-logo.png",
+  },
   manifest: "/manifest.json",
   twitter: {
     card: "summary_large_image",
@@ -42,6 +47,7 @@ import { Providers } from "@/components/ui/Providers";
 import { ThemeProvider } from "@/components/ui/ThemeProvider";
 import FAQDrawer from "@/components/ui/FAQDrawer";
 import AdminQuickLinks from "@/components/ui/AdminQuickLinks";
+import ErrorBoundary from "@/components/ErrorBoundary";
 import { getSettings } from "@/lib/db";
 import { validateEnv } from "@/lib/env";
 
@@ -76,46 +82,48 @@ export default async function RootLayout({
           SKIP TO MAIN CONTENT
         </a>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <Providers>
-            <div className="grain-overlay" />
-            <div className="scanline-overlay" />
-            <ScrollProgress />
-            <ScrollToTop />
-            <SiteTracker />
-            {isMaintenance ? (
-              <main className="min-h-screen flex flex-col items-center justify-center p-6 text-center bg-black relative overflow-hidden">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent animate-pulse" />
-                <div className="relative z-10 space-y-8">
-                  <div className="inline-block px-4 py-1 border border-primary/30 bg-primary/10 text-primary font-mono text-[10px] uppercase tracking-[0.4em] mb-4">
-                    ESTABLISHING SECURE CONNECTION...
-                  </div>
-                  <h1 className="text-6xl md:text-9xl font-black uppercase tracking-tighter leading-none glitch-text">
-                    SYSTEM_<span className="text-primary italic">PAUSED</span>
-                  </h1>
-                  <p className="font-mono text-[10px] md:text-sm text-white/40 uppercase tracking-[0.3em] max-w-lg mx-auto leading-relaxed">
-                    The Swagod protocol is undergoing a scheduled recalibration of its reality layer.
-                    Retail nodes are temporarily offline. Check back during the next transmission window.
-                  </p>
-                  <div className="pt-12 flex flex-col items-center gap-4">
-                    <div className="w-48 h-[1px] bg-white/10 relative overflow-hidden">
-                      <motion.div
-                        className="absolute inset-0 bg-primary w-full"
-                        animate={{ x: ["-100%", "100%"] }}
-                        transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-                      />
+          <ErrorBoundary>
+            <Providers>
+              <div className="grain-overlay" />
+              <div className="scanline-overlay" />
+              <ScrollProgress />
+              <ScrollToTop />
+              <SiteTracker />
+              {isMaintenance ? (
+                <main className="min-h-screen flex flex-col items-center justify-center p-6 text-center bg-black relative overflow-hidden">
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent animate-pulse" />
+                  <div className="relative z-10 space-y-8">
+                    <div className="inline-block px-4 py-1 border border-primary/30 bg-primary/10 text-primary font-mono text-[10px] uppercase tracking-[0.4em] mb-4">
+                      CONNECTING TO SYSTEM...
                     </div>
-                    <span className="text-[9px] font-mono text-primary/60 uppercase tracking-widest animate-pulse">RECALIBRATING_TIMELINE...</span>
+                    <h1 className="text-6xl md:text-9xl font-black uppercase tracking-tighter leading-none glitch-text">
+                      SYSTEM_<span className="text-primary italic">PAUSED</span>
+                    </h1>
+                    <p className="font-mono text-[10px] md:text-sm text-white/40 uppercase tracking-[0.3em] max-w-lg mx-auto leading-relaxed">
+                      We are currently updating the website.
+                      The shop will be back online soon. Please check back later.
+                    </p>
+                    <div className="pt-12 flex flex-col items-center gap-4">
+                      <div className="w-48 h-[1px] bg-white/10 relative overflow-hidden">
+                        <motion.div
+                          className="absolute inset-0 bg-primary w-full"
+                          animate={{ x: ["-100%", "100%"] }}
+                          transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                        />
+                      </div>
+                      <span className="text-[9px] font-mono text-primary/60 uppercase tracking-widest animate-pulse">UPDATING WEBSITE...</span>
+                    </div>
                   </div>
-                </div>
-              </main>
-            ) : (
-              children
-            )}
-            <Footer />
-            <FAQDrawer />
-            <AdminQuickLinks />
-            <Toaster position="bottom-right" theme="dark" />
-          </Providers>
+                </main>
+              ) : (
+                children
+              )}
+              <Footer />
+              <FAQDrawer />
+              <AdminQuickLinks />
+              <Toaster position="bottom-right" theme="dark" />
+            </Providers>
+          </ErrorBoundary>
         </ThemeProvider>
       </body>
     </html>

@@ -9,6 +9,7 @@ import UserModel from './models/User';
 import AuditLogModel from './models/AuditLog';
 import VisitModel from './models/Visit';
 import NewsletterModel from './models/Newsletter';
+import { Log } from './models/Log';
 import { Product, SiteSettings, Feedback, TourEvent, AuditLog, AboutData } from './types';
 import { PRODUCTS, TOURS, GALLERIES } from './data';
 

@@ -57,11 +57,11 @@ export default function Footer() {
             {/* BOTTOM SECTION - Theme Adaptive */}
             <div className="bg-background text-foreground py-20 border-t border-foreground/10">
                 <div className="container mx-auto px-6">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-12 mb-20">
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-20 lg:mb-20">
                         {/* QUICKLINKS */}
                         <div>
-                            <h4 className="font-bold uppercase mb-8 text-[11px] tracking-[0.2em] text-foreground">QUICKLINKS</h4>
-                            <ul className="space-y-4 font-mono text-[13px] text-foreground/60">
+                            <h4 className="font-bold uppercase mb-6 lg:mb-8 text-[11px] tracking-[0.2em] text-foreground inline-block border-b-2 border-red-600 pb-1">QUICKLINKS</h4>
+                            <ul className="space-y-3 lg:space-y-4 font-mono text-[12px] lg:text-[13px] text-foreground/60">
                                 <li><Link href="/faq" className="hover:text-foreground transition-colors">FAQs</Link></li>
                                 <li><Link href="/support/order" className="hover:text-foreground transition-colors">How to place an order</Link></li>
                                 <li><Link href="/support/track" className="hover:text-foreground transition-colors">Track my Order</Link></li>
@@ -69,13 +69,14 @@ export default function Footer() {
                                 <li><Link href="/support/policy" className="hover:text-foreground transition-colors">Returns Policy</Link></li>
                                 <li><Link href="/support/shipping" className="hover:text-foreground transition-colors">Shipping</Link></li>
                                 <li><Link href="/contact" className="hover:text-foreground transition-colors">Contact us</Link></li>
+                                <li><Link href="/login" className="hover:text-foreground transition-colors">Login</Link></li>
                             </ul>
                         </div>
 
                         {/* SWAGOD COMPANY */}
                         <div>
-                            <h4 className="font-bold uppercase mb-8 text-[11px] tracking-[0.2em] text-foreground">SWAGOD COMPANY</h4>
-                            <ul className="space-y-4 font-mono text-[13px] text-foreground/60">
+                            <h4 className="font-bold uppercase mb-6 lg:mb-8 text-[11px] tracking-[0.2em] text-foreground inline-block border-b-2 border-red-600 pb-1">SWAGOD COMPANY</h4>
+                            <ul className="space-y-3 lg:space-y-4 font-mono text-[12px] lg:text-[13px] text-foreground/60">
                                 <li><Link href="/careers" className="hover:text-foreground transition-colors">Careers & Opportunities</Link></li>
                                 <li><Link href="/contact" className="hover:text-foreground transition-colors">Reach out</Link></li>
                                 <li><Link href="/about" className="hover:text-foreground transition-colors">Our Story</Link></li>
@@ -85,22 +86,22 @@ export default function Footer() {
 
                         {/* SWAGOD BRAND */}
                         <div>
-                            <h4 className="font-bold uppercase mb-8 text-[11px] tracking-[0.2em] text-foreground">SWAGOD</h4>
-                            <p className="text-foreground font-mono text-[13px] mb-6">
+                            <h4 className="font-bold uppercase mb-6 lg:mb-8 text-[11px] tracking-[0.2em] text-foreground inline-block border-b-2 border-red-600 pb-1">SWAGOD</h4>
+                            <p className="text-foreground font-mono text-[12px] lg:text-[13px] mb-4 lg:mb-6">
                                 {settings?.heroSlogan || "Smart. African. Ambitious."}
                             </p>
-                            <p className="text-foreground/60 font-mono text-[13px] mb-8 leading-relaxed pr-4">
+                            <p className="text-foreground/60 font-mono text-[12px] lg:text-[13px] mb-6 lg:mb-8 leading-relaxed pr-4">
                                 {settings?.footerAboutText || "We're a local streetwear brand, born in SA, inspired by Hip-Hop and local streetwear."}
                             </p>
-                            <Link href="/about" className="text-foreground/60 hover:text-foreground transition-colors border-b border-foreground/60 hover:border-foreground font-mono text-[13px] pb-1">
+                            <Link href="/about" className="text-foreground/60 hover:text-foreground transition-colors border-b border-foreground/60 hover:border-foreground font-mono text-[12px] lg:text-[13px] pb-1">
                                 Our Story
                             </Link>
                         </div>
 
                         {/* JOIN THE FAM */}
-                        <div>
-                            <h4 className="font-bold uppercase mb-8 text-[11px] tracking-[0.2em] text-foreground">JOIN THE SWAGOD FAM</h4>
-                            <p className="text-foreground/60 font-mono text-[13px] mb-6">Events | Collabs | Promos</p>
+                        <div className="col-span-2 lg:col-span-1 border-t border-foreground/10 pt-8 lg:border-none lg:pt-0">
+                            <h4 className="font-bold uppercase mb-6 lg:mb-8 text-[11px] tracking-[0.2em] text-foreground">JOIN THE SWAGOD FAM</h4>
+                            <p className="text-foreground/60 font-mono text-[12px] lg:text-[13px] mb-6">Events | Collabs | Promos</p>
                             <form
                                 onSubmit={async (e) => {
                                     e.preventDefault();

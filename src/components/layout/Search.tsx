@@ -194,8 +194,13 @@ export default function Search({ isOpen, onClose }: SearchProps) {
                                                     className="group flex items-center justify-between p-4 border border-foreground/5 dark:border-white/5 hover:border-primary transition-colors bg-foreground/5 dark:bg-white/5"
                                                 >
                                                     <div className="flex items-center gap-4">
-                                                        <div className="w-12 h-12 relative overflow-hidden">
-                                                            <Image src={product.image} alt={product.title} fill className="object-cover" />
+                                                        <div className="w-12 h-12 relative overflow-hidden bg-foreground/5">
+                                                            <Image
+                                                                src={product.image ? (product.image.startsWith('http') || product.image.startsWith('/') ? product.image : `/${product.image}`) : "/assets/placeholder.png"}
+                                                                alt={product.title}
+                                                                fill
+                                                                className="object-cover"
+                                                            />
                                                         </div>
                                                         <div>
                                                             <h3 className="text-sm font-bold text-foreground uppercase">{product.title}</h3>

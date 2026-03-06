@@ -19,7 +19,25 @@ interface LatestDropsProps {
 
 export default function LatestDrops({ products, featuredCategory, latestDropsLimit }: LatestDropsProps) {
     const { addItem, openCart, currency } = useAppStore();
-    const sortedProducts = [...products].sort((a, b) => (b.createdAt || "").localeCompare(a.createdAt || ""));
+
+    const sortedProducts = React.useMemo(() => {
+        return [...products].sort((a, b) => (b.createdAt || "").localeCompare(a.createdAt || ""));
+    }, [products]);
+
+    const apparelProducts = React.useMemo(() => {
+        return sortedProducts.filter(p => {
+            const isApparel = ['male', 'female'].includes((p.category || "").toLowerCase());
+            if (!featuredCategory || featuredCategory === 'all') return isApparel;
+            return isApparel && (p.category?.toLowerCase() === featuredCategory.toLowerCase() || p.subCategory?.toLowerCase() === featuredCategory.toLowerCase());
+        }).slice(0, latestDropsLimit || 8);
+    }, [sortedProducts, featuredCategory, latestDropsLimit]);
+
+    const merchProducts = React.useMemo(() => {
+        return sortedProducts.filter(p => {
+            const cat = (p.category || "").toLowerCase();
+            return cat === 'merch';
+        }).slice(0, latestDropsLimit || 8);
+    }, [sortedProducts, latestDropsLimit]);
 
     return (
         <section id="latest-drops" className="py-24 bg-background text-foreground relative overflow-hidden">
@@ -44,16 +62,8 @@ export default function LatestDrops({ products, featuredCategory, latestDropsLim
                     <span className="w-8 h-[1px] bg-primary glow-primary"></span> {featuredCategory && featuredCategory !== 'all' ? featuredCategory : 'ALL APPAREL'}
                 </h3>
                 <div className="flex overflow-x-auto gap-4 snap-x snap-mandatory pb-4 hide-scrollbar" style={{ scrollbarWidth: 'none' }}>
-                    {sortedProducts.filter(p => {
-                        const isApparel = ['male', 'female'].includes((p.category || "").toLowerCase());
-                        if (!featuredCategory || featuredCategory === 'all') return isApparel;
-                        return isApparel && (p.category?.toLowerCase() === featuredCategory.toLowerCase() || p.subCategory?.toLowerCase() === featuredCategory.toLowerCase());
-                    }).length > 0 ? (
-                        sortedProducts.filter(p => {
-                            const isApparel = ['male', 'female'].includes((p.category || "").toLowerCase());
-                            if (!featuredCategory || featuredCategory === 'all') return isApparel;
-                            return isApparel && (p.category?.toLowerCase() === featuredCategory.toLowerCase() || p.subCategory?.toLowerCase() === featuredCategory.toLowerCase());
-                        }).slice(0, latestDropsLimit || 8).map((product, index) => (
+                    {apparelProducts.length > 0 ? (
+                        apparelProducts.map((product, index) => (
                             <ProductCard key={product.id} product={product} index={index} addItem={addItem} openCart={openCart} currency={currency} className="min-w-[75vw] md:min-w-[25vw] snap-center shrink-0" />
                         ))
                     ) : products.length === 0 ? (
@@ -78,14 +88,8 @@ export default function LatestDrops({ products, featuredCategory, latestDropsLim
                     <span className="w-8 h-[1px] bg-primary"></span> MERCH EXCLUSIVES
                 </h3>
                 <div className="flex overflow-x-auto gap-4 snap-x snap-mandatory pb-4 hide-scrollbar" style={{ scrollbarWidth: 'none' }}>
-                    {sortedProducts.filter(p => {
-                        const cat = (p.category || "").toLowerCase();
-                        return cat === 'merch';
-                    }).length > 0 ? (
-                        sortedProducts.filter(p => {
-                            const cat = (p.category || "").toLowerCase();
-                            return cat === 'merch';
-                        }).slice(0, latestDropsLimit || 8).map((product, index) => (
+                    {merchProducts.length > 0 ? (
+                        merchProducts.map((product, index) => (
                             <ProductCard key={product.id} product={product} index={index} addItem={addItem} openCart={openCart} currency={currency} className="min-w-[75vw] md:min-w-[25vw] snap-center shrink-0" />
                         ))
                     ) : products.length === 0 ? (

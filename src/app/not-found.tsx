@@ -19,14 +19,15 @@ export default function NotFound() {
                 4040
             </h1>
             <p className="font-mono text-foreground/40 max-w-sm mt-8 mb-12 uppercase tracking-widest text-xs leading-loose">
-                The requested coordinates lead to an empty zone. The future you are looking for has been overwritten.
+                The page you are looking for does not exist.
+                It may have been moved or deleted.
             </p>
             <Link
                 href="/"
                 className="flex items-center gap-3 px-8 py-4 border border-white/20 font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all group"
             >
                 <Home size={16} />
-                Return to the timeline
+                Return home
             </Link>
         </main>
     );

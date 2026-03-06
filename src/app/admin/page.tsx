@@ -1,5 +1,6 @@
 import AdminAnalytics from "@/components/admin/AdminAnalytics";
 import Link from "next/link";
+import ChangelogWidget from "@/components/ui/ChangelogWidget";
 
 export default async function AdminPage() {
     return (
@@ -9,7 +10,7 @@ export default async function AdminPage() {
                     <h1 className="text-6xl md:text-9xl font-black uppercase tracking-tighter mb-4 leading-none">
                         SWAGOD // <span className="text-primary italic">ADMIN</span>
                     </h1>
-                    <p className="text-primary font-mono uppercase tracking-[0.2em] text-[10px] md:text-sm italic mb-12 md:mb-16">DASHBOARD CONTROL CENTER</p>
+                    <p className="text-primary font-mono uppercase tracking-[0.2em] text-[10px] md:text-sm italic mb-12 md:mb-16">WEBSITE CONTROL CENTER</p>
 
                     <AdminAnalytics />
                 </header>
@@ -27,7 +28,7 @@ export default async function AdminPage() {
 
                     <Link href="/admin/gallery" className="group relative p-6 md:p-10 border border-foreground/10 bg-foreground/5 backdrop-blur-md hover:border-primary transition-all duration-500 overflow-hidden">
                         <div className="absolute top-0 right-0 p-4 text-foreground/10 group-hover:text-primary transition-colors text-[10px] md:text-sm">02</div>
-                        <h3 className="font-mono text-primary text-[10px] md:text-xs uppercase tracking-[0.3em] mb-2 md:mb-4">STORIES</h3>
+                        <h3 className="font-mono text-primary text-[10px] md:text-xs uppercase tracking-[0.3em] mb-2 md:mb-4">BRAND</h3>
                         <p className="text-2xl md:text-3xl font-black uppercase tracking-tight mb-1 md:mb-2">GALLERY</p>
                         <p className="text-foreground/40 font-mono text-[8px] md:text-[10px] uppercase">MANAGE BRAND VISUALS</p>
                         <div className="mt-6 md:mt-8 flex items-center gap-2 text-[8px] md:text-[10px] font-bold uppercase tracking-widest group-hover:gap-4 transition-all">
@@ -37,7 +38,7 @@ export default async function AdminPage() {
 
                     <Link href="/admin/tour" className="group relative p-6 md:p-10 border border-foreground/10 bg-foreground/5 backdrop-blur-md hover:border-primary transition-all duration-500 overflow-hidden">
                         <div className="absolute top-0 right-0 p-4 text-foreground/10 group-hover:text-primary transition-colors text-[10px] md:text-sm">03</div>
-                        <h3 className="font-mono text-primary text-[10px] md:text-xs uppercase tracking-[0.3em] mb-2 md:mb-4">LOGISTICS</h3>
+                        <h3 className="font-mono text-primary text-[10px] md:text-xs uppercase tracking-[0.3em] mb-2 md:mb-4">OPERATIONS</h3>
                         <p className="text-2xl md:text-3xl font-black uppercase tracking-tight mb-1 md:mb-2">TOUR DATES</p>
                         <p className="text-foreground/40 font-mono text-[8px] md:text-[10px] uppercase">GLOBAL SOURCING AND EVENTS</p>
                         <div className="mt-6 md:mt-8 flex items-center gap-2 text-[8px] md:text-[10px] font-bold uppercase tracking-widest group-hover:gap-4 transition-all">
@@ -67,9 +68,9 @@ export default async function AdminPage() {
 
                     <Link href="/admin/settings" className="group relative p-6 md:p-10 border border-foreground/10 bg-foreground/5 backdrop-blur-md hover:border-primary transition-all duration-500 overflow-hidden">
                         <div className="absolute top-0 right-0 p-4 text-foreground/10 group-hover:text-primary transition-colors text-[10px] md:text-sm">06</div>
-                        <h3 className="font-mono text-primary text-[10px] md:text-xs uppercase tracking-[0.3em] mb-2 md:mb-4">INFRASTRUCTURE</h3>
+                        <h3 className="font-mono text-primary text-[10px] md:text-xs uppercase tracking-[0.3em] mb-2 md:mb-4">CONFIGURATION</h3>
                         <p className="text-2xl md:text-3xl font-black uppercase tracking-tight mb-1 md:mb-2">SETTINGS</p>
-                        <p className="text-foreground/40 font-mono text-[8px] md:text-[10px] uppercase">CORE SYSTEM CONFIGURATION</p>
+                        <p className="text-foreground/40 font-mono text-[8px] md:text-[10px] uppercase">WEBSITE SETTINGS & DATA</p>
                         <div className="mt-6 md:mt-8 flex items-center gap-2 text-[8px] md:text-[10px] font-bold uppercase tracking-widest group-hover:gap-4 transition-all">
                             ACCESS CORE <span className="text-primary">→</span>
                         </div>
@@ -124,6 +125,10 @@ export default async function AdminPage() {
                             </tbody>
                         </table>
                     </div>
+                </div>
+
+                <div className="mt-24">
+                    <ChangelogWidget />
                 </div>
             </div>
         </main>

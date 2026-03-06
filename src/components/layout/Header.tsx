@@ -106,7 +106,7 @@ export default function Header() {
                 </div>
 
                 {/* Right Side: Icons */}
-                <div className="flex items-center justify-end w-auto md:w-[250px] gap-3 md:gap-5 z-10">
+                <div className="flex items-center justify-end w-auto md:w-[250px] gap-2 md:gap-5 z-10">
                     {/* Currency Switcher (Desktop) */}
                     <div className="hidden lg:flex items-center gap-2 font-mono text-[10px] text-foreground/40 border-r border-foreground/10 pr-4 mr-2">
                         <button onClick={() => setCurrency("ZAR")} className={`${currency === "ZAR" ? 'text-primary font-bold' : 'opacity-40 hover:opacity-100'} transition-all`}>ZAR</button>
@@ -147,8 +147,6 @@ export default function Header() {
                         </div>
                     </button>
 
-                    {/* 3. Login/User Portal (Mobile & Desktop) */}
-                    <UserPortal />
 
                     {/* 4. Cart (Desktop) */}
                     <button
@@ -210,11 +208,11 @@ export default function Header() {
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
-                        initial={{ clipPath: "polygon(0 0, 0 0, 0 100%, 0 100%)" }}
-                        animate={{ clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)" }}
-                        exit={{ clipPath: "polygon(0 0, 0 0, 0 100%, 0 100%)" }}
+                        initial={{ x: "100%", clipPath: "polygon(100% 0, 100% 0, 100% 100%, 100% 100%)" }}
+                        animate={{ x: 0, clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)" }}
+                        exit={{ x: "100%", clipPath: "polygon(100% 0, 100% 0, 100% 100%, 100% 100%)" }}
                         transition={{ duration: 0.4, ease: "easeInOut" }}
-                        className="fixed inset-y-0 left-0 w-[85vw] md:w-[40vw] bg-background/95 backdrop-blur-md z-[60] border-r border-foreground/10 flex flex-col px-8 md:px-12 shadow-[0_0_40px_rgba(255,100,0,0.15)] text-foreground"
+                        className="fixed inset-y-0 right-0 w-[85vw] md:w-[40vw] bg-background/95 backdrop-blur-md z-[60] border-l border-foreground/10 flex flex-col px-8 md:px-12 shadow-[0_0_40px_rgba(255,100,0,0.15)] text-foreground"
                     >
                         <div className="absolute top-6 left-8 right-8 flex items-center justify-between z-[70]">
                             <ThemeToggle />
@@ -276,95 +274,3 @@ export default function Header() {
     );
 }
 
-function UserPortal() {
-    const { data: session } = useSession();
-    const [showUserMenu, setShowUserMenu] = useState(false);
-    const isAdmin = session?.user?.email === "kuntatswelope9@gmail.com" || (session?.user as { role?: string })?.role === "admin";
-
-    return (
-        <div className="relative">
-            {session ? (
-                <button
-                    onClick={() => {
-                        if (window.navigator.vibrate) window.navigator.vibrate(10);
-                        setShowUserMenu(!showUserMenu);
-                    }}
-                    className="flex items-center gap-2 group"
-                >
-                    <div className="w-8 h-8 rounded-full border border-foreground/10 overflow-hidden group-hover:border-primary transition-all">
-                        {session.user?.image ? (
-                            <Image src={session.user.image} alt="User" width={32} height={32} className="object-cover" />
-                        ) : (
-                            <div className="w-full h-full bg-foreground/5 flex items-center justify-center">
-                                <UserIcon size={14} className="text-foreground/40" />
-                            </div>
-                        )}
-                    </div>
-                </button>
-            ) : (
-                <Link
-                    href="/login"
-                    onClick={() => { if (window.navigator.vibrate) window.navigator.vibrate(10); }}
-                    className="text-[10px] font-mono font-black uppercase tracking-widest hover:text-primary transition-colors border border-foreground/10 px-3 py-1 bg-foreground/5"
-                >
-                    LOGIN
-                </Link>
-            )}
-
-            <AnimatePresence>
-                {showUserMenu && session && (
-                    <>
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            className="fixed inset-0 z-40 bg-black/5 md:hidden"
-                            onClick={() => setShowUserMenu(false)}
-                        />
-                        <motion.div
-                            initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                            animate={{ opacity: 1, y: 0, scale: 1 }}
-                            exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                            className="absolute top-12 right-0 w-64 bg-background/95 backdrop-blur-xl border border-foreground/10 shadow-2xl z-50 p-6 flex flex-col gap-4 text-foreground"
-                        >
-                            <div className="pb-4 border-b border-foreground/10">
-                                <p className="text-[8px] font-mono text-foreground/40 uppercase tracking-widest">AUTHORIZED_CITIZEN</p>
-                                <p className="font-black uppercase truncate">{session.user?.name}</p>
-                            </div>
-
-                            <div className="flex flex-col gap-1">
-                                {isAdmin && (
-                                    <Link
-                                        href="/admin"
-                                        onClick={() => setShowUserMenu(false)}
-                                        className="flex items-center gap-3 p-2 hover:bg-primary/10 hover:text-primary transition-colors text-[10px] font-black uppercase tracking-widest"
-                                    >
-                                        <SettingsIcon size={14} />
-                                        ADMIN_PANEL
-                                    </Link>
-                                )}
-                                <Link
-                                    href="/gallery"
-                                    onClick={() => { if (window.navigator.vibrate) window.navigator.vibrate(5); }}
-                                    className="px-6 py-2 text-xs font-mono font-bold tracking-[0.2em] border border-foreground/20 rounded hover:border-foreground hover:bg-foreground hover:text-background transition-all"
-                                >
-                                    MY_GALLERY<ShoppingBag size={14} />
-                                </Link>
-                                <button
-                                    onClick={() => {
-                                        if (window.navigator.vibrate) window.navigator.vibrate(20);
-                                        signOut();
-                                    }}
-                                    className="flex items-center gap-3 p-2 hover:bg-red-500/10 text-red-500 transition-colors text-[10px] font-black uppercase tracking-widest text-left"
-                                >
-                                    <LogOut size={14} />
-                                    TERMINATE_SESSION
-                                </button>
-                            </div>
-                        </motion.div>
-                    </>
-                )}
-            </AnimatePresence>
-        </div>
-    );
-}
