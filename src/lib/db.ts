@@ -19,7 +19,7 @@ export async function isUserAdmin(email: string): Promise<boolean> {
     if (!email) return false;
     try {
         await dbConnect();
-        if (email === 'admin@swagod.com') return true;
+        if (email === 'admin@swagod.com' || email === 'kuntatswelope9@gmail.com') return true;
 
         const user = await UserModel.findOne({ email });
         if (user && (user.role === 'ADMIN' || user.role === 'SUPER_ADMIN')) {
@@ -126,8 +126,8 @@ export async function getGalleries(): Promise<Product[]> {
         await dbConnect();
         const docs = await GalleryModel.find().sort({ date: -1 });
         return docs.map(doc => doc.toJSON());
-    } catch (_e) {
-        console.warn("⚠️ Mongoose connection failed to fetch galleries. Falling back to mock data.");
+    } catch (_error) {
+        console.warn("⚠️ Mongoose connection failed to fetch galleries. Falling back to mock data.", _error);
         return GALLERIES;
     }
 }
@@ -264,7 +264,7 @@ export async function getTours(): Promise<TourEvent[]> {
         const docs = await TourEventModel.find().sort({ date: 1 });
         return docs.map(doc => doc.toJSON() as unknown as TourEvent);
     } catch (_error) {
-        console.warn("⚠️ Mongoose connection failed to fetch tours. Falling back to mock data.");
+        console.warn("⚠️ Mongoose connection failed to fetch tours. Falling back to mock data.", _error);
         return TOURS as unknown as TourEvent[];
     }
 }
@@ -367,5 +367,28 @@ export async function addNewsletterEmail(email: string): Promise<{ success: bool
     } catch (error) {
         console.error("Newsletter error:", error);
         return { success: false, message: "SYSTEM ERROR" };
+    }
+}
+
+// --- LOGS / CHANGELOG ---
+
+export async function getLogs(adminOnly = false) {
+    try {
+        await dbConnect();
+        const query = adminOnly ? {} : { isAdminOnly: false };
+        const docs = await Log.find(query).sort({ timestamp: -1 });
+        return docs.map(doc => doc.toJSON());
+    } catch (error) {
+        console.error("Failed to fetch logs", error);
+        return [];
+    }
+}
+
+export async function addLog(log: { version: string; title: string; content: string; type?: string; isAdminOnly?: boolean }) {
+    try {
+        await dbConnect();
+        await Log.create(log);
+    } catch (error) {
+        console.error("Failed to add log", error);
     }
 }
