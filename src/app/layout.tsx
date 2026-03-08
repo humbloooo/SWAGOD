@@ -30,8 +30,8 @@ export const metadata: Metadata = {
     type: "website",
   },
   icons: {
-    icon: "/assets/swagod-logo.png",
-    shortcut: "/assets/swagod-logo.png",
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg",
     apple: "/assets/swagod-logo.png",
   },
   manifest: "/manifest.json",

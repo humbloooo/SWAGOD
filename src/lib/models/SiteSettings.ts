@@ -35,6 +35,16 @@ export interface ISiteSettings extends Document {
     cloudinaryCloudName?: string;
     cloudinaryApiKey?: string;
     cloudinaryApiSecret?: string;
+    psychologyTriggers?: {
+        scarcity: { enabled: boolean; stockThreshold: number; text: string };
+        urgency: { enabled: boolean; expiryMinutes: number; text: string };
+        socialProof: { enabled: boolean; minLikes: number; recentPurchaseInterval: number };
+    };
+    marqueeSettings?: {
+        speed: number;
+        direction: "left" | "right";
+        colors: { bg: string; text: string };
+    };
 }
 
 const SiteSettingsSchema: Schema = new Schema({
@@ -80,7 +90,32 @@ const SiteSettingsSchema: Schema = new Schema({
     },
     cloudinaryCloudName: { type: String },
     cloudinaryApiKey: { type: String },
-    cloudinaryApiSecret: { type: String }
+    cloudinaryApiSecret: { type: String },
+    marqueeSettings: {
+        speed: { type: Number, default: 20 },
+        direction: { type: String, enum: ["left", "right"], default: "left" },
+        colors: {
+            bg: { type: String, default: "#ff6400" },
+            text: { type: String, default: "#ffffff" }
+        }
+    },
+    psychologyTriggers: {
+        scarcity: {
+            enabled: { type: Boolean, default: true },
+            stockThreshold: { type: Number, default: 5 },
+            text: { type: String, default: "ONLY {count} LEFT IN STOCK" }
+        },
+        urgency: {
+            enabled: { type: Boolean, default: true },
+            expiryMinutes: { type: Number, default: 15 },
+            text: { type: String, default: "OFFER EXPIRES IN {time}" }
+        },
+        socialProof: {
+            enabled: { type: Boolean, default: true },
+            minLikes: { type: Number, default: 10 },
+            recentPurchaseInterval: { type: Number, default: 24 }
+        }
+    }
 }, {
     timestamps: true,
     toJSON: {

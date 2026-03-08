@@ -71,6 +71,16 @@ export interface SiteSettings {
         question: string;
         answer: string;
     }[];
+    psychologyTriggers?: {
+        scarcity: { enabled: boolean; stockThreshold: number; text: string };
+        urgency: { enabled: boolean; expiryMinutes: number; text: string };
+        socialProof: { enabled: boolean; minLikes: number; recentPurchaseInterval: number };
+    };
+    marqueeSettings?: {
+        speed: number;
+        direction: "left" | "right";
+        colors: { bg: string; text: string };
+    };
 }
 
 export interface Feedback {

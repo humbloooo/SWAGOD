@@ -120,23 +120,38 @@ export default function AdminSettings() {
                                 />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-foreground/40 font-mono text-xs uppercase tracking-widest">HERO_WALLPAPER_SOURCE (DARK MODE)</label>
-                                <div className="p-4 border border-foreground/5 bg-background/20">
-                                    <ImageUpload
-                                        value={settings.heroImage}
-                                        onChange={(url) => setSettings({ ...settings, heroImage: url })}
-                                        folder="settings"
-                                    />
-                                </div>
-                            </div>
-                            <div className="space-y-2">
-                                <label className="text-foreground/40 font-mono text-xs uppercase tracking-widest">HERO_WALLPAPER_SOURCE (LIGHT MODE)</label>
-                                <div className="p-4 border border-foreground/5 bg-background/20">
-                                    <ImageUpload
-                                        value={settings.lightModeWallpaper}
-                                        onChange={(url) => setSettings({ ...settings, lightModeWallpaper: url })}
-                                        folder="settings"
-                                    />
+                                <label className="text-foreground/40 font-mono text-xs uppercase tracking-widest">HERO_WALLPAPER_SOURCE</label>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="space-y-4">
+                                        <label className="text-[10px] text-foreground/30 font-mono uppercase">CUSTOM_SOURCE (CLOUDINARY/EXTERNAL)</label>
+                                        <div className="p-4 border border-foreground/5 bg-background/20">
+                                            <ImageUpload
+                                                value={settings.heroImage}
+                                                onChange={(url) => setSettings({ ...settings, heroImage: url })}
+                                                folder="settings"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="space-y-4">
+                                        <label className="text-[10px] text-foreground/30 font-mono uppercase">PRE_BUNDLED_PRESETS</label>
+                                        <select
+                                            className="w-full bg-foreground/5 border border-foreground/10 p-4 focus:border-primary outline-none transition-all font-mono text-sm uppercase appearance-none"
+                                            onChange={(e) => {
+                                                if (e.target.value) setSettings({ ...settings, heroImage: e.target.value });
+                                            }}
+                                            value={settings.heroImage?.startsWith('/assets/wallpapers/') ? settings.heroImage : ""}
+                                        >
+                                            <option value="">-- SELECT PRESET --</option>
+                                            <option value="/assets/wallpapers/industrial-dark.png">INDUSTRIAL_DARK</option>
+                                            <option value="/assets/wallpapers/cyan-neon.png">CYAN_NEON</option>
+                                            <option value="/assets/wallpapers/minimal-white.png">MINIMAL_WHITE</option>
+                                            <option value="/assets/wallpapers/brutalist-concrete.png">BRUTALIST_CONCRETE</option>
+                                            <option value="/assets/wallpapers/liquid-metal.png">LIQUID_METAL</option>
+                                            <option value="#000000">BRAND_PLAIN_BLACK</option>
+                                            <option value="#ffffff">BRAND_PLAIN_WHITE</option>
+                                        </select>
+                                        <p className="text-[8px] text-foreground/30 font-mono uppercase italic">PRESETS ARE BUNDLED FOR MAX PERFORMANCE & STABILITY</p>
+                                    </div>
                                 </div>
                             </div>
                             <div className="space-y-2">
@@ -254,58 +269,105 @@ export default function AdminSettings() {
                             <h2 className="text-8xl font-black">$$$</h2>
                         </div>
                         <h3 className="text-xl font-black uppercase mb-8 border-b border-foreground/10 pb-4 text-primary font-mono">REVENUE // PSYCHOLOGY</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <label className="flex items-center gap-4 group cursor-pointer p-4 border border-foreground/5 bg-foreground/5 hover:border-primary/30 transition-all">
-                                <input
-                                    type="checkbox"
-                                    className="w-6 h-6 bg-foreground/5 border border-foreground/10 checked:bg-primary accent-primary"
-                                    checked={settings.showScarcity ?? true}
-                                    onChange={(e) => setSettings({ ...settings, showScarcity: e.target.checked })}
-                                />
-                                <div className="flex flex-col">
-                                    <span className="font-black uppercase tracking-widest text-[10px] group-hover:text-primary transition-colors">ACTIVATE_SCARCITY</span>
-                                    <span className="text-[8px] text-foreground/40 font-mono uppercase tracking-[0.2em] mt-1">SHOWS &quot;ONLY X LEFT&quot; ALERTS</span>
+                        <div className="space-y-12">
+                            {/* SCARCITY */}
+                            <div className="space-y-6">
+                                <label className="flex items-center gap-4 group cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        className="w-6 h-6 bg-foreground/5 border border-foreground/10 checked:bg-primary accent-primary"
+                                        checked={settings.psychologyTriggers?.scarcity?.enabled ?? true}
+                                        onChange={(e) => setSettings({ ...settings, psychologyTriggers: { ...settings.psychologyTriggers!, scarcity: { ...settings.psychologyTriggers!.scarcity, enabled: e.target.checked } } })}
+                                    />
+                                    <span className="font-black uppercase tracking-widest text-xs group-hover:text-primary transition-colors">ACTIVATE_SCARCITY</span>
+                                </label>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pl-10 border-l border-primary/20">
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] text-foreground/40 font-mono uppercase tracking-widest">STOCK_THRESHOLD</label>
+                                        <input
+                                            type="number"
+                                            value={settings.psychologyTriggers?.scarcity?.stockThreshold ?? 5}
+                                            onChange={(e) => setSettings({ ...settings, psychologyTriggers: { ...settings.psychologyTriggers!, scarcity: { ...settings.psychologyTriggers!.scarcity, stockThreshold: parseInt(e.target.value) || 0 } } })}
+                                            className="w-full bg-background border border-foreground/10 p-3 outline-none focus:border-primary font-mono text-xs"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] text-foreground/40 font-mono uppercase tracking-widest">DISPLAY_TEXT</label>
+                                        <input
+                                            type="text"
+                                            value={settings.psychologyTriggers?.scarcity?.text || "ONLY {count} LEFT IN STOCK"}
+                                            onChange={(e) => setSettings({ ...settings, psychologyTriggers: { ...settings.psychologyTriggers!, scarcity: { ...settings.psychologyTriggers!.scarcity, text: e.target.value } } })}
+                                            className="w-full bg-background border border-foreground/10 p-3 outline-none focus:border-primary font-mono text-xs"
+                                        />
+                                    </div>
                                 </div>
-                            </label>
+                            </div>
 
-                            <label className="flex items-center gap-4 group cursor-pointer p-4 border border-foreground/5 bg-foreground/5 hover:border-primary/30 transition-all">
-                                <input
-                                    type="checkbox"
-                                    className="w-6 h-6 bg-foreground/5 border border-foreground/10 checked:bg-primary accent-primary"
-                                    checked={settings.showUrgency ?? true}
-                                    onChange={(e) => setSettings({ ...settings, showUrgency: e.target.checked })}
-                                />
-                                <div className="flex flex-col">
-                                    <span className="font-black uppercase tracking-widest text-[10px] group-hover:text-primary transition-colors">ACTIVATE_URGENCY</span>
-                                    <span className="text-[8px] text-foreground/40 font-mono uppercase tracking-[0.2em] mt-1">SHOWS COUNTDOWN TIMERS</span>
+                            {/* URGENCY */}
+                            <div className="space-y-6">
+                                <label className="flex items-center gap-4 group cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        className="w-6 h-6 bg-foreground/5 border border-foreground/10 checked:bg-primary accent-primary"
+                                        checked={settings.psychologyTriggers?.urgency?.enabled ?? true}
+                                        onChange={(e) => setSettings({ ...settings, psychologyTriggers: { ...settings.psychologyTriggers!, urgency: { ...settings.psychologyTriggers!.urgency, enabled: e.target.checked } } })}
+                                    />
+                                    <span className="font-black uppercase tracking-widest text-xs group-hover:text-primary transition-colors">ACTIVATE_URGENCY</span>
+                                </label>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pl-10 border-l border-primary/20">
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] text-foreground/40 font-mono uppercase tracking-widest">EXPIRY_MINUTES</label>
+                                        <input
+                                            type="number"
+                                            value={settings.psychologyTriggers?.urgency?.expiryMinutes ?? 15}
+                                            onChange={(e) => setSettings({ ...settings, psychologyTriggers: { ...settings.psychologyTriggers!, urgency: { ...settings.psychologyTriggers!.urgency, expiryMinutes: parseInt(e.target.value) || 0 } } })}
+                                            className="w-full bg-background border border-foreground/10 p-3 outline-none focus:border-primary font-mono text-xs"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] text-foreground/40 font-mono uppercase tracking-widest">DISPLAY_TEXT</label>
+                                        <input
+                                            type="text"
+                                            value={settings.psychologyTriggers?.urgency?.text || "OFFER EXPIRES IN {time}"}
+                                            onChange={(e) => setSettings({ ...settings, psychologyTriggers: { ...settings.psychologyTriggers!, urgency: { ...settings.psychologyTriggers!.urgency, text: e.target.value } } })}
+                                            className="w-full bg-background border border-foreground/10 p-3 outline-none focus:border-primary font-mono text-xs"
+                                        />
+                                    </div>
                                 </div>
-                            </label>
+                            </div>
 
-                            <label className="flex items-center gap-4 group cursor-pointer p-4 border border-foreground/5 bg-foreground/5 hover:border-primary/30 transition-all">
-                                <input
-                                    type="checkbox"
-                                    className="w-6 h-6 bg-foreground/5 border border-foreground/10 checked:bg-primary accent-primary"
-                                    checked={settings.showSocialProof ?? true}
-                                    onChange={(e) => setSettings({ ...settings, showSocialProof: e.target.checked })}
-                                />
-                                <div className="flex flex-col">
-                                    <span className="font-black uppercase tracking-widest text-[10px] group-hover:text-primary transition-colors">ACTIVATE_SOCIAL_PROOF</span>
-                                    <span className="text-[8px] text-foreground/40 font-mono uppercase tracking-[0.2em] mt-1">SHOWS RECENT PURCHASES</span>
+                            {/* SOCIAL PROOF */}
+                            <div className="space-y-6">
+                                <label className="flex items-center gap-4 group cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        className="w-6 h-6 bg-foreground/5 border border-foreground/10 checked:bg-primary accent-primary"
+                                        checked={settings.psychologyTriggers?.socialProof?.enabled ?? true}
+                                        onChange={(e) => setSettings({ ...settings, psychologyTriggers: { ...settings.psychologyTriggers!, socialProof: { ...settings.psychologyTriggers!.socialProof, enabled: e.target.checked } } })}
+                                    />
+                                    <span className="font-black uppercase tracking-widest text-xs group-hover:text-primary transition-colors">ACTIVATE_SOCIAL_PROOF</span>
+                                </label>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pl-10 border-l border-primary/20">
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] text-foreground/40 font-mono uppercase tracking-widest">MIN_LIKES_THRESHOLD</label>
+                                        <input
+                                            type="number"
+                                            value={settings.psychologyTriggers?.socialProof?.minLikes ?? 10}
+                                            onChange={(e) => setSettings({ ...settings, psychologyTriggers: { ...settings.psychologyTriggers!, socialProof: { ...settings.psychologyTriggers!.socialProof, minLikes: parseInt(e.target.value) || 0 } } })}
+                                            className="w-full bg-background border border-foreground/10 p-3 outline-none focus:border-primary font-mono text-xs"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] text-foreground/40 font-mono uppercase tracking-widest">PURCHASE_WINDOW (HOURS)</label>
+                                        <input
+                                            type="number"
+                                            value={settings.psychologyTriggers?.socialProof?.recentPurchaseInterval ?? 24}
+                                            onChange={(e) => setSettings({ ...settings, psychologyTriggers: { ...settings.psychologyTriggers!, socialProof: { ...settings.psychologyTriggers!.socialProof, recentPurchaseInterval: parseInt(e.target.value) || 0 } } })}
+                                            className="w-full bg-background border border-foreground/10 p-3 outline-none focus:border-primary font-mono text-xs"
+                                        />
+                                    </div>
                                 </div>
-                            </label>
-
-                            <label className="flex items-center gap-4 group cursor-pointer p-4 border border-foreground/5 bg-foreground/5 hover:border-primary/30 transition-all">
-                                <input
-                                    type="checkbox"
-                                    className="w-6 h-6 bg-foreground/5 border border-foreground/10 checked:bg-primary accent-primary"
-                                    checked={settings.showPersonalization ?? true}
-                                    onChange={(e) => setSettings({ ...settings, showPersonalization: e.target.checked })}
-                                />
-                                <div className="flex flex-col">
-                                    <span className="font-black uppercase tracking-widest text-[10px] group-hover:text-primary transition-colors">ACTIVATE_PERSONALIZATION</span>
-                                    <span className="text-[8px] text-foreground/40 font-mono uppercase tracking-[0.2em] mt-1">CUSTOMIZES CONTENT FOR RETURNING USERS</span>
-                                </div>
-                            </label>
+                            </div>
                         </div>
                     </div>
 
@@ -346,15 +408,59 @@ export default function AdminSettings() {
                             </label>
 
                             {settings.showMarquee && (
-                                <div className="space-y-2 pt-4">
-                                    <label className="text-foreground/40 font-mono text-xs uppercase tracking-widest">MARQUEE_TEXT_CONTENT (// DELIMITED)</label>
-                                    <input
-                                        type="text"
-                                        value={settings.marqueeText || ""}
-                                        onChange={(e) => setSettings({ ...settings, marqueeText: e.target.value })}
-                                        placeholder="WORLDWIDE SHIPPING // NEW DROP AVAILABLE"
-                                        className="w-full bg-foreground/5 border border-foreground/10 p-4 focus:border-primary outline-none transition-all font-mono text-sm"
-                                    />
+                                <div className="space-y-6 pt-4 pl-10 border-l border-primary/20">
+                                    <div className="space-y-2">
+                                        <label className="text-foreground/40 font-mono text-xs uppercase tracking-widest">MARQUEE_TEXT_CONTENT (// DELIMITED)</label>
+                                        <input
+                                            type="text"
+                                            value={settings.marqueeText || ""}
+                                            onChange={(e) => setSettings({ ...settings, marqueeText: e.target.value })}
+                                            placeholder="WORLDWIDE SHIPPING // NEW DROP AVAILABLE"
+                                            className="w-full bg-background border border-foreground/10 p-4 focus:border-primary outline-none transition-all font-mono text-sm"
+                                        />
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] text-foreground/40 font-mono uppercase tracking-widest">SPEED_INTENSITY</label>
+                                            <input
+                                                type="number"
+                                                value={settings.marqueeSettings?.speed ?? 20}
+                                                onChange={(e) => setSettings({ ...settings, marqueeSettings: { ...settings.marqueeSettings!, speed: parseInt(e.target.value) || 0 } })}
+                                                className="w-full bg-background border border-foreground/10 p-3 outline-none focus:border-primary font-mono text-xs"
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] text-foreground/40 font-mono uppercase tracking-widest">DIRECTION</label>
+                                            <select
+                                                value={settings.marqueeSettings?.direction || "left"}
+                                                onChange={(e) => setSettings({ ...settings, marqueeSettings: { ...settings.marqueeSettings!, direction: e.target.value as "left" | "right" } })}
+                                                className="w-full bg-background border border-foreground/10 p-3 outline-none focus:border-primary font-mono text-xs uppercase"
+                                            >
+                                                <option value="left">LEFT</option>
+                                                <option value="right">RIGHT</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] text-foreground/40 font-mono uppercase tracking-widest">BACKGROUND_HEX</label>
+                                            <input
+                                                type="text"
+                                                value={settings.marqueeSettings?.colors?.bg || "#ff6400"}
+                                                onChange={(e) => setSettings({ ...settings, marqueeSettings: { ...settings.marqueeSettings!, colors: { ...settings.marqueeSettings!.colors, bg: e.target.value } } })}
+                                                className="w-full bg-background border border-foreground/10 p-3 outline-none focus:border-primary font-mono text-xs"
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] text-foreground/40 font-mono uppercase tracking-widest">TEXT_HEX</label>
+                                            <input
+                                                type="text"
+                                                value={settings.marqueeSettings?.colors?.text || "#ffffff"}
+                                                onChange={(e) => setSettings({ ...settings, marqueeSettings: { ...settings.marqueeSettings!, colors: { ...settings.marqueeSettings!.colors, text: e.target.value } } })}
+                                                className="w-full bg-background border border-foreground/10 p-3 outline-none focus:border-primary font-mono text-xs"
+                                            />
+                                        </div>
+                                    </div>
                                 </div>
                             )}
                         </div>

@@ -7,7 +7,6 @@ import HomeHero from "@/components/home/HomeHero";
 import HomeLatestDrops from "@/components/home/HomeLatestDrops";
 import HomeAbout from "@/components/home/HomeAbout";
 import FeedbackForm from "@/components/ui/FeedbackForm";
-import ChangelogWidget from "@/components/ui/ChangelogWidget";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { getSettings } from "@/lib/db";
 
@@ -44,10 +43,6 @@ export default async function Home() {
       <Suspense fallback={<Skeleton className="h-96 w-full" />}>
         <HomeAbout />
       </Suspense>
-
-      <div className="container mx-auto px-6">
-        <ChangelogWidget />
-      </div>
 
       <Navigation />
     </main>

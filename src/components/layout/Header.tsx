@@ -216,7 +216,9 @@ export default function Header() {
                                 { l: "Collections", h: "/shop" },
                                 { l: "Tour", h: "/tour" },
                                 { l: "Gallery", h: "/gallery" },
-                                { l: "Login", h: "/login" },
+                                status === "authenticated"
+                                    ? { l: session?.user?.name?.split(" ")[0] || "ACCOUNT", h: "/account" }
+                                    : { l: "LOGIN", h: "/login" },
                             ].map((item, i) => (
                                 <motion.div
                                     key={item.l}

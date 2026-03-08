@@ -26,30 +26,31 @@ export default function Footer() {
     return (
         <footer>
             {/* TOP SECTION - Shipping, Returns, Support */}
-            <div className="bg-foreground/5 text-foreground py-16 border-t border-foreground/10">
-                <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
+            <div className="bg-foreground/5 text-foreground py-8 md:py-16 border-t border-foreground/10">
+                <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-12 text-center">
                     {/* SHIPPING */}
-                    <div className="flex flex-col items-center">
-                        <Truck size={28} className="mb-6 stroke-[1.5]" />
-                        <h4 className="font-bold uppercase mb-4 text-xs tracking-[0.2em]">SHIPPING</h4>
-                        <p className="text-sm text-foreground/70 mb-2 font-mono">Delivery 2-5 business days</p>
-                        <p className="text-sm text-foreground/70 font-mono">R90 / Free over R900</p>
+                    <div className="flex flex-col items-center border-b border-foreground/5 md:border-none pb-6 md:pb-0">
+                        <Truck size={20} className="mb-4 md:mb-6 stroke-[1.5] md:w-7 md:h-7" />
+                        <h4 className="font-bold uppercase mb-2 md:mb-4 text-[9px] md:text-xs tracking-[0.2em]">SHIPPING</h4>
+                        <p className="text-[10px] md:text-sm text-foreground/70 mb-1 md:mb-2 font-mono">2-5 BUSINESS DAYS</p>
+                        <p className="text-[10px] md:text-sm text-foreground/70 font-mono italic">FREE OVER R2000</p>
                     </div>
                     {/* RETURNS */}
-                    <div className="flex flex-col items-center">
-                        <RefreshCcw size={28} className="mb-6 stroke-[1.5]" />
-                        <h4 className="font-bold uppercase mb-4 text-xs tracking-[0.2em]">RETURNS</h4>
-                        <p className="text-sm text-foreground/70 mb-4 font-mono">Return online orders in-store or online.</p>
-                        <Link href="/faq" className="text-sm text-foreground/70 mb-4 hover:underline hover:text-primary transition-colors font-mono">FAQ&apos;s</Link>
-                        <Link href="/support/return" className="text-sm text-foreground hover:text-primary transition-colors border-b border-foreground hover:border-primary font-mono pb-1">Log a Return</Link>
+                    <div className="flex flex-col items-center border-b border-foreground/5 md:border-none py-6 md:py-0">
+                        <RefreshCcw size={20} className="mb-4 md:mb-6 stroke-[1.5] md:w-7 md:h-7" />
+                        <h4 className="font-bold uppercase mb-2 md:mb-4 text-[9px] md:text-xs tracking-[0.2em]">RETURNS</h4>
+                        <p className="text-[10px] md:text-sm text-foreground/70 mb-3 md:mb-4 font-mono">14 DAY GLOBAL RETURNS</p>
+                        <div className="flex gap-4">
+                            <Link href="/faq" className="text-[9px] md:text-sm text-foreground/70 hover:underline hover:text-primary transition-colors font-mono">FAQ&apos;S</Link>
+                            <Link href="/support/return" className="text-[9px] md:text-sm text-foreground hover:text-primary transition-colors border-b border-foreground hover:border-primary font-mono pb-0.5">LOG RETURN</Link>
+                        </div>
                     </div>
                     {/* SUPPORT */}
-                    <div className="flex flex-col items-center">
-                        <MessageSquare size={28} className="mb-6 stroke-[1.5]" />
-                        <h4 className="font-bold uppercase mb-4 text-xs tracking-[0.2em]">SUPPORT</h4>
-                        <p className="text-sm text-foreground/70 mb-4 font-mono">We uphold the Consumer Goods and Services Code.</p>
-                        <Link href="/faq" className="text-sm text-foreground/70 mb-4 hover:underline hover:text-primary transition-colors font-mono">FAQs</Link>
-                        <p className="text-sm text-foreground/70 font-mono uppercase">CGSO PARTICIPANT</p>
+                    <div className="flex flex-col items-center pt-6 md:pt-0">
+                        <MessageSquare size={20} className="mb-4 md:mb-6 stroke-[1.5] md:w-7 md:h-7" />
+                        <h4 className="font-bold uppercase mb-2 md:mb-4 text-[9px] md:text-xs tracking-[0.2em]">SUPPORT</h4>
+                        <p className="text-[10px] md:text-sm text-foreground/70 mb-3 md:mb-4 font-mono">EXCELLENCE IN SERVICE</p>
+                        <Link href="/contact" className="text-[9px] md:text-sm text-foreground/70 hover:underline hover:text-primary transition-colors font-mono uppercase tracking-widest">HELP_CENTER</Link>
                     </div>
                 </div>
             </div>
