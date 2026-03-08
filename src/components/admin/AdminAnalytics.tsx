@@ -1,12 +1,19 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { TrendingUp, Users, ShoppingCart, DollarSign } from "lucide-react";
+import { TrendingUp, Users, ShoppingCart } from "lucide-react";
 
 import { useEffect, useState } from "react";
 
+interface AnalyticsData {
+    todayVisits: number;
+    monthlyVisits: number;
+    totalProducts: number;
+    chartData: number[];
+}
+
 export default function AdminAnalytics() {
-    const [data, setData] = useState<any>(null);
+    const [data, setData] = useState<AnalyticsData | null>(null);
 
     useEffect(() => {
         fetch('/api/analytics')
@@ -17,7 +24,6 @@ export default function AdminAnalytics() {
 
     // Provide default fallback while loading or on error
     const d = data || { todayVisits: 0, monthlyVisits: 0, totalProducts: 0, chartData: [0, 0, 0, 0, 0, 0, 0] };
-    const maxChart = Math.max(...d.chartData, 1);
 
     const stats = [
         { label: "PRODUCTS", value: d.totalProducts.toString(), icon: ShoppingCart, trend: "LIVE", color: "text-green-500" },
@@ -70,21 +76,25 @@ export default function AdminAnalytics() {
                 </div>
 
                 <div className="flex items-end justify-between h-48 gap-4">
-                    {chartData.map((height: number, i: number) => (
-                        <div key={i} className="flex-1 flex flex-col items-center gap-4">
-                            <motion.div
-                                initial={{ height: 0 }}
-                                animate={{ height: `${height}%` }}
-                                transition={{ delay: 0.7 + (i * 0.1), duration: 1, ease: "easeOut" }}
-                                className="w-full bg-primary/20 border-t-2 border-primary relative group cursor-crosshair"
-                            >
-                                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-full mb-2 opacity-0 group-hover:opacity-100 transition-opacity bg-primary text-black text-[10px] font-black px-2 py-1">
-                                    {height}%
-                                </div>
-                            </motion.div>
-                            <span className="font-mono text-[10px] text-foreground/20">D0{i + 1}</span>
-                        </div>
-                    ))}
+                    {chartData.map((count: number, i: number) => {
+                        const maxVal = Math.max(...chartData, 1);
+                        const percentage = (count / maxVal) * 100;
+                        return (
+                            <div key={i} className="flex-1 flex flex-col items-center gap-4">
+                                <motion.div
+                                    initial={{ height: 0 }}
+                                    animate={{ height: `${percentage}%` }}
+                                    transition={{ delay: 0.7 + (i * 0.1), duration: 1, ease: "easeOut" }}
+                                    className="w-full bg-primary/20 border-t-2 border-primary relative group cursor-crosshair"
+                                >
+                                    <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-full mb-2 opacity-0 group-hover:opacity-100 transition-opacity bg-primary text-black text-[10px] font-black px-2 py-1 whitespace-nowrap shadow-lg z-10">
+                                        {count} VISITS
+                                    </div>
+                                </motion.div>
+                                <span className="font-mono text-[10px] text-foreground/20">D0{i + 1}</span>
+                            </div>
+                        );
+                    })}
                 </div>
             </motion.div>
         </section>

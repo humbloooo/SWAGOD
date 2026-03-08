@@ -32,6 +32,9 @@ export interface ISiteSettings extends Document {
         address: string;
         hours: string;
     };
+    cloudinaryCloudName?: string;
+    cloudinaryApiKey?: string;
+    cloudinaryApiSecret?: string;
 }
 
 const SiteSettingsSchema: Schema = new Schema({
@@ -74,7 +77,10 @@ const SiteSettingsSchema: Schema = new Schema({
         phone: { type: String },
         address: { type: String },
         hours: { type: String }
-    }
+    },
+    cloudinaryCloudName: { type: String },
+    cloudinaryApiKey: { type: String },
+    cloudinaryApiSecret: { type: String }
 }, {
     timestamps: true,
     toJSON: {

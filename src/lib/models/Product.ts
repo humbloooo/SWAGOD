@@ -14,6 +14,9 @@ export interface IProduct extends Document {
     subCategory?: string;
     stockCount?: number;
     isPromo?: boolean;
+    videoUrl?: string; // Link to Cloudinary video
+    cloudinaryPublicId?: string;
+    mediaType?: 'image' | 'video' | 'both';
 }
 
 const ProductSchema: Schema = new Schema({
@@ -29,7 +32,10 @@ const ProductSchema: Schema = new Schema({
     likes: [{ type: String }],
     active: { type: Boolean, default: true },
     stockCount: { type: Number, default: 10 },
-    isPromo: { type: Boolean, default: false }
+    isPromo: { type: Boolean, default: false },
+    videoUrl: { type: String },
+    cloudinaryPublicId: { type: String },
+    mediaType: { type: String, enum: ['image', 'video', 'both'], default: 'image' }
 }, {
     timestamps: true,
     toJSON: {

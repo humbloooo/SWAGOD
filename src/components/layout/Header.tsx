@@ -2,10 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ShoppingBag, Search as SearchIcon, User as UserIcon, LogOut, Settings as SettingsIcon } from "lucide-react";
+import { Menu, X, ShoppingBag, Search as SearchIcon, User as UserIcon } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 const CartDrawer = dynamic(() => import("@/components/layout/CartDrawer"), { ssr: false });
 const Search = dynamic(() => import("@/components/layout/Search"), { ssr: false });
@@ -17,6 +17,7 @@ import { SiteSettings } from "@/lib/types";
 
 
 export default function Header() {
+    const { data: session, status } = useSession();
     const [isOpen, setIsOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const hidden = useScrollThreshold(150);
@@ -73,18 +74,8 @@ export default function Header() {
                     <div className="absolute inset-0 w-full h-full bg-background/80 backdrop-blur-md -z-10" />
                 )}
 
-                {/* Left Side: Navigation Menu Toggle (Desktop) / Logo (Mobile) */}
+                {/* Left Side: Empty on desktop (keeping spacing) / Logo (Mobile) */}
                 <div className="flex items-center w-auto md:w-[250px] z-10 gap-4">
-                    {/* Desktop Menu */}
-                    <button
-                        onClick={() => setIsOpen(true)}
-                        className="hidden md:flex text-foreground hover:text-primary transition-colors items-center gap-2"
-                        aria-label="Open Navigation Menu"
-                        suppressHydrationWarning
-                    >
-                        <Menu size={28} className="icon-industrial" suppressHydrationWarning />
-                    </button>
-
                     {/* Mobile Logo */}
                     <div className="flex md:hidden items-center group">
                         <Link href="/" className="flex items-center gap-2 hover:scale-105 transition-transform">
@@ -106,15 +97,32 @@ export default function Header() {
                 </div>
 
                 {/* Right Side: Icons */}
-                <div className="flex items-center justify-end w-auto md:w-[250px] gap-2 md:gap-5 z-10">
-                    {/* Currency Switcher (Desktop) */}
-                    <div className="hidden lg:flex items-center gap-2 font-mono text-[10px] text-foreground/40 border-r border-foreground/10 pr-4 mr-2">
+                <div className="flex items-center justify-end w-auto md:w-[250px] gap-2 md:gap-4 z-10">
+                    {/* Currency Switcher (Large Desktop) */}
+                    <div className="hidden xl:flex items-center gap-2 font-mono text-[10px] text-foreground/40 border-r border-foreground/10 pr-4 mr-2">
                         <button onClick={() => setCurrency("ZAR")} className={`${currency === "ZAR" ? 'text-primary font-bold' : 'opacity-40 hover:opacity-100'} transition-all`}>ZAR</button>
                         <span className="opacity-20">/</span>
                         <button onClick={() => setCurrency("USD")} className={`${currency === "USD" ? 'text-primary font-bold' : 'opacity-40 hover:opacity-100'} transition-all`}>USD</button>
                     </div>
 
-                    {/* 1. Search (Mobile & Desktop) */}
+                    {/* Authentication / Account Icon */}
+                    <div className="hidden md:block">
+                        {status === "authenticated" ? (
+                            <Link href="/account" className="flex items-center gap-2 group">
+                                <span className="font-mono text-[10px] font-black uppercase tracking-widest text-primary/80 group-hover:text-primary transition-colors">
+                                    {session.user?.name?.split(' ')[0] || "ACCOUNT"}
+                                </span>
+                                <UserIcon size={18} className="text-foreground group-hover:text-primary transition-colors" />
+                            </Link>
+                        ) : (
+                            <Link href="/login" className="flex items-center gap-2 group">
+                                <span className="font-mono text-[10px] font-black uppercase tracking-widest text-foreground/40 group-hover:text-primary transition-colors">LOGIN</span>
+                                <UserIcon size={18} className="text-foreground/40 group-hover:text-primary transition-colors" />
+                            </Link>
+                        )}
+                    </div>
+
+                    {/* 1. Search */}
                     <button
                         onClick={() => {
                             if (window.navigator.vibrate) window.navigator.vibrate(10);
@@ -127,34 +135,13 @@ export default function Header() {
                         <SearchIcon size={20} className="icon-industrial" suppressHydrationWarning />
                     </button>
 
-                    {/* 2. Cart (Mobile - placed btwn search and login) */}
+                    {/* 2. Cart (Desktop & Mobile) */}
                     <button
                         onClick={() => {
                             if (window.navigator.vibrate) window.navigator.vibrate(10);
                             openCart();
                         }}
-                        className="flex md:hidden group relative items-center gap-2 text-foreground hover:text-primary transition-colors"
-                        aria-label="View Cart"
-                        suppressHydrationWarning
-                    >
-                        <div className="relative">
-                            <ShoppingBag size={20} className="icon-industrial" suppressHydrationWarning />
-                            {itemCount > 0 && (
-                                <span className="absolute -top-2 -right-2 bg-black text-white text-[8px] font-bold w-4 h-4 rounded-full flex items-center justify-center border border-primary glow-primary">
-                                    {itemCount}
-                                </span>
-                            )}
-                        </div>
-                    </button>
-
-
-                    {/* 4. Cart (Desktop) */}
-                    <button
-                        onClick={() => {
-                            if (window.navigator.vibrate) window.navigator.vibrate(10);
-                            openCart();
-                        }}
-                        className="hidden md:flex group relative items-center gap-2 text-foreground hover:text-primary transition-colors"
+                        className="group relative flex items-center gap-2 text-foreground hover:text-primary transition-colors"
                         aria-label="View Cart"
                         suppressHydrationWarning
                     >
@@ -173,10 +160,10 @@ export default function Header() {
                         )}
                     </button>
 
-                    {/* 5. Mobile Menu Trigger (Far Right) */}
+                    {/* 3. Global Menu Trigger (Now on the right for all) */}
                     <button
                         onClick={() => setIsOpen(true)}
-                        className="flex md:hidden text-foreground hover:text-primary transition-colors items-center"
+                        className="text-foreground hover:text-primary transition-colors items-center"
                         aria-label="Open Navigation Menu"
                         suppressHydrationWarning
                     >

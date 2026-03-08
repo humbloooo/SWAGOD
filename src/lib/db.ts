@@ -328,17 +328,13 @@ export async function getAnalytics(): Promise<AnalyticsData> {
             last7DaysData.push(v ? v.count : 0);
         }
 
-        // We can just calculate percentage relative to the max of the last 7 days for the chart
-        const maxVisits = Math.max(...last7DaysData, 1); // prevent division by zero
-        const chartData = last7DaysData.map(val => Math.round((val / maxVisits) * 100));
-
-        // Get total products and total sales (mock for sales for now as orders aren't fully implemented in DB yet)
+        // Get total products
         const totalProducts = await ProductModel.countDocuments({ active: true });
 
         return {
             todayVisits: todayVisit ? todayVisit.count : 0,
             monthlyVisits: monthlyTotal,
-            chartData,
+            chartData: last7DaysData,
             totalProducts
         };
 

@@ -6,6 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "server": "nodemon server.js",
+    "migrate": "ts-node --transpile-only src/lib/migrate/migrate.ts",
     "lint": "eslint",
     "analyze": "set ANALYZE=true && next build",
     "prepare": "husky"
@@ -13,10 +15,13 @@
   "dependencies": {
     "@auth/mongodb-adapter": "^3.11.1",
     "@types/canvas-confetti": "^1.9.0",
+    "@types/dotenv": "^6.1.1",
     "canvas-confetti": "^1.9.4",
     "cloudinary": "^2.9.0",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
     "framer-motion": "^12.34.0",
     "lucide-react": "^0.563.0",
     "mongodb": "^6.21.0",
@@ -24,6 +29,7 @@
     "next": "16.1.6",
     "next-auth": "^4.24.13",
     "next-themes": "^0.4.6",
+    "nodemon": "^3.1.14",
     "preact": "^10.11.3",
     "react": "19.2.3",
     "react-dom": "19.2.3",
@@ -44,6 +50,7 @@
     "lint-staged": "^16.2.7",
     "markdown-it": "^14.1.1",
     "tailwindcss": "^4",
+    "ts-node": "^10.9.2",
     "typescript": "^5"
   },
   "lint-staged": {

@@ -33,7 +33,7 @@ const ProductCard = memo(({ product, currency, isSmall = false }: ProductCardPro
                 )}>
                     {product.image && (
                         <Image
-                            src={product.image}
+                            src={product.image.startsWith('http') || product.image.startsWith('/') ? product.image : `/${product.image}`}
                             alt={product.title ?? "Product Image"}
                             fill
                             className="object-cover transition-transform duration-1000 group-hover:scale-110"
