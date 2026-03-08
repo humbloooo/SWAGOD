@@ -3,6 +3,8 @@ import Link from "next/link";
 import dbConnect from "@/lib/mongoose";
 import Transaction from "@/lib/models/Transaction";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminPage() {
     await dbConnect();
     const recentTransactions = await Transaction.find()
