@@ -1,6 +1,14 @@
 import mongoose from 'mongoose';
 
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/swagod_dummy";
+const MONGODB_URI = process.env.MONGODB_URI;
+
+if (!MONGODB_URI) {
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('MONGODB_URI is not defined in production environment.');
+  }
+}
+
+const URI = MONGODB_URI || "mongodb://localhost:27017/swagod_dummy";
 
 /**
  * Global is used here to maintain a cached connection across hot reloads
@@ -27,7 +35,7 @@ async function dbConnect() {
       connectTimeoutMS: 10000,
     };
 
-    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
+    cached.promise = mongoose.connect(URI, opts).then((mongoose) => {
       return mongoose;
     });
   }

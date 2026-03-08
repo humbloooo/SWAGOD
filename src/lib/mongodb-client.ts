@@ -1,6 +1,12 @@
 import { MongoClient } from 'mongodb';
 
-const uri = process.env.MONGODB_URI || "mongodb://localhost:27017/swagod_dummy";
+const MONGODB_URI = process.env.MONGODB_URI;
+
+if (!MONGODB_URI && process.env.NODE_ENV === 'production') {
+    throw new Error('MONGODB_URI is not defined in production environment.');
+}
+
+const uri = MONGODB_URI || "mongodb://localhost:27017/swagod_dummy";
 const options = {};
 
 let client: MongoClient;
