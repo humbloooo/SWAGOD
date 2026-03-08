@@ -31,6 +31,7 @@ export default function AdminPromos() {
         e.preventDefault();
         const res = await fetch("/api/promos", {
             method: "POST",
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(newItem),
         });
 
@@ -66,6 +67,7 @@ export default function AdminPromos() {
 
         await fetch("/api/promos", {
             method: "PUT",
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(itemToUpdate),
         });
     };

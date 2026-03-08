@@ -40,6 +40,7 @@ export default function AdminProducts() {
             try {
                 const res = await fetch("/api/products", {
                     method,
+                    headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(currentProduct),
                 });
 

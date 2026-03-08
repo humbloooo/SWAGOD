@@ -23,7 +23,7 @@ export interface ISiteSettings extends Document {
     showUrgency?: boolean;
     showSocialProof?: boolean;
     showPersonalization?: boolean;
-    featuredCategory?: "male" | "female" | "merch" | "all";
+    featuredCategory?: "male" | "female" | "merch" | "all" | "accessories" | "shirts" | "jerseys" | "hoodies" | "hats";
     freeShippingText?: string;
     faqItems?: { question: string; answer: string }[];
     contactInfo?: {
@@ -66,7 +66,7 @@ const SiteSettingsSchema: Schema = new Schema({
     showUrgency: { type: Boolean, default: true },
     showSocialProof: { type: Boolean, default: true },
     showPersonalization: { type: Boolean, default: true },
-    featuredCategory: { type: String, enum: ["male", "female", "merch", "all"], default: "all" },
+    featuredCategory: { type: String, enum: ["male", "female", "merch", "all", "accessories", "shirts", "jerseys", "hoodies", "hats"], default: "all" },
     freeShippingText: { type: String },
     faqItems: [{
         question: { type: String },

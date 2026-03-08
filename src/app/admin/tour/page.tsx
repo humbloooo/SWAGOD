@@ -19,6 +19,7 @@ export default function AdminTour() {
         e.preventDefault();
         const res = await fetch("/api/tour", {
             method: "POST",
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(newItem),
         });
 
